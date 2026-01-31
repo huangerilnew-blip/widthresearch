@@ -52,13 +52,13 @@ class AkShareSearcher:
         Args:
             max_results: 最大返回数量，默认 20
         """
-        self.max_results = max_results or 20
+        self.max_results = max_results or Config.AKSHARE_NUM
 
     async def search(
         self,
         symbol: str,
-        data_type: str = "news",
-        limit: int = None
+        limit: int ,
+        data_type: str = "news"
     ) -> List[Paper]:
         """
         搜索金融数据并解析为 Paper 列表
@@ -91,7 +91,7 @@ class AkShareSearcher:
                 papers = []
         except Exception as e:
             print(f"获取数据失败: {e}")
-            return []
+            raise e
         
         print(f"解析完成，共 {len(papers)} 条记录")
         return papers
@@ -207,17 +207,16 @@ class AkShareSearcher:
     async def download(
         self,
         papers: Union[Paper, List[Paper]],
-        save_path: str = None,
-        filename: str = None
+        save_path: str = None
     ) -> List[Paper]:
         """
-        将 Paper 列表导出为 Markdown 文件
-        
+        将 Paper 列表导出为 Markdown 文件（每个 Paper 单独保存）
+
         Args:
             papers: 单个 Paper 或 Paper 列表
             save_path: 保存目录，默认 Config.DOC_SAVE_PATH
-            filename: 文件名，默认使用时间戳生成
-            
+            filename: 文件名，默认使用 URL 最后 5 位 + title 命名
+
         Returns:
             List[Paper]: 更新了 saved_path 的 Paper 列表
         """
@@ -226,40 +225,48 @@ class AkShareSearcher:
             paper_list = [papers]
         else:
             paper_list = list(papers)
-        
+
         if not paper_list:
             print("没有 Paper 需要下载。")
             return paper_list
-        
+
         # 使用默认保存路径
         if save_path is None:
             save_path = Config.DOC_SAVE_PATH
-        
-        # 生成文件名
-        if filename is None:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            # 尝试从第一个 paper 获取 symbol
-            symbol = ""
-            if paper_list[0].extra:
-                symbol = paper_list[0].extra.get("symbol", "")
-            if symbol:
-                filename = f"akshare_{symbol}_{timestamp}.md"
-            else:
-                filename = f"akshare_search_{timestamp}.md"
-        
-        # 生成 Markdown 内容
-        content = self._generate_markdown(paper_list)
-        
-        # 保存文件
-        file_path = self._save_markdown(content, save_path, filename)
-        
-        # 更新每个 Paper 的 saved_path
+
+        # 每个 Paper 单独保存
         for paper in paper_list:
+            # 生成文件名（如果未指定 filename）
+            # 第一步：提取 URL 最后 5 个字符
+            if paper.url and len(paper.url) >= 5:
+                url_tail = paper.url[-5:]
+            else:
+                url_tail = "00000"
+
+            # 第二步：删除特殊字符，只保留字母数字
+            safe_url_tail = ''.join(c for c in url_tail if c.isalnum())
+
+            # 如果不足 5 位，用 0 填充
+            if len(safe_url_tail) < 5:
+                safe_url_tail = safe_url_tail.ljust(5, '0')
+
+            # 提取 title 前 20 个字符并清理特殊字符
+            safe_title = self._sanitize_filename(paper.title[:20])
+
+            # 生成文件名
+            current_filename = f"{safe_url_tail}_{safe_title}.md"
+
+            # 生成单个 Paper 的 Markdown 内容
+            content = self._paper_to_markdown(paper)
+
+            # 保存文件
+            file_path = self._save_markdown(content, save_path, current_filename)
+            if "失败" in file_path:
+                file_path = "save_failed"
+            # 更新 Paper 的 saved_path
             if paper.extra is None:
                 paper.extra = {}
             paper.extra["saved_path"] = file_path
-        
-        print(f"Markdown 文件已保存: {file_path}")
         return paper_list
 
     def _generate_markdown(self, papers: List[Paper]) -> str:
@@ -323,6 +330,25 @@ class AkShareSearcher:
         
         return "\n".join(lines)
 
+    def _sanitize_filename(self, filename: str) -> str:
+        """
+        清理文件名中的非法字符，保留字母、数字、空格、下划线、横线
+
+        Args:
+            filename: 原始文件名
+
+        Returns:
+            str: 清理后的文件名
+        """
+        # 只保留字母、数字、空格、下划线、横线
+        safe = ''.join(c for c in filename if c.isalnum() or c in ' _-')
+
+        # 去除首尾空格
+        safe = safe.strip()
+
+        # 如果为空，返回默认值
+        return safe if safe else "unnamed"
+
     def _save_markdown(self, content: str, save_path: str, filename: str) -> str:
         """
         保存 Markdown 内容到文件
@@ -336,10 +362,19 @@ class AkShareSearcher:
             str: 完整文件路径，失败时返回错误信息
         """
         try:
-            # 确保目录存在
-            os.makedirs(save_path, exist_ok=True)
+            if not os.path.exists(save_path):
+                try:
+                # 确保目录存在
+                    os.makedirs(save_path, exist_ok=True)
+                except OSError as e:
+                    error_msg = f"创建目录失败: {e}"
+                    print(error_msg)
+                    raise IOError(error_msg)
             
             file_path = os.path.join(save_path, filename)
+            if os.path.exists(file_path):
+                print(f"文件已存在，跳过保存: {file_path}")
+                return file_path
             with open(file_path, 'w', encoding='utf-8') as f:
                 f.write(content)
             

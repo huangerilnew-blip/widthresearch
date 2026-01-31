@@ -37,6 +37,7 @@ class Config:
     TOP_K=5 #向量检索top_k
     TAVILY_NUM=3 #Tavily文献检索返回数量
     EXA_NUM=10 #EXA检索的结果
+    AKSHARE_NUM=3 #Akshare检索返回数量
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
     WIKI_NUM=3 #wiki检索返回数量
     WIKI_LANGUAGE="en" #wiki检索语言版本

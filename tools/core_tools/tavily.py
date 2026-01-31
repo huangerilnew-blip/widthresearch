@@ -79,6 +79,8 @@ class TavilySearch:
         Returns:
             List[Paper]: 成功保存的 Paper 列表（paper.extra["save_path"] 已填充）
         """
+        if isinstance(papers, Paper):
+            papers = [papers]
         # 使用默认保存路径
         if save_dir is None:
             save_dir = Config.DOC_SAVE_PATH
@@ -102,10 +104,15 @@ class TavilySearch:
 
                 # 构造完整路径
                 file_path = os.path.join(save_dir, filename)
-
+                # 如果文件已存在，跳过保存,可以防止多个executoragent共同编辑一个文件
+                if os.path.exists(file_path):
+                    print(f"文件已存在，跳过下载: {paper.title} -> {file_path}")
+                    if paper.extra is None:
+                        paper.extra = {}
+                paper.extra["saved_path"] = file_path
+                continue
                 # abstract 中保存的是 raw_content
                 markdown_content = paper.abstract
-
                 # 写入文件
                 with open(file_path, 'w', encoding='utf-8') as f:
                     f.write(markdown_content)

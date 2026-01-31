@@ -809,6 +809,9 @@ class SECEdgarSearcher:
                 filename = f"sec_edgar_{datetime.now().strftime('%Y%m%d%H%M%S')}.md"
             
             file_path = os.path.join(save_path, filename)
+            if os.path.exists(file_path):
+                print(f"文件已存在，跳过下载: {paper.title} -> {file_path}")
+                return file_path
             
             with open(file_path, "w", encoding="utf-8") as f:
                 f.write(markdown_content)

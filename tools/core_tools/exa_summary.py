@@ -305,6 +305,8 @@ class ExaSearcherSummary:
         Returns:
             List[Paper]: 成功下载的 Paper 对象列表
         """
+        if isinstance(papers, Paper):
+            papers = [papers]
         if save_path is None:
             save_path = Config.DOC_SAVE_PATH
 
@@ -337,7 +339,12 @@ class ExaSearcherSummary:
 
                 filename = f"exa_{self._sanitize_filename(title)}.md"
                 file_path = os.path.join(save_path, filename)
-
+                if os.path.exists(file_path):
+                    print(f"文件已存在，跳过下载: {paper.title} -> {file_path}")
+                    if paper.extra is None:
+                        paper.extra = {}
+                    paper.extra["saved_path"] = file_path
+                    continue
                 # 保存文件
                 markdown_content = self._generate_markdown(result_dict)
                 with open(file_path, 'w', encoding='utf-8') as f:

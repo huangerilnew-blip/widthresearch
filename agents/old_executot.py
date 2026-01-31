@@ -6,11 +6,9 @@ from core.config import Config
 from core.llms import get_llm
 from core.reranker import BGEReranker
 from typing import TypedDict, Annotated, List, Dict, Any
-from langgraph.graph import add_messages, StateGraph, START, END
+from langgraph.graph import add_messages, StateGraph, START, END, state
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.messages import AnyMessage, AIMessage, HumanMessage,ToolMessage
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.runnables import RunnablePassthrough
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from psycopg_pool import AsyncConnectionPool
 import logging, json, asyncio
@@ -32,107 +30,16 @@ handler.setFormatter(logging.Formatter(
 ))
 logger.addHandler(handler)
 
-class PlannerState(TypedDict):
-    planner_messages: Annotated[list[AnyMessage], add_messages]
-    planner_result: AIMessage
-    epoch: int
-
 class ExecutorState(TypedDict):
+    url_pool:list[str] # url 池，防止重复下载
+
     executor_messages: Annotated[list[AnyMessage], add_messages]
-    current_query: str  # 当前处理的子问题
+    sub_query: str  # 当前处理的子问题
     optional_search_results:Annotated[list[ToolMessage], add_messages]  # 可选工具的搜索结果
     search_results: List[Dict]  # 所有搜索结果（必需工具 + 可选工具）
     reranked_results: List[Dict]  # Rerank后的结果
     downloaded_papers: List[Dict]  # 已下载的论文
     executor_result: Dict  # 最终结果摘要
-
-class PlannerAgent:
-    def __init__(self, pool: AsyncConnectionPool, modelname: ChatOpenAI = Config.LLM_PLANNER):
-        self.chat_llm = get_llm(modelname)[0]
-        self.memory = AsyncPostgresSaver(pool)
-        self.graph = self._build_graph()
-
-    def _json_node(self, state: PlannerState, planner_epoch=Config.PLANNER_EPOCH) -> dict:
-        prompt = """请根据用户提供的主要问题{query}，从多个维度拆解成子问题列表。在回答中，你需要遵循以下要求：
-
-        1. **拆解主问题：** 根据问题的多个层次和方面进行拆解，确保每个子问题具体且明确。
-        2. **生成子问题列表：** 将拆解后的子问题组织成一个简单的列表，每个子问题是一个字符串。
-        3. **结构化输出：** 使用以下JSON格式来输出子问题列表：
-
-        ```
-        {{
-          "tasks": [
-            "子问题1",
-            "子问题2",
-            "子问题3"
-          ]
-        }}
-        ```
-
-        **详细规则：**
-
-        - "tasks"是一个字符串数组，每个元素是一个具体的子问题。
-        - json的样例中虽然只放了三个子问题，但是你一定不能受到三个子问题数量的限制。而是要思考主问题，去拆解分析，打破欧式距离限制，帮助用户深层次的去了解问题。
-        - 子问题之间不需要考虑依赖关系，只需要列出所有相关的子问题即可。
-        """
-        query = state["planner_messages"][0]
-        template = ChatPromptTemplate.from_messages([
-            {"role": "system", "content": prompt}],
-        )
-        try:
-            chain = {"query": RunnablePassthrough()} | template | self.chat_llm
-            if state["epoch"] < planner_epoch:
-                result = chain.invoke(query)
-                state["epoch"] += 1
-                return {"planner_messages": [result]}
-        except Exception as e:
-            logger.error(f"planner_agent_node1 分析用户的问题时，出现错误:{e}")
-            raise e
-
-    def _condition_router(self, state: PlannerState, planner_epoch=Config.PLANNER_EPOCH):
-        result = state["planner_messages"][-1]
-        if isinstance(result, AIMessage):
-            if state["epoch"] < planner_epoch:
-                try:
-                    _ = json.loads(result.content)
-                    state["planner_result"] = result
-                    return "END"
-                except Exception:
-                    return "json_node"
-            state["planner_result"] = AIMessage(content=str({"tasks": "error"}))
-            logger.warning(f"planner_agent 达到最大迭代次数{planner_epoch}，仍未能生成有效的json结构，结束planner流程")
-            return "END"
-        logger.error(f"planner_agent 条件路由器收到非AIMessage类型的消息，类型为:{type(result)}，内容为:{result.content}")
-        raise TypeError(f"planner_agent 条件路由器收到非AIMessage类型的消息，类型为:{type(result)}")
-    
-    def _build_graph(self):
-        builder = StateGraph(PlannerState)
-        builder.add_node("json_node", self._json_node)
-        builder.add_edge(START, "json_node")
-        builder.add_conditional_edges("json_node", self._condition_router, {"END": END, "json_node": "json_node"})
-        builder.compile(checkpointer=self.memory)
-        logger.info(f"完成planner_graph的初始化构造")
-        return builder
-
-    async def invoke(self, thread_id: str):
-        query = state["planner_messages"][0]
-        config = {"configurable": {"thread_id": thread_id}}
-        try:
-            response = await self.chat_llm.ainvoke(query, config)
-            logger.info(f"planner_chatmodel对于用户的{query} 返回:{response}")
-            return response
-        except Exception as e:
-            logger.error(f"planner_chatmodel对于用户的{query} 出现错误：{e}")
-            raise e
-
-    async def _clean(self):
-        if self.memory:
-            try:
-                await self.memory.aclose()
-                logger.info("对实例化的PlannerAgent,完成对短期记忆连接池的断开处理")
-            except Exception as e:
-                logger.info(f"尝试对实例化的PlannerAgent与短期记忆连接池断开，出现错误：{e}")
-
 
 class ExecutorAgent:
     """
@@ -326,9 +233,9 @@ class ExecutorAgent:
         except Exception as e:
             logger.error(f"ExctorAgent-llm_decision_node 状态错误{e}，无法正确提取用户查询")
             raise e
-        # 缓存到 current_query 中，方便后续节点使用
-        if not state.get("current_query"):
-            state["current_query"] = query
+        # 缓存到 sub_query 中，方便后续节点使用
+        if not state.get("sub_query"):
+            state["sub_query"] = query
         
         optional_tools = self._get_optional_tools()
         optional_search_results = state.get("optional_search_results", [])
@@ -432,7 +339,7 @@ class ExecutorAgent:
     
     async def _search_node(self, state: ExecutorState) -> Dict:
         """搜索节点：并行调用必需的搜索工具"""
-        query = state["current_query"]
+        query = state["sub_query"]
         required_tool_names = self._get_required_tools()
         
         search_results = []
@@ -494,7 +401,7 @@ class ExecutorAgent:
     async def _clean_node(self, state: ExecutorState) -> Dict:
         """清洗和Rerank节点（使用 LlamaIndex）"""
         try:
-            query = state["current_query"]
+            query = state["sub_query"]
             search_results = state["search_results"]
         except Exception as e:
             logger.error(f"ExecutorAgent clean_node 获取状态失败: {e}")
@@ -737,7 +644,7 @@ class ExecutorAgent:
         config = {"configurable": {"thread_id": thread_id}}
         initial_state = {
             "executor_messages": [],
-            "current_query": query,
+            "sub_query": query,
             "optional_search_results": [],
             "search_results": [],
             "reranked_results": [],

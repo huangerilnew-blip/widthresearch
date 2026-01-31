@@ -11,6 +11,10 @@ from pathlib import Path
 from concurrent_log_handler import ConcurrentRotatingFileHandler
 from extract_company_info import extract_company_info
 from dotenv import load_dotenv
+os.environ["http_proxy"] = "http://127.0.0.1:7890"
+os.environ["https_proxy"] = "http://127.0.0.1:7890"
+os.environ["HTTP_PROXY"] = "http://127.0.0.1:7890"
+os.environ["HTTPS_PROXY"] = "http://127.0.0.1:7890"
 logger = logging.getLogger(__name__)
 # 设置日志器级别为DEBUG
 logger.setLevel(logging.DEBUG)

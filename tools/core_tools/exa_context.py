@@ -305,12 +305,18 @@ class ExaSearcherContext:
         Returns:
             List[Paper]: 成功下载的 Paper 对象列表
         """
+        if isinstance(papers, Paper):
+            papers = [papers]
         if save_path is None:
             save_path = Config.DOC_SAVE_PATH
 
         # 确保保存目录存在
         if not os.path.exists(save_path):
-            os.makedirs(save_path, exist_ok=True)
+            try:
+                os.makedirs(save_path)
+            except Exception as e:
+                print(f"创建保存目录失败: {e}")
+                raise e
 
         print(f"\n开始下载 {len(papers)} 个Paper到 {save_path}")
 
@@ -336,7 +342,12 @@ class ExaSearcherContext:
 
                 filename = f"exa_{self._sanitize_filename(title)}.md"
                 file_path = os.path.join(save_path, filename)
-
+                if os.path.exists(file_path):
+                    print(f"文件已存在，跳过保存: {paper.title} -> {file_path}")
+                    if paper.extra is None:
+                        paper.extra = {}
+                    paper.extra["save_path"] = file_path
+                    continue
                 # 保存文件
                 markdown_content = self._generate_markdown(result_dict)
                 with open(file_path, 'w', encoding='utf-8') as f:

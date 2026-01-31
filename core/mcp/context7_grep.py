@@ -30,6 +30,19 @@ class Context7GrepMCPClient:
         self._client = None
         self._tools = None
 
+    def _get_proxy_env(self) -> Dict[str, str]:
+        """
+        获取代理相关的环境变量
+
+        Returns:
+            包含代理环境变量的字典
+        """
+        proxy_env_vars = [
+            'http_proxy', 'https_proxy', 'HTTP_PROXY', 'HTTPS_PROXY',
+            'all_proxy', 'ALL_PROXY', 'no_proxy', 'NO_PROXY'
+        ]
+        return {k: v for k, v in os.environ.items() if k in proxy_env_vars}
+
     async def _get_client_config(self) -> Dict[str, Any]:
         """
         构建服务器配置字典
@@ -54,12 +67,12 @@ class Context7GrepMCPClient:
             else:
                 raise ValueError("缺少context7_api_key,无法使用context7 mcp")
 
-        # Grep 配置
         if self.grep_need:
             config["grep"] = {
-                "transport": "stdio",  # 本地子进程通信
-                "command": "python",   # 或 "node"/直接二进制路径
+                "transport": "stdio",
+                "command": "python",
                 "args": ["core/mcp/grep_mcp/server.py"],
+                "env": self._get_proxy_env(),
             }
         return config
 
@@ -87,8 +100,11 @@ class Context7GrepMCPClient:
         Returns:
             Context7 工具列表
         """
+        if not self.context7_need:
+            return []
+        
         all_tools = await self.get_tools()
-        return [tool for tool in all_tools if tool.name.startswith("context7_")]
+        return [tool for tool in all_tools if tool.name in ["resolve-library-id", "query-docs"]]
 
     async def get_grep_tools(self) -> List[BaseTool]:
         """

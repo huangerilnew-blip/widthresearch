@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 from typing import Any, Optional, List, Dict, Annotated
 from urllib.parse import urlencode, quote_plus
 import aiohttp
@@ -223,7 +224,10 @@ async def grep_query(
         params["f.path"] = path.strip()
     
     try:
-        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=30)) as session:
+        async with aiohttp.ClientSession(
+            timeout=aiohttp.ClientTimeout(total=30),
+            trust_env=True
+        ) as session:
             url = "https://grep.app/api/search"
             
             async with session.get(url, params=params) as response:
