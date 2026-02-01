@@ -4,15 +4,18 @@ from langchain_core.tools import BaseTool
 from langgraph.prebuilt import ToolNode
 from core.config import Config
 from core.llms import get_llm
+from core.mcp.context7_grep import Context7GrepMCPClient
 from typing import TypedDict, Annotated, List, Dict, Any
 from langgraph.graph import add_messages, StateGraph, START, END, state
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.messages import AnyMessage, AIMessage, HumanMessage,ToolMessage
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from psycopg_pool import AsyncConnectionPool
-import logging, json, asyncio
+import logging, json, asyncio, os
 from concurrent_log_handler import ConcurrentRotatingFileHandler
-
+from core.mcp.tools import get_tools
+from dotenv import load_dotenv
+load_dotenv()
 # 设置日志基本配置，级别为DEBUG或INFO
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -30,7 +33,7 @@ handler.setFormatter(logging.Formatter(
 logger.addHandler(handler)
 
 class ExecutorState(TypedDict):
-    url_pool: list[str]  # url 池，防止重复下载
+    sub_url_pool: list[str]  # url 池，防止重复下载
     executor_messages: Annotated[list[AnyMessage], add_messages]
     user_query: str  # 用户的原始查询
     sub_query: str  # 当前处理的子问题
@@ -50,15 +53,18 @@ class ExecutorAgent:
     LLM 可以多次决策是否调用可选工具，形成循环，直到 LLM 认为已经收集了足够的信息。
     """
     
-    def __init__(self, pool: AsyncConnectionPool, modelname: ChatOpenAI = Config.LLM_EXECUTOR):
+    def __init__(self, pool: AsyncConnectionPool | None, modelname: ChatOpenAI = Config.LLM_EXECUTOR):
         self.chat_llm = get_llm(modelname)[0]
         # 搜索工具延迟加载
         self.search_tools: list[BaseTool] = None
         # 下载工具单独获取
         self.download_tools: list[BaseTool] = None  # 延迟加载
-        self.memory = AsyncPostgresSaver(pool)
+        self._context7_grep_client = None
+        if pool:
+            self.memory = AsyncPostgresSaver(pool) # 异步持久化存储
+        else:
+            self.memory = None
         self.graph = None  # 延迟构建
-    
     async def _ensure_initialized(self):
         """确保异步资源已初始化"""
         if self.search_tools is None:
@@ -68,8 +74,21 @@ class ExecutorAgent:
     
     async def _get_search_tools(self) -> list[BaseTool]:
         """获取搜索工具（只包含 search 类工具）"""
-        from core.tools import get_tools
-        return await get_tools(tool_type="search")
+        search_tools = await get_tools(tool_type="search")
+
+        if self._context7_grep_client is None:
+            self._context7_grep_client = Context7GrepMCPClient(
+                context7_need=True,
+                grep_need=True
+            )
+
+        context7_grep_tools = await self._context7_grep_client.get_tools()
+
+        merged_tools = {tool.name: tool for tool in search_tools}
+        for tool in context7_grep_tools:
+            merged_tools.setdefault(tool.name, tool)
+
+        return list(merged_tools.values())
     
     async def _get_download_tools(self) -> list[BaseTool]:
         """获取下载工具（只包含 download 类工具）"""
@@ -84,7 +103,13 @@ class ExecutorAgent:
     
     def _get_optional_tools(self) -> List[BaseTool]:
         """获取可选工具列表（由 LLM 决定是否调用）"""
-        optional_tool_names = ["sec_edgar_search", "akshare_search"]
+        optional_tool_names = [
+            "sec_edgar_search",
+            "akshare_search",
+            "resolve-library-id",
+            "query-docs",
+            "grep_query"
+        ]
         return [t for t in self.search_tools if any(opt in t.name.lower() for opt in optional_tool_names)]
     
     async def _invoke_single_tool(self, tool: BaseTool, query: str)->list[dict]:
@@ -102,37 +127,198 @@ class ExecutorAgent:
             logger.error(f"工具 {tool.name} 调用失败: {e}")
             raise RuntimeError(f"工具 {tool.name} 调用失败: {e}")
         
-        # MultiServerMCPClient 返回的是 str 类型（从 TextContent.text 提取）
-        if not result or not isinstance(result, str):
+        if result is None:
+            logger.error(f"工具 {tool.name} 返回结果为空")
+            raise TypeError(f"工具 {tool.name} 返回结果类型错误")
+
+        papers = None
+
+        if isinstance(result, str):
+            if result.startswith("Unknown tool:"):
+                logger.error(f"MCP 工具名不存在: {result}")
+                raise NameError(f"MCP 工具名不存在: {tool.name}")
+
+            if result.startswith("Error executing"):
+                logger.error(f"MCP 工具执行错误: {result[:200]}")
+                raise RuntimeError(f"MCP 工具执行错误: {tool.name}")
+
+            try:
+                papers = json.loads(result)
+            except json.JSONDecodeError as e:
+                logger.error(f"JSON 解析失败: {e}, 原始结果: {result[:200]}")
+                raise ValueError(f"工具 {tool.name} 返回的 JSON 格式错误")
+        elif isinstance(result, list):
+            if result and isinstance(result[0], dict) and "text" in result[0]:
+                text_content = result[0].get("text", "")
+                try:
+                    papers = json.loads(text_content)
+                except json.JSONDecodeError as e:
+                    logger.error(f"JSON 解析失败: {e}, 原始结果: {text_content[:200]}")
+                    raise ValueError(f"工具 {tool.name} 返回的 JSON 格式错误")
+            else:
+                papers = result
+        elif isinstance(result, dict):
+            if isinstance(result.get("results"), list):
+                papers = result["results"]
+            elif isinstance(result.get("papers"), list):
+                papers = result["papers"]
+            else:
+                papers = [result]
+        else:
             logger.error(f"工具 {tool.name} 返回结果异常: type={type(result)}")
             raise TypeError(f"工具 {tool.name} 返回结果类型错误")
-        
-        # 根据 mcp_server.py 的三种返回情况判断：
-        # 1. 正常返回：JSON 格式结果
-        # 2. 工具名不存在："Unknown tool: {name}"
-        # 3. 意外错误："Error executing {name}: ..."
-        
-        if result.startswith("Unknown tool:"):
-            logger.error(f"MCP 工具名不存在: {result}")
-            raise NameError(f"MCP 工具名不存在: {tool.name}")
-        
-        if result.startswith("Error executing"):
-            logger.error(f"MCP 工具执行错误: {result[:200]}")
-            raise RuntimeError(f"MCP 工具执行错误: {tool.name}")
-        
-        # 正常情况：解析 JSON
-        try:
-            papers = json.loads(result)
-        except json.JSONDecodeError as e:
-            logger.error(f"JSON 解析失败: {e}, 原始结果: {result[:200]}")
-            raise ValueError(f"工具 {tool.name} 返回的 JSON 格式错误")
-        
+
         if not isinstance(papers, list):
             logger.error(f"工具 {tool.name} 返回的数据不是列表: {type(papers)}")
             raise TypeError(f"工具 {tool.name} 返回数据格式错误")
-        
-        logger.info(f"工具 {tool.name} 返回 {len(papers)} 条结果")
-        return papers
+
+        if not all(isinstance(item, dict) for item in papers):
+            logger.error(f"工具 {tool.name} 返回的数据不是 dict 列表")
+            raise TypeError(f"工具 {tool.name} 返回数据格式错误")
+
+        required_keys = {"title", "source", "url"}
+        filtered_papers = []
+        for paper in papers:
+            missing_keys = required_keys.difference(paper.keys())
+            if missing_keys:
+                logger.warning(f"工具 {tool.name} 返回结果缺少字段: {missing_keys}")
+                continue
+            filtered_papers.append(paper)
+
+        logger.info(f"工具 {tool.name} 返回 {len(filtered_papers)} 条结果")
+        return filtered_papers
+
+    def _parse_tool_args(self, tool_args: Any) -> Dict[str, Any]:
+        if isinstance(tool_args, dict):
+            return tool_args
+        if isinstance(tool_args, str):
+            try:
+                return json.loads(tool_args)
+            except json.JSONDecodeError:
+                return {}
+        return {}
+
+    def _build_tool_call_info(self, tool_calls: Any) -> Dict[str, Dict[str, Any]]:
+        tool_call_info = {}
+        for call in tool_calls or []:
+            if isinstance(call, dict):
+                call_id = call.get("id")
+                name = call.get("name", "")
+                args = self._parse_tool_args(call.get("args", {}))
+            else:
+                call_id = getattr(call, "id", None) or getattr(call, "tool_call_id", None)
+                name = getattr(call, "name", "")
+                args = self._parse_tool_args(getattr(call, "args", {}))
+            if call_id:
+                tool_call_info[call_id] = {"name": name, "args": args}
+        return tool_call_info
+
+    def _parse_tool_content(self, content: Any) -> Any:
+        if isinstance(content, str):
+            try:
+                return json.loads(content)
+            except json.JSONDecodeError:
+                return content
+        return content
+
+    def _ensure_tool_message_name(self, tool_msg: ToolMessage, tool_name: str) -> ToolMessage:
+        if tool_name and not getattr(tool_msg, "name", None):
+            if hasattr(tool_msg, "model_copy"):
+                return tool_msg.model_copy(update={"name": tool_name})
+            try:
+                setattr(tool_msg, "name", tool_name)
+                return tool_msg
+            except Exception:
+                return ToolMessage(
+                    content=tool_msg.content,
+                    tool_call_id=tool_msg.tool_call_id,
+                    name=tool_name
+                )
+        return tool_msg
+
+    def _build_query_docs_records(self, content: Any, tool_args: Dict[str, Any]) -> List[Dict[str, Any]]:
+        items = content if isinstance(content, list) else [content]
+        records = []
+        for item in items:
+            if isinstance(item, dict):
+                text = item.get("text")
+                if text is None:
+                    text = json.dumps(item, ensure_ascii=True)
+                metadata = {}
+                if isinstance(item.get("metadata"), dict):
+                    metadata.update(item.get("metadata", {}))
+            else:
+                text = str(item)
+                metadata = {}
+
+            metadata.update({
+                "tool": "query-docs",
+                "source": "context7"
+            })
+            if tool_args.get("library_id"):
+                metadata["library_id"] = tool_args["library_id"]
+            if tool_args.get("query"):
+                metadata["query"] = tool_args["query"]
+
+            records.append({"text": text, "metadata": metadata})
+        return records
+
+    def _build_grep_query_records(self, content: Any, tool_args: Dict[str, Any]) -> List[Dict[str, Any]]:
+        records = []
+        query_value = None
+        if isinstance(content, dict) and "results_by_repository" in content:
+            query_value = content.get("query") or tool_args.get("query")
+            for repo in content.get("results_by_repository", []):
+                repo_name = repo.get("repository")
+                for file_info in repo.get("files", []):
+                    text = file_info.get("code_snippet") or ""
+                    metadata = {
+                        "tool": "grep_query",
+                        "source": "grep",
+                        "repository": repo_name,
+                        "file_path": file_info.get("file_path"),
+                        "branch": file_info.get("branch"),
+                        "line_numbers": file_info.get("line_numbers"),
+                        "language": file_info.get("language"),
+                        "total_matches": file_info.get("total_matches")
+                    }
+                    if query_value:
+                        metadata["query"] = query_value
+                    records.append({"text": text, "metadata": metadata})
+        else:
+            text = json.dumps(content, ensure_ascii=True) if not isinstance(content, str) else content
+            metadata = {
+                "tool": "grep_query",
+                "source": "grep"
+            }
+            if tool_args.get("query"):
+                metadata["query"] = tool_args["query"]
+            records.append({"text": text, "metadata": metadata})
+        return records
+
+    def _build_context7_grep_records(
+        self,
+        tool_name: str,
+        content: Any,
+        tool_args: Dict[str, Any]
+    ) -> List[Dict[str, Any]]:
+        if tool_name == "query-docs":
+            return self._build_query_docs_records(content, tool_args)
+        if tool_name == "grep_query":
+            return self._build_grep_query_records(content, tool_args)
+        return []
+
+    def _persist_context7_grep_results(self, tool_name: str, content: Any, tool_args: Dict[str, Any]) -> None:
+        parsed_content = self._parse_tool_content(content)
+        records = self._build_context7_grep_records(tool_name, parsed_content, tool_args)
+        if not records:
+            return
+
+        os.makedirs(Config.DOC_SAVE_PATH, exist_ok=True)
+        file_path = os.path.join(Config.DOC_SAVE_PATH, "context7_grep.json")
+        with open(file_path, "a", encoding="utf-8") as file:
+            for record in records:
+                file.write(json.dumps(record, ensure_ascii=True) + "\n")
     
     def _crop_observation(self, tool_messages: List[ToolMessage]) -> List[ToolMessage]:
         """
@@ -227,6 +413,7 @@ class ExecutorAgent:
             raise ValueError("ExecutorAgent missing user query")
         if not messages:
             messages = [HumanMessage(content=query)]
+            state["executor_messages"] = messages
         # 缓存到 sub_query 中，方便后续节点使用
         if not state.get("sub_query"):
             state["sub_query"] = query
@@ -243,19 +430,8 @@ class ExecutorAgent:
         try:
             llm_with_tools = self.chat_llm.bind_tools(optional_tools)
 
-            # 构建消息列表：利用 LangGraph 的消息流
-            if optional_search_results:
-                # 有工具结果，使用裁剪后的 ToolMessage
-                formatted_messages = self._crop_observation(optional_search_results)
-
-                # 构建完整消息流：原始问题 + 之前的 AI 响应 + 工具结果
-                messages = [] + messages[:2] + formatted_messages
-            else:
-                # 第一次决策，只有原始问题
-                messages = messages
-
             # LLM 会看到完整的对话历史，自主决策
-            response = await llm_with_tools.ainvoke(messages)
+            response = await llm_with_tools.ainvoke(state["executor_messages"])
 
             # 记录决策结果
             has_tool_calls = hasattr(response, 'tool_calls') and bool(response.tool_calls)
@@ -286,7 +462,7 @@ class ExecutorAgent:
             logger.warning(f"意外的消息类型: {type(last_message)}")
             return "clean"
     
-    async def _optional_tool_node(self, state: ExecutorState) -> Dict:
+    async def _optional_tool_node(self, state: ExecutorState) -> dict:
         """
         可选工具节点：使用 LangGraph 的 ToolNode 执行工具调用
         按照 ReAct 模式，执行 Action 并返回 Observation (ToolMessage)
@@ -304,34 +480,48 @@ class ExecutorAgent:
         
         optional_tools = self._get_optional_tools()
         tool_node = ToolNode(optional_tools)
+        tool_call_info = self._build_tool_call_info(last_message.tool_calls)
         
         try:
             logger.info(f"准备执行 {len(last_message.tool_calls)} 个可选工具调用")
             
             # ToolNode.ainvoke() 接收 AIMessage，返回 ToolMessage 列表
-            tool_messages = await tool_node.ainvoke(last_message)
+            tool_messages = await tool_node.ainvoke([last_message])
             
             # 确保返回的是列表
             if not isinstance(tool_messages, list):
                 tool_messages = [tool_messages]
             
-            # 记录日志
+            normalized_tool_messages = []
             logger.info(f"可选工具执行完成，返回 {len(tool_messages)} 条 ToolMessage")
             for tool_msg in tool_messages:
+                tool_call_id = getattr(tool_msg, "tool_call_id", None)
+                call_info = tool_call_info.get(tool_call_id, {})
+                tool_name = call_info.get("name", "") or getattr(tool_msg, "name", "")
+                tool_args = call_info.get("args", {})
+
+                tool_msg = self._ensure_tool_message_name(tool_msg, tool_name)
+                normalized_tool_messages.append(tool_msg)
+
+                if tool_name in {"query-docs", "grep_query"}:
+                    self._persist_context7_grep_results(tool_name, tool_msg.content, tool_args)
+
                 try:
                     content = json.loads(tool_msg.content) if isinstance(tool_msg.content, str) else tool_msg.content
                     if isinstance(content, list):
-                        logger.info(f"  - 工具 {tool_msg.name} 返回 {len(content)} 条结果")
-                except:
-                    logger.info(f"  - 工具 {tool_msg.name} 执行完成")
+                        logger.info(f"  - 工具 {tool_name} 返回 {len(content)} 条结果")
+                    else:
+                        logger.info(f"  - 工具 {tool_name} 执行完成")
+                except Exception:
+                    logger.info(f"  - 工具 {tool_name} 执行完成")
             
-            return {"optional_search_results": tool_messages, "executor_messages": tool_messages}
+            return {"optional_search_results": normalized_tool_messages, "executor_messages": normalized_tool_messages}
         
         except Exception as e:
             logger.error(f"执行可选工具时出错: {e}")
             raise e
     
-    async def _search_node(self, state: ExecutorState) -> Dict:
+    async def _search_node(self, state: ExecutorState) -> dict:
         """搜索节点：并行调用必需的搜索工具"""
         query = state["sub_query"]
         required_tool_names = self._get_required_tools()
@@ -371,20 +561,24 @@ class ExecutorAgent:
                                    optional_results: List[Dict]) -> List[Dict]:
         """
         根据 URL 去重，优先级：wiki > tavily > exa > optional
+        注意：context7 和 grep 的结果不进行去重，全部保留
+        因为这些工具返回的是代码片段和文档内容，不应该基于 URL 去重
 
         Args:
             search_results: 必需工具的结果（wiki, tavily, exa）
-            optional_results: 可选工具的结果
+            optional_results: 可选工具的结果（可能包含 context7 和 grep）
 
         Returns:
-            去重后的结果列表
+            去重后的结果列表（context7 和 grep 结果全部保留）
         """
-        # 按优先级分组
+        # 按优先级分组（扩展支持 context7 和 grep）
         priority_groups = {
             "wiki": [],
             "tavily": [],
             "exa": [],
-            "optional": []
+            "context7": [],  # 新增：Context7 结果单独分组
+            "grep": [],      # 新增：Grep 结果单独分组
+            "optional": []   # 其他可选工具（sec_edgar, akshare）
         }
 
         # 分类 search_results
@@ -397,10 +591,22 @@ class ExecutorAgent:
             elif "exa" in source or "context" in source:
                 priority_groups["exa"].append(paper)
 
-        # optional_results 全部归入 "optional"
-        priority_groups["optional"].extend(optional_results)
+        # 分类 optional_results（根据 source 字段）
+        for paper in optional_results:
+            source = paper.get("source", "").lower()
 
-        # 按优先级去重
+            if "context7" in source:
+                priority_groups["context7"].append(paper)
+                logger.debug(f"将结果归类到 context7 组: {paper.get('title', 'N/A')[:50]}")
+            elif "grep" in source:
+                priority_groups["grep"].append(paper)
+                logger.debug(f"将结果归类到 grep 组: {paper.get('file_path', 'N/A')[:50]}")
+            else:
+                # 其他可选工具（sec_edgar, akshare）
+                priority_groups["optional"].append(paper)
+                logger.debug(f"将结果归类到 optional 组: source={source}")
+
+        # 步骤 1: 对 wiki/tavily/exa/optional 按 URL 去重
         url_to_paper = {}
 
         for priority in ["wiki", "tavily", "exa", "optional"]:
@@ -408,19 +614,44 @@ class ExecutorAgent:
                 url = paper.get("url")
                 if url and url not in url_to_paper:
                     url_to_paper[url] = paper
-                elif not url:  # 没有 URL 的直接保留
-                    url_to_paper[f"no_url_{len(url_to_paper)}"] = paper
+                    logger.debug(f"保留结果（URL去重）: {url[:80]}")
+                elif not url:
+                    # 没有 URL 的也保留（使用递增 key）
+                    unique_key = f"no_url_{len(url_to_paper)}"
+                    url_to_paper[unique_key] = paper
+                    logger.debug(f"保留结果（无URL）: {unique_key}")
 
-        # 返回去重后的结果
-        return list(url_to_paper.values())
+        # 步骤 2: 提取去重后的结果
+        deduplicated = list(url_to_paper.values())
 
-    async def _clean_node(self, state: ExecutorState) -> Dict:
+        # 步骤 3: 追加 context7 结果（不进行去重，全部保留）
+        context7_count = len(priority_groups["context7"])
+        if context7_count > 0:
+            deduplicated.extend(priority_groups["context7"])
+            logger.info(f"追加 {context7_count} 条 Context7 结果（不进行去重）")
+
+        # 步骤 4: 追加 grep 结果（不进行去重，全部保留）
+        grep_count = len(priority_groups["grep"])
+        if grep_count > 0:
+            deduplicated.extend(priority_groups["grep"])
+            logger.info(f"追加 {grep_count} 条 Grep 结果（不进行去重）")
+
+        # 步骤 5: 记录去重统计
+        total_before = len(search_results) + len(optional_results)
+        total_after = len(deduplicated)
+        dedup_ratio = ((total_before - total_after) / total_before * 100) if total_before > 0 else 0
+
+        logger.info(f"去重统计: 去重前={total_before}, 去重后={total_after}, 去重率={dedup_ratio:.1f}%")
+
+        return deduplicated
+
+    async def _clean_node(self, state: ExecutorState) -> dict:
         """
         清洗和去重节点
 
         1. 合并 search_results 和 optional_search_results
         2. 根据 URL 去重（优先级：wiki > tavily > exa > optional）
-        3. 更新 url_pool
+        3. 更新 sub——url_pool
         """
         try:
             search_results = state.get("search_results", [])
@@ -433,20 +664,46 @@ class ExecutorAgent:
             logger.warning("没有搜索结果需要去重")
             return {"deduplicated_results": [], "url_pool": []}
 
-        # 从 optional_search_results 中提取 paper
+        # 从 optional_search_results 中提取 paper 并添加 source 字段
         optional_papers = []
         for tool_msg in optional_search_results:
             try:
                 content = tool_msg.content
+
+                # 根据 tool_msg.name 识别工具类型并添加 source
+                tool_name = getattr(tool_msg, "name", "") or ""
+                if tool_name in {"query-docs", "grep_query", "resolve-library-id"}:
+                    logger.info(f"跳过工具 {tool_name} 的结果（非 paper 结构）")
+                    continue
+                source = None
+
+                if "grep" in tool_name.lower():
+                    source = "grep"
+                    logger.debug(f"识别到 grep 工具，添加 source='grep'")
+                elif "query" in tool_name.lower() and "doc" in tool_name.lower():
+                    source = "context7"
+                    logger.debug(f"识别到 query-docs 工具，添加 source='context7'")
+                elif "resolve" in tool_name.lower() and "library" in tool_name.lower():
+                    source = "context7"  # resolve-library-id 也属于 Context7
+                    logger.debug(f"识别到 resolve-library-id 工具，添加 source='context7'")
+
+                # 解析 ToolMessage.content
                 if isinstance(content, str):
                     papers = json.loads(content)
                 elif isinstance(content, list):
                     papers = content
                 else:
+                    logger.warning(f"ToolMessage content 类型异常: {type(content)}")
                     continue
 
+                # 为每个 paper 添加 source 字段（如果工具级别有 source）
                 if isinstance(papers, list):
+                    for paper in papers:
+                        if source and not paper.get("source"):
+                            paper["source"] = source
                     optional_papers.extend(papers)
+                    logger.info(f"从工具 {tool_name} 提取 {len(papers)} 条结果，source={source}")
+
             except (json.JSONDecodeError, AttributeError) as e:
                 logger.warning(f"解析 optional_search_results 失败: {e}")
 
@@ -470,7 +727,7 @@ class ExecutorAgent:
             "url_pool": url_pool
         }
     
-    async def _download_node(self, state: ExecutorState) -> Dict:
+    async def _download_node(self, state: ExecutorState) -> dict:
         """下载节点：下载 deduplicated_results 和 optional_search_results 中的文档"""
         deduplicated_results = state.get("deduplicated_results", [])
         optional_search_results = state.get("optional_search_results", [])
@@ -488,6 +745,10 @@ class ExecutorAgent:
             for tool_msg in optional_search_results:
                 try:
                     # tool_msg 是 ToolMessage 对象
+                    tool_name = getattr(tool_msg, "name", "") or ""
+                    if tool_name in {"query-docs", "grep_query", "resolve-library-id"}:
+                        logger.info(f"跳过工具 {tool_name} 的下载结果合并")
+                        continue
                     content = tool_msg.content
                     
                     if isinstance(content, str):
@@ -605,19 +866,22 @@ class ExecutorAgent:
         builder.add_edge("clean", "download")
         builder.add_edge("download", END)
         
-        graph = builder.compile(checkpointer=self.memory)
+        if self.memory:
+            graph = builder.compile(checkpointer=self.memory)
+        else:
+            graph = builder.compile()
         logger.info("完成 executor_graph 的初始化构造")
         return graph
     
-    async def invoke(self, query: str, thread_id: str, user_query: str = "") -> Dict:
+    async def invoke(self, query: str, thread_id: str,user_id:str, user_query: str = "") -> Dict:
         """执行单个子问题的完整处理流程"""
         # 确保异步资源已初始化
         await self._ensure_initialized()
 
-        config = {"configurable": {"thread_id": thread_id}}
+        config = {"configurable": {"thread_id": thread_id, "user_id": user_id}}
         initial_state = {
-            "executor_messages": [],
-            "user_query": user_query or query,
+            "executor_messages": [HumanMessage(content=query)],
+            "user_query": user_query,
             "sub_query": query,
             "optional_search_results": [],
             "search_results": [],
@@ -639,6 +903,11 @@ class ExecutorAgent:
     
     async def _clean(self):
         """清理资源"""
+        if self._context7_grep_client:
+            try:
+                await self._context7_grep_client.close()
+            except Exception as e:
+                logger.info(f"尝试关闭 Context7GrepMCPClient 失败：{e}")
         if self.memory:
             try:
                 await self.memory.aclose()

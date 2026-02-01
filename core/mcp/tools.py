@@ -38,10 +38,9 @@ handler.setFormatter(logging.Formatter(
 ))
 logger.addHandler(handler)
 
-# 加载环境变量（指定 .env 文件路径）
-from pathlib import Path
-env_path = Path(__file__).parent / ".env"
-load_dotenv(env_path)
+# 加载环境变量
+
+load_dotenv()
 
 # 为工具添加人工审查（human-in-the-loop）功能
 async def add_human_in_the_loop(
@@ -162,8 +161,8 @@ async def get_tools(tool_type: str = "all") -> list[BaseTool]:
     client = MultiServerMCPClient({
         "paper-search": {
             "command": "python",
-            "args": ["-m", "core.mcp_server"],
-            "cwd": os.path.dirname(os.path.dirname(__file__)),  # 项目根目录
+            "args": ["-m", "core.mcp.search_tool_mcp.mcp_server"],
+            "cwd": os.path.dirname(os.path.dirname(os.path.dirname(__file__))),  # 项目根目录
             "env": {
                 "TAVILY_API_KEY": tavily_key,
                 "EXA_API_KEY": exa_key

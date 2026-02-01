@@ -13,6 +13,8 @@ from core.config import Config
 from core.llms import get_llm
 from core.mcp.tools import get_tools
 from core.mcp.context7_grep import Context7GrepMCPClient
+from dotenv import load_dotenv
+load_dotenv()
 # 设置日志基本配置，级别为DEBUG或INFO
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

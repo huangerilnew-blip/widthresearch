@@ -36,7 +36,7 @@ class Config:
     BASEDATA_RESTRUCTURE_PATH="data/crunchbase_data/restructure_data/restructure_company_info.json" #清洗与重构后的基础数据路径
     TOP_K=5 #向量检索top_k
     TAVILY_NUM=3 #Tavily文献检索返回数量
-    EXA_NUM=10 #EXA检索的结果
+    EXA_NUM=1 #EXA检索的结果
     AKSHARE_NUM=3 #Akshare检索返回数量
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
     WIKI_NUM=3 #wiki检索返回数量

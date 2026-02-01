@@ -377,6 +377,8 @@ async def call_tool(name: str, arguments: Any) -> List[TextContent]:
     """处理工具调用 - 使用字典映射方式"""
     
     try:
+        if name == "wikipedia_search" and isinstance(arguments, dict):
+            arguments.setdefault("language", "en")
         # 从映射字典中获取处理函数和搜索器
         if name in TOOL_HANDLERS:
             handler_func, searcher = TOOL_HANDLERS[name]

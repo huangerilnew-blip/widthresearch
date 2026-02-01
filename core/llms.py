@@ -116,7 +116,7 @@ def get_llm(llm_type: str = DEFAULT_LLM_TYPE) -> ChatOpenAI:
         logger.warning(f"使用默认配置重试: {str(e)}")
         if llm_type != DEFAULT_LLM_TYPE:
             return initialize_llm(DEFAULT_LLM_TYPE)
-        raise  # 如果默认配置也失败，则抛出异常
+        raise e # 如果默认配置也失败，则抛出异常
 
 
 

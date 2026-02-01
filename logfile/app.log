@@ -116,3 +116,346 @@ model
     For further information visit https://errors.pydantic.dev/2.12/v/string_type
 2026-01-21 16:54:12,568 - __main__ - INFO - 初始化本地 Embedding 模型: BAAI/bge-large-zh-v1.5
 2026-01-21 16:54:12,572 - __main__ - INFO - vllm 服务地址: http://localhost:8001
+2026-02-01 17:55:42,500 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-01 17:58:13,039 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-01 18:07:23,251 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-01 18:07:23,251 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-01 18:15:52,716 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-01 18:15:52,717 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-01 18:26:49,200 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-01 18:26:49,200 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-01 18:38:14,508 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-01 18:38:14,508 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-01 18:38:17,592 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-01 18:38:29,949 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
+2026-02-01 18:38:29,952 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-01 18:38:29,952 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 18:38:29,954 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 18:38:29,956 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 18:38:32,649 - agents.executoragent - ERROR - 工具 wikipedia_search 返回结果异常: type=<class 'list'>
+2026-02-01 18:38:42,261 - agents.executoragent - ERROR - 工具 exa_context_search 返回结果异常: type=<class 'list'>
+2026-02-01 18:38:46,742 - agents.executoragent - ERROR - 工具 tavily_search 返回结果异常: type=<class 'list'>
+2026-02-01 18:38:46,742 - agents.executoragent - ERROR - 工具 wikipedia_search 执行失败: 工具 wikipedia_search 返回结果类型错误
+2026-02-01 18:38:46,742 - agents.executoragent - ERROR - 工具 exa_context_search 执行失败: 工具 exa_context_search 返回结果类型错误
+2026-02-01 18:38:46,742 - agents.executoragent - ERROR - 工具 tavily_search 执行失败: 工具 tavily_search 返回结果类型错误
+2026-02-01 18:38:46,743 - agents.executoragent - INFO - 搜索完成，共获得 0 条结果
+2026-02-01 18:38:46,744 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:38:48,978 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:38:48,978 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:38:48,985 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:38:48,986 - agents.executoragent - ERROR - 执行可选工具时出错: No message found in input
+2026-02-01 18:38:48,986 - agents.executoragent - ERROR - executor 处理子问题 'langchain 中短期记忆管理的最佳实践是什么？' 时出错: No message found in input
+2026-02-01 18:41:49,517 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-01 18:41:49,517 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-01 18:41:51,813 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-01 18:42:04,170 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
+2026-02-01 18:42:04,172 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-01 18:42:04,172 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 18:42:04,174 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 18:42:04,176 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 18:42:06,783 - agents.executoragent - ERROR - 工具 wikipedia_search 返回结果异常: type=<class 'list'>
+2026-02-01 18:42:15,702 - agents.executoragent - ERROR - 工具 tavily_search 返回结果异常: type=<class 'list'>
+2026-02-01 18:42:16,087 - agents.executoragent - ERROR - 工具 exa_context_search 返回结果异常: type=<class 'list'>
+2026-02-01 18:42:16,087 - agents.executoragent - ERROR - 工具 wikipedia_search 执行失败: 工具 wikipedia_search 返回结果类型错误
+2026-02-01 18:42:16,087 - agents.executoragent - ERROR - 工具 exa_context_search 执行失败: 工具 exa_context_search 返回结果类型错误
+2026-02-01 18:42:16,087 - agents.executoragent - ERROR - 工具 tavily_search 执行失败: 工具 tavily_search 返回结果类型错误
+2026-02-01 18:42:16,087 - agents.executoragent - INFO - 搜索完成，共获得 0 条结果
+2026-02-01 18:42:16,088 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:42:19,376 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:42:19,376 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:42:19,382 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:42:33,476 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:42:33,477 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
+2026-02-01 18:42:33,477 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:42:35,369 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:42:35,370 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:42:35,371 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:42:49,482 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:42:49,484 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 18:42:49,485 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:42:51,239 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:42:51,240 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:42:51,241 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:43:05,634 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:43:05,635 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 18:43:05,636 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:43:07,407 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:43:07,408 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:43:07,409 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:43:26,609 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:43:26,610 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 18:43:26,610 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:43:31,013 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:43:31,014 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:43:31,016 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:49:50,894 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-01 18:49:50,894 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-01 18:49:53,092 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-01 18:50:08,499 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
+2026-02-01 18:50:08,500 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-01 18:50:08,501 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 18:50:08,503 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 18:50:08,505 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 18:50:12,058 - agents.executoragent - ERROR - 工具 wikipedia_search 返回结果异常: type=<class 'list'>
+2026-02-01 18:50:22,623 - agents.executoragent - ERROR - 工具 exa_context_search 返回结果异常: type=<class 'list'>
+2026-02-01 18:50:25,185 - agents.executoragent - ERROR - 工具 tavily_search 返回结果异常: type=<class 'list'>
+2026-02-01 18:50:25,185 - agents.executoragent - ERROR - 工具 wikipedia_search 执行失败: 工具 wikipedia_search 返回结果类型错误
+2026-02-01 18:50:25,185 - agents.executoragent - ERROR - 工具 exa_context_search 执行失败: 工具 exa_context_search 返回结果类型错误
+2026-02-01 18:50:25,186 - agents.executoragent - ERROR - 工具 tavily_search 执行失败: 工具 tavily_search 返回结果类型错误
+2026-02-01 18:50:25,186 - agents.executoragent - INFO - 搜索完成，共获得 0 条结果
+2026-02-01 18:50:25,187 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:50:27,194 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:50:27,195 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:50:27,201 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:50:41,248 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:50:41,248 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
+2026-02-01 18:50:41,249 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:50:42,660 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:50:42,661 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:50:42,662 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:50:56,643 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:50:56,644 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 18:50:56,644 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:50:59,009 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:50:59,010 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:50:59,011 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:51:13,244 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:51:13,245 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 18:51:13,246 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:51:15,196 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:51:15,196 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:51:15,198 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:51:29,443 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:51:29,443 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 18:51:29,444 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:51:34,559 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:51:34,559 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:51:34,561 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:51:50,447 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:51:50,448 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 18:51:50,449 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:51:53,302 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:51:53,303 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:51:53,304 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:52:08,720 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:52:08,721 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 18:52:08,721 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:52:11,795 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:52:11,795 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:52:11,797 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:52:26,696 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:52:26,696 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 18:52:26,697 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:52:29,066 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:52:29,067 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:52:29,068 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:52:43,202 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:52:43,202 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 18:52:43,203 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:52:45,354 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:52:45,354 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:52:45,355 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:52:59,522 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:52:59,522 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 18:52:59,523 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:53:01,440 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:53:01,440 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:53:01,443 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:53:15,842 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:53:15,843 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 18:53:15,843 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:53:19,519 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:53:19,520 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:53:19,521 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:53:34,090 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:53:34,090 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 18:53:34,091 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 18:53:36,159 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 18:53:36,160 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 18:53:36,161 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 18:53:51,257 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 18:53:51,258 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 18:53:51,259 - agents.executoragent - ERROR - executor 处理子问题 'langchain 中短期记忆管理的最佳实践是什么？' 时出错: Recursion limit of 25 reached without hitting a stop condition. You can increase the limit by setting the `recursion_limit` config key.
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langgraph/errors/GRAPH_RECURSION_LIMIT
+2026-02-01 19:29:11,103 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-01 19:29:11,103 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-01 19:29:13,792 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-01 19:55:28,319 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-01 19:55:28,319 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-01 19:55:30,697 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-01 19:55:43,215 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
+2026-02-01 19:55:43,217 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-01 19:55:43,217 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 19:55:43,219 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 19:55:43,220 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 19:55:45,754 - agents.executoragent - ERROR - 工具 wikipedia_search 返回结果异常: type=<class 'list'>
+2026-02-01 19:55:55,116 - agents.executoragent - ERROR - 工具 exa_context_search 返回结果异常: type=<class 'list'>
+2026-02-01 19:55:58,133 - agents.executoragent - ERROR - 工具 tavily_search 返回结果异常: type=<class 'list'>
+2026-02-01 19:55:58,133 - agents.executoragent - ERROR - 工具 wikipedia_search 执行失败: 工具 wikipedia_search 返回结果类型错误
+2026-02-01 19:55:58,133 - agents.executoragent - ERROR - 工具 exa_context_search 执行失败: 工具 exa_context_search 返回结果类型错误
+2026-02-01 19:55:58,133 - agents.executoragent - ERROR - 工具 tavily_search 执行失败: 工具 tavily_search 返回结果类型错误
+2026-02-01 19:55:58,133 - agents.executoragent - INFO - 搜索完成，共获得 0 条结果
+2026-02-01 19:55:58,134 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 19:56:00,062 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 19:56:00,063 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 19:56:00,068 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 19:56:15,102 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 19:56:15,102 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
+2026-02-01 19:56:15,104 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 19:56:18,569 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 19:56:18,570 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 19:56:18,572 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 19:56:36,000 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 19:56:36,002 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 19:56:36,003 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 19:56:54,585 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
+2026-02-01 19:56:54,585 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆（Short-term memory）管理通常指的是在单次对话或会话中对上下文信息的维护和优化。以下是基于 LangChain 官方文档和最佳实践总结的关键策略：
+
+---
+
+### 1. **动态模型选择（Dynamic Model Selection）**
+根...
+2026-02-01 19:56:54,585 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
+2026-02-01 19:56:54,586 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
+2026-02-01 19:56:54,586 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
+2026-02-01 19:56:54,587 - agents.executoragent - INFO - 去重统计: 去重前=0, 去重后=0, 去重率=0.0%
+2026-02-01 19:56:54,587 - agents.executoragent - INFO - 去重前: 0 篇
+2026-02-01 19:56:54,587 - agents.executoragent - INFO - 去重后: 0 篇
+2026-02-01 19:56:54,587 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
+2026-02-01 19:56:54,587 - agents.executoragent - INFO - 跳过工具 query-docs 的下载结果合并
+2026-02-01 19:56:54,588 - agents.executoragent - WARNING - 没有需要下载的文档
+2026-02-01 19:56:54,588 - agents.executoragent - INFO - executor 完成子问题 'langchain 中短期记忆管理的最佳实践是什么？' 的处理
+2026-02-01 20:36:16,431 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-01 20:36:16,432 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-01 20:36:19,551 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-01 20:36:32,217 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
+2026-02-01 20:36:32,224 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-01 20:36:32,224 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 20:36:32,227 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 20:36:32,230 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 20:36:35,543 - agents.executoragent - WARNING - 工具 wikipedia_search 返回结果缺少字段: {'source', 'title', 'url'}
+2026-02-01 20:36:35,543 - agents.executoragent - INFO - 工具 wikipedia_search 返回 0 条结果
+2026-02-01 20:37:00,526 - agents.executoragent - WARNING - 工具 tavily_search 返回结果缺少字段: {'source', 'title', 'url'}
+2026-02-01 20:37:00,527 - agents.executoragent - INFO - 工具 tavily_search 返回 0 条结果
+2026-02-01 20:37:01,814 - agents.executoragent - WARNING - 工具 exa_context_search 返回结果缺少字段: {'source', 'title', 'url'}
+2026-02-01 20:37:01,814 - agents.executoragent - INFO - 工具 exa_context_search 返回 0 条结果
+2026-02-01 20:37:01,815 - agents.executoragent - INFO - 搜索完成，共获得 0 条结果
+2026-02-01 20:37:01,817 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 20:37:11,072 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 20:37:11,073 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 20:37:11,079 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 20:37:28,834 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 20:37:28,835 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
+2026-02-01 20:37:28,836 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 20:37:30,935 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 20:37:30,936 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 20:37:30,937 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 20:37:45,166 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 20:37:45,168 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 20:37:45,169 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 20:38:02,163 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
+2026-02-01 20:38:02,164 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆（即对话上下文）的管理是构建高效、连贯的 AI 代理的关键。以下是基于 LangChain 官方文档的最佳实践：
+
+---
+
+### **1. 动态选择模型以优化成本和性能**
+根据对话长度动态切换语言模型，可以平衡成本和响应质量：
+- **短对话（<10 条消息...
+2026-02-01 20:38:02,164 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
+2026-02-01 20:38:02,165 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
+2026-02-01 20:38:02,165 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
+2026-02-01 20:38:02,165 - agents.executoragent - INFO - 去重统计: 去重前=0, 去重后=0, 去重率=0.0%
+2026-02-01 20:38:02,165 - agents.executoragent - INFO - 去重前: 0 篇
+2026-02-01 20:38:02,166 - agents.executoragent - INFO - 去重后: 0 篇
+2026-02-01 20:38:02,166 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
+2026-02-01 20:38:02,166 - agents.executoragent - INFO - 跳过工具 query-docs 的下载结果合并
+2026-02-01 20:38:02,166 - agents.executoragent - WARNING - 没有需要下载的文档
+2026-02-01 20:38:02,167 - agents.executoragent - INFO - executor 完成子问题 'langchain 中短期记忆管理的最佳实践是什么？' 的处理
+2026-02-01 21:10:06,655 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-01 21:10:06,657 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-01 21:10:10,277 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-01 21:10:22,557 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
+2026-02-01 21:10:22,559 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-01 21:10:22,559 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 21:10:22,561 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 21:10:22,563 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 21:10:25,518 - agents.executoragent - ERROR - JSON 解析失败: Expecting value: line 1 column 1 (char 0), 原始结果: Error executing wikipedia_search: 'coroutine' object is not iterable
+
+Details:
+Traceback (most recent call last):
+  File "/home/qinshan/widthresearch/core/mcp/search_tool_mcp/mcp_server.py", line 383,
+2026-02-01 21:10:50,100 - agents.executoragent - ERROR - JSON 解析失败: Expecting value: line 1 column 1 (char 0), 原始结果: Error executing tavily_search: Request failed: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+
+Details:
+Traceback (most recent call last):
+  File "/home/qinshan/minicon
+2026-02-01 21:10:51,778 - agents.executoragent - INFO - 工具 exa_context_search 返回 0 条结果
+2026-02-01 21:10:51,778 - agents.executoragent - ERROR - 工具 wikipedia_search 执行失败: 工具 wikipedia_search 返回的 JSON 格式错误
+2026-02-01 21:10:51,779 - agents.executoragent - ERROR - 工具 tavily_search 执行失败: 工具 tavily_search 返回的 JSON 格式错误
+2026-02-01 21:10:51,779 - agents.executoragent - INFO - 搜索完成，共获得 0 条结果
+2026-02-01 21:10:51,780 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 21:10:53,612 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 21:10:53,612 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 21:10:53,619 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 21:11:07,842 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 21:11:07,842 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
+2026-02-01 21:11:07,843 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 21:11:11,832 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 21:11:11,833 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 21:11:11,834 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 21:11:26,250 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 21:11:26,253 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 21:11:26,254 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 21:11:48,329 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
+2026-02-01 21:11:48,330 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆（即对话上下文）的管理是构建高效、连贯的 AI 代理的关键。以下是基于 LangChain 官方文档的最佳实践：
+
+---
+
+### 1. **动态选择模型以优化成本和性能**
+根据对话长度动态切换语言模型，可以在保持性能的同时降低成本：
+- **短对话**（<1...
+2026-02-01 21:11:48,331 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
+2026-02-01 21:11:48,331 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
+2026-02-01 21:11:48,332 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
+2026-02-01 21:11:48,332 - agents.executoragent - INFO - 去重统计: 去重前=0, 去重后=0, 去重率=0.0%
+2026-02-01 21:11:48,332 - agents.executoragent - INFO - 去重前: 0 篇
+2026-02-01 21:11:48,332 - agents.executoragent - INFO - 去重后: 0 篇
+2026-02-01 21:11:48,332 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
+2026-02-01 21:11:48,332 - agents.executoragent - INFO - 跳过工具 query-docs 的下载结果合并
+2026-02-01 21:11:48,332 - agents.executoragent - WARNING - 没有需要下载的文档
+2026-02-01 21:11:48,333 - agents.executoragent - INFO - executor 完成子问题 'langchain 中短期记忆管理的最佳实践是什么？' 的处理
+2026-02-01 21:19:24,044 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-01 21:19:24,045 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-01 21:19:26,161 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-01 21:19:38,897 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
+2026-02-01 21:19:38,899 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-01 21:19:38,899 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 21:19:38,900 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 21:19:38,902 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
+2026-02-01 21:19:41,500 - agents.executoragent - ERROR - JSON 解析失败: Expecting value: line 1 column 1 (char 0), 原始结果: Error executing wikipedia_search: 'coroutine' object is not iterable
+
+Details:
+Traceback (most recent call last):
+  File "/home/qinshan/widthresearch/core/mcp/search_tool_mcp/mcp_server.py", line 383,
+2026-02-01 21:20:06,190 - agents.executoragent - ERROR - JSON 解析失败: Expecting value: line 1 column 1 (char 0), 原始结果: Error executing tavily_search: Request failed: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+
+Details:
+Traceback (most recent call last):
+  File "/home/qinshan/minicon
+2026-02-01 21:20:12,571 - agents.executoragent - INFO - 工具 exa_context_search 返回 0 条结果
+2026-02-01 21:20:12,571 - agents.executoragent - ERROR - 工具 wikipedia_search 执行失败: 工具 wikipedia_search 返回的 JSON 格式错误
+2026-02-01 21:20:12,572 - agents.executoragent - ERROR - 工具 tavily_search 执行失败: 工具 tavily_search 返回的 JSON 格式错误
+2026-02-01 21:20:12,572 - agents.executoragent - INFO - 搜索完成，共获得 0 条结果
+2026-02-01 21:20:12,573 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 21:20:16,317 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 21:20:16,318 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 21:20:16,324 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 21:20:30,859 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 21:20:30,860 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
+2026-02-01 21:20:30,860 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-01 21:20:35,192 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
+2026-02-01 21:20:35,193 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
+2026-02-01 21:20:35,195 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
+2026-02-01 21:20:49,915 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-01 21:20:49,915 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
+2026-02-01 21:20:49,916 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']

@@ -21,7 +21,7 @@
 
 - 初始化parentagnt时候，先初始化多个executoragent，用于并发执行子问题
 
-## search_graph
+## executoragent
 
 ### 1. 核心定位与职责
 
@@ -151,3 +151,9 @@ ExecutorAgent 对不同数据源采用差异化处理策略：
 - pre_questions:通过question_pool构建search目标
 - question_pool:由planner和markdown文件改写获得
 - 过滤：rerank+过滤
+### 工具输出格式
+| 类型编号 | 输入类型              | 说明            | 示例                                             |
+| ---- | ----------------- | ------------- | ---------------------------------------------- |
+| 1    | `str` (JSON List) | JSON 字符串格式的列表 | `'[{"title": "paper1"}, {"title": "paper2"}]'` |
+| 2    | `list[dict]`      | Python 列表内含字典 | `[{"title": "paper1"}, {"title": "paper2"}]`   |
+| 3    | `dict`            | 单个字典（会被包装为列表） | `{"title": "paper1"}`                          |
