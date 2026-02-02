@@ -7,10 +7,14 @@ Paper Search MCP Server
 import asyncio
 import json
 import sys
+import os
+import logging
+from concurrent_log_handler import ConcurrentRotatingFileHandler
 from typing import Any, Dict, List
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import Tool, TextContent
+from core.config import Config
 
 # 导入所有搜索器
 from tools.core_tools.wikipedia_searcher import WikipediaSearcher
@@ -23,6 +27,20 @@ from tools.core_tools.paper import Paper
 
 # 创建 MCP Server 实例
 app = Server("paper-search-server")
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+logger.handlers = []
+handler = ConcurrentRotatingFileHandler(
+    os.path.join(os.path.dirname(__file__), "..", "logfile", "mcp.log"),
+    maxBytes=Config.MAX_BYTES,
+    backupCount=Config.BACKUP_COUNT
+)
+handler.setLevel(logging.DEBUG)
+handler.setFormatter(logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+))
+logger.addHandler(handler)
 
 # 初始化所有搜索器
 wiki_searcher = WikipediaSearcher()
@@ -67,16 +85,6 @@ async def list_tools() -> List[Tool]:
                     "query": {
                         "type": "string",
                         "description": "搜索关键词"
-                    },
-                    "limit": {
-                        "type": "integer",
-                        "description": "返回结果数量限制",
-                        "default": 3
-                    },
-                    "language": {
-                        "type": "string",
-                        "description": "语言代码（en/zh）",
-                        "default": "en"
                     }
                 },
                 "required": ["query"]
@@ -111,11 +119,6 @@ async def list_tools() -> List[Tool]:
                     "query": {
                         "type": "string",
                         "description": "搜索关键词"
-                    },
-                    "limit": {
-                        "type": "integer",
-                        "description": "返回结果数量限制",
-                        "default": 3
                     }
                 },
                 "required": ["query"]
@@ -150,11 +153,6 @@ async def list_tools() -> List[Tool]:
                     "query": {
                         "type": "string",
                         "description": "公司名称或股票代码"
-                    },
-                    "limit": {
-                        "type": "integer",
-                        "description": "返回结果数量限制",
-                        "default": 10
                     }
                 },
                 "required": ["query"]
@@ -189,11 +187,6 @@ async def list_tools() -> List[Tool]:
                     "query": {
                         "type": "string",
                         "description": "公司名称或股票代码"
-                    },
-                    "limit": {
-                        "type": "integer",
-                        "description": "返回结果数量限制",
-                        "default": 10
                     }
                 },
                 "required": ["query"]
@@ -229,11 +222,6 @@ async def list_tools() -> List[Tool]:
                     "query": {
                         "type": "string",
                         "description": "搜索关键词"
-                    },
-                    "limit": {
-                        "type": "integer",
-                        "description": "返回结果数量限制",
-                        "default": 10
                     },
                     "type": {
                         "type": "string",
@@ -275,14 +263,9 @@ async def list_tools() -> List[Tool]:
                         "type": "string",
                         "description": "搜索关键词"
                     },
-                    "limit": {
-                        "type": "integer",
-                        "description": "返回结果数量限制",
-                        "default": 10
-                    },
                     "type": {
                         "type": "string",
-                        "description": "搜索类型（auto/fast/deep）",
+                        "description": "搜索类型（auto/fast/deep）,推荐使用默认",
                         "default": "auto"
                     }
                 },
@@ -315,33 +298,51 @@ async def list_tools() -> List[Tool]:
 async def handle_search(searcher, arguments: Dict) -> List[Dict]:
     """通用搜索处理函数"""
     query = arguments["query"]
-    limit = arguments.get("limit", 10)
-    language = arguments.get("language")  # 仅 Wikipedia 使用
     search_type = arguments.get("type")  # Exa 使用
+    logger.info(
+        f"handle_search: searcher={type(searcher).__name__}, query={query}, search_type={search_type}"
+    )
 
-    # WikipediaSearcher 是异步的，支持 language 参数
-    if language and isinstance(searcher, WikipediaSearcher):
-        papers = await searcher.search(query, limit, language)
+    # WikipediaSearcher 是异步的
+    if isinstance(searcher, WikipediaSearcher):
+        papers = await searcher.search(query)
     # ExaSearcher 是同步的，支持 type 参数
     elif search_type and (isinstance(searcher, ExaSearcherSummary) or isinstance(searcher, ExaSearcherContext)):
-        papers = searcher.search(query, limit, search_type)
+        papers = searcher.search(query, type=search_type)
     # 其他搜索器（Tavily, SEC EDGAR, AkShare）都是同步的
     else:
-        papers = searcher.search(query, limit)
+        papers = searcher.search(query)
 
-    return [paper_to_dict(p) for p in papers]
+    results = [paper_to_dict(p) for p in papers]
+    if results:
+        logger.info(f"handle_search: returned={len(results)}")
+    else:
+        logger.warning(f"handle_search: returned=0 for query={query}")
+    return results
 
 
 async def handle_download(searcher, arguments: Dict) -> List[Dict]:
     """通用下载处理函数（兼容 save_dir 和 save_path 参数）"""
     papers_data = arguments["papers"]
     save_path = arguments.get("save_path") or arguments.get("save_dir")
+    logger.info(
+        f"handle_download: searcher={type(searcher).__name__}, input_papers={len(papers_data)}, "
+        f"save_path={save_path}"
+    )
 
     # 将字典转换回 Paper 对象
     papers = [Paper(**p) for p in papers_data]
-    downloaded = searcher.download(papers, save_path) if save_path else searcher.download(papers)
+    if isinstance(searcher, WikipediaSearcher):
+        downloaded = await searcher.download(papers, save_path) if save_path else await searcher.download(papers)
+    else:
+        downloaded = searcher.download(papers, save_path) if save_path else searcher.download(papers)
 
-    return [paper_to_dict(p) for p in downloaded]
+    results = [paper_to_dict(p) for p in downloaded]
+    if results:
+        logger.info(f"handle_download: downloaded={len(results)}")
+    else:
+        logger.warning("handle_download: downloaded=0")
+    return results
 
 
 # 工具映射字典：工具名 -> (处理函数, 搜索器实例)
@@ -377,13 +378,23 @@ async def call_tool(name: str, arguments: Any) -> List[TextContent]:
     """处理工具调用 - 使用字典映射方式"""
     
     try:
-        if name == "wikipedia_search" and isinstance(arguments, dict):
-            arguments.setdefault("language", "en")
+        logger.info(f"call_tool: name={name}, args={arguments}")
         # 从映射字典中获取处理函数和搜索器
         if name in TOOL_HANDLERS:
             handler_func, searcher = TOOL_HANDLERS[name]
             results = await handler_func(searcher, arguments)
-            return [TextContent(type="text", text=json.dumps(results, ensure_ascii=False, indent=2))]
+            payload = {
+                "source_tool": name,
+                "result_type": "papers",
+                "count": len(results),
+                "papers": results
+            }
+            logger.info(
+                f"call_tool: name={name}, result_type=papers, count={len(results)}"
+            )
+            if results:
+                logger.debug(f"call_tool payload sample: {results[0]}")
+            return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False, indent=2))]
         else:
             return [TextContent(type="text", text=f"Unknown tool: {name}")]
     

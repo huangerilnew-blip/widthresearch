@@ -200,7 +200,7 @@ class ExaSearcherSummary:
             published_date=published_date,
             pdf_url='',
             url=url,
-            source='exa'
+            source='exa_summary'
         )
 
     def search(
@@ -321,12 +321,15 @@ class ExaSearcherSummary:
             try:
                 # 将Paper对象转换为字典格式（用于复用_generate_markdown）
                 # 注意：paper.abstract 存储的是 summary
+                published_date = paper.published_date
+                if hasattr(published_date, "isoformat"):
+                    published_date = published_date.isoformat()
                 result_dict = {
                     'title': paper.title,
                     'url': paper.url,
                     'summary': paper.abstract,  # abstract存储的是summary
                     'text': '',
-                    'published_date': paper.published_date.isoformat() if paper.published_date else '',
+                    'published_date': published_date or '',
                     'author': ''
                 }
 

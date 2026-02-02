@@ -16,7 +16,7 @@ SEC EDGAR 公司财务报告检索器
     
     async def main():
         searcher = SECEdgarSearcher()
-        papers = await searcher.search("AAPL", limit=1)
+        papers = await searcher.search("AAPL")
         for paper in papers:
             print(f"{paper.title}")
         papers = await searcher.download(papers)
@@ -587,17 +587,17 @@ class SECEdgarSearcher:
             extra=extra
         )
 
-    async def search(self, query: str, limit: int = 5) -> List[Paper]:
+    async def search(self, query: str) -> List[Paper]:
         """
         搜索公司并提取关键财务信息
         
         Args:
             query: 公司名称或股票代码
-            limit: 最大返回数量（目前每次查询返回一家公司）
-            
+        
         Returns:
             List[Paper]: 包含关键财务信息的 Paper 对象列表
         """
+        max_results = Config.SEC_NUM
         papers = []
         
         async with httpx.AsyncClient(timeout=60.0) as client:
@@ -656,7 +656,7 @@ class SECEdgarSearcher:
             )
             papers.append(paper)
         
-        return papers[:limit]
+        return papers[:max_results]
 
 
     def _sanitize_filename(self, filename: str) -> str:

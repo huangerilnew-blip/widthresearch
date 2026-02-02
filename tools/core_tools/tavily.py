@@ -28,14 +28,16 @@ class TavilySearch:
             raise ValueError("TAVILY_API_KEY 环境变量未设置")
 
         self.client = TavilyClient(api_key=api_key)
-
-    def search(self, query: str, max_results: int = Config.TAVILY_NUM) -> List[Paper]:
+        if Config.EXA_NUM:
+            self.exa_num = Config.EXA_NUM
+        else:
+            self.exa_num = 5
+    def search(self, query: str) -> List[Paper]:
         """
         使用 Tavily 搜索并返回 Paper 对象列表
 
         Args:
-            query: 搜索查询
-            max_results: 最大结果数
+            query: 搜索查询字符串
 
         Returns:
             List[Paper]: 过滤后的 Paper 列表（score >= 0.8）
@@ -45,7 +47,7 @@ class TavilySearch:
             query=query,
             search_depth="advanced",
             topic="general",
-            max_results=max_results,
+            max_results=self.exa_num,
             include_answer=False,
             include_raw_content="markdown",
             include_images=False,
@@ -59,7 +61,7 @@ class TavilySearch:
         for result in response.get('results', []):
             # 检查 score 并过滤
             score = result.get('score')
-            if score is not None and score < 0.8:
+            if score is not None and score < Config.TAVILY_FLOOR_SCORE:
                 continue  # 过滤低质量结果
 
             # 转换为 Paper 对象
@@ -109,8 +111,9 @@ class TavilySearch:
                     print(f"文件已存在，跳过下载: {paper.title} -> {file_path}")
                     if paper.extra is None:
                         paper.extra = {}
-                paper.extra["saved_path"] = file_path
-                continue
+                    paper.extra["save_path"] = file_path
+                    saved_papers.append(paper)
+                    continue
                 # abstract 中保存的是 raw_content
                 markdown_content = paper.abstract
                 # 写入文件
@@ -188,7 +191,7 @@ if __name__ == "__main__":
         print(f"查询: {query}")
         print(f"最大结果数: 5")
 
-        papers = tavily_search.search(query, max_results=5)
+        papers = tavily_search.search(query)
 
         print(f"\n搜索结果: 找到 {len(papers)} 篇高质量文档 (score >= 0.8)\n")
 

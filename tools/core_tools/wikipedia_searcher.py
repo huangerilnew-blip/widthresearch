@@ -31,7 +31,14 @@ class WikipediaSearcher:
         self.headers = {
             "User-Agent": "PaperSearchBot/1.0 (https://github.com/paper-search; contact@example.com)"
         }
-    
+        if Config.LANGUAGE:
+            self.language = Config.LANGUAGE
+        else:
+            self.language = "en"
+        if Config.WIKI_NUM:
+            self.wiki_num = Config.WIKI_NUM
+        else:
+            self.wiki_num = 5
     def _get_api_url(self, language: str = None) -> str:
         """获取 Wikipedia API URL"""
         lang = language or self.language
@@ -134,14 +141,13 @@ class WikipediaSearcher:
             extra=extra
         )
 
-    async def search(self, query: str, limit: int =Config.WIKI_NUM, language: str = Config.WIKI_LANGUAGE) -> List[Paper]:
+    async def search(self, query: str) -> List[Paper]:
         """
         根据关键词搜索 Wikipedia 词条（异步并发获取内容）
         
         Args:
             query: 搜索关键词
-            limit: 最大返回数量，默认3
-            language: 语言代码，覆盖初始化时的设置
+
             
         Returns:
             List[Paper]: Paper 对象列表
@@ -150,10 +156,10 @@ class WikipediaSearcher:
             return []
         
         query = query.strip()
-        lang = language or self.language
+        lang =  self.language
         
         print(f"正在搜索 Wikipedia ({lang}): {query}")
-        search_results = await self._search_articles(query, limit, lang)
+        search_results = await self._search_articles(query, self.wiki_num, lang)
         
         if not search_results:
             print(f"未找到相关词条: {query}")
@@ -279,7 +285,7 @@ async def main():
     # 示例 1: 英文 Wikipedia 搜索
     print("\n【示例 1】英文 Wikipedia 搜索")
     print("-" * 40)
-    papers = await searcher.search("人工智能中美差距情况", limit=2)
+    papers = await searcher.search("人工智能中美差距情况")
     
     if papers:
         for paper in papers:
@@ -290,7 +296,7 @@ async def main():
     # 示例 2: 中文 Wikipedia 搜索
     print("\n【示例 2】中文 Wikipedia 搜索")
     print("-" * 40)
-    zh_papers = await searcher.search("人工智能", limit=2, language="zh")
+    zh_papers = await searcher.search("人工智能")
     
     if zh_papers:
         for paper in zh_papers:

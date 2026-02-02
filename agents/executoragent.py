@@ -15,6 +15,7 @@ import logging, json, asyncio, os
 from concurrent_log_handler import ConcurrentRotatingFileHandler
 from core.mcp.tools import get_tools
 from dotenv import load_dotenv
+from core.mcp.tools import get_tools
 load_dotenv()
 # 设置日志基本配置，级别为DEBUG或INFO
 logger = logging.getLogger(__name__)
@@ -93,7 +94,7 @@ class ExecutorAgent:
     async def _get_download_tools(self) -> list[BaseTool]:
         """获取下载工具（只包含 download 类工具）"""
         if self.download_tools is None:
-            from core.tools import get_tools
+
             self.download_tools = await get_tools(tool_type="download")
         return self.download_tools
     
@@ -132,6 +133,9 @@ class ExecutorAgent:
             raise TypeError(f"工具 {tool.name} 返回结果类型错误")
 
         papers = None
+        source_tool = None
+        count = None
+        parsed_content = result
 
         if isinstance(result, str):
             if result.startswith("Unknown tool:"):
@@ -143,30 +147,17 @@ class ExecutorAgent:
                 raise RuntimeError(f"MCP 工具执行错误: {tool.name}")
 
             try:
-                papers = json.loads(result)
+                parsed_content = json.loads(result)
             except json.JSONDecodeError as e:
                 logger.error(f"JSON 解析失败: {e}, 原始结果: {result[:200]}")
                 raise ValueError(f"工具 {tool.name} 返回的 JSON 格式错误")
-        elif isinstance(result, list):
-            if result and isinstance(result[0], dict) and "text" in result[0]:
-                text_content = result[0].get("text", "")
-                try:
-                    papers = json.loads(text_content)
-                except json.JSONDecodeError as e:
-                    logger.error(f"JSON 解析失败: {e}, 原始结果: {text_content[:200]}")
-                    raise ValueError(f"工具 {tool.name} 返回的 JSON 格式错误")
-            else:
-                papers = result
-        elif isinstance(result, dict):
-            if isinstance(result.get("results"), list):
-                papers = result["results"]
-            elif isinstance(result.get("papers"), list):
-                papers = result["papers"]
-            else:
-                papers = [result]
+        elif isinstance(result, (list, dict)):
+            parsed_content = self._parse_tool_content(result)
         else:
             logger.error(f"工具 {tool.name} 返回结果异常: type={type(result)}")
             raise TypeError(f"工具 {tool.name} 返回结果类型错误")
+
+        papers, source_tool, count = self._extract_papers_payload(parsed_content)
 
         if not isinstance(papers, list):
             logger.error(f"工具 {tool.name} 返回的数据不是列表: {type(papers)}")
@@ -185,7 +176,12 @@ class ExecutorAgent:
                 continue
             filtered_papers.append(paper)
 
-        logger.info(f"工具 {tool.name} 返回 {len(filtered_papers)} 条结果")
+        log_source = source_tool or tool.name
+        result_count = count if count is not None else len(filtered_papers)
+        if result_count:
+            logger.info(f"{log_source} 返回了 {result_count} 条数据")
+        else:
+            logger.warning(f"{log_source} 返回了 0 条数据")
         return filtered_papers
 
     def _parse_tool_args(self, tool_args: Any) -> Dict[str, Any]:
@@ -219,7 +215,37 @@ class ExecutorAgent:
                 return json.loads(content)
             except json.JSONDecodeError:
                 return content
+        if isinstance(content, dict) and "text" in content:
+            return self._parse_tool_content(content.get("text"))
+        if isinstance(content, list):
+            if content and all(isinstance(item, dict) and "text" in item for item in content):
+                if len(content) == 1:
+                    return self._parse_tool_content(content[0].get("text"))
+                parsed_items = [self._parse_tool_content(item.get("text")) for item in content]
+                return parsed_items
         return content
+
+    def _extract_papers_payload(self, parsed_content: Any) -> tuple[list[dict], str | None, int | None]:
+        source_tool = None
+        count = None
+        if isinstance(parsed_content, dict):
+            source_tool = parsed_content.get("source_tool")
+            count_value = parsed_content.get("count")
+            count = count_value if isinstance(count_value, int) else None
+            papers = parsed_content.get("papers")
+            if isinstance(papers, list):
+                return papers, source_tool, count
+            results = parsed_content.get("results")
+            if isinstance(results, list):
+                return results, source_tool, count
+            return [parsed_content], source_tool, count
+
+        if isinstance(parsed_content, list):
+            if len(parsed_content) == 1 and isinstance(parsed_content[0], dict):
+                return self._extract_papers_payload(parsed_content[0])
+            return parsed_content, None, None
+
+        return [], None, None
 
     def _ensure_tool_message_name(self, tool_msg: ToolMessage, tool_name: str) -> ToolMessage:
         if tool_name and not getattr(tool_msg, "name", None):
@@ -253,10 +279,12 @@ class ExecutorAgent:
 
             metadata.update({
                 "tool": "query-docs",
-                "source": "context7"
+                "source": "context7_query_docs"
             })
             if tool_args.get("library_id"):
                 metadata["library_id"] = tool_args["library_id"]
+            if tool_args.get("libraryId"):
+                metadata["library_id"] = tool_args["libraryId"]
             if tool_args.get("query"):
                 metadata["query"] = tool_args["query"]
 
@@ -308,9 +336,14 @@ class ExecutorAgent:
             return self._build_grep_query_records(content, tool_args)
         return []
 
-    def _persist_context7_grep_results(self, tool_name: str, content: Any, tool_args: Dict[str, Any]) -> None:
+    def _persist_context7_grep_results(
+        self,
+        tool_name: str,
+        content: Any,
+        tool_args: Dict[str, Any] | None = None
+    ) -> None:
         parsed_content = self._parse_tool_content(content)
-        records = self._build_context7_grep_records(tool_name, parsed_content, tool_args)
+        records = self._build_context7_grep_records(tool_name, parsed_content, tool_args or {})
         if not records:
             return
 
@@ -503,9 +536,6 @@ class ExecutorAgent:
                 tool_msg = self._ensure_tool_message_name(tool_msg, tool_name)
                 normalized_tool_messages.append(tool_msg)
 
-                if tool_name in {"query-docs", "grep_query"}:
-                    self._persist_context7_grep_results(tool_name, tool_msg.content, tool_args)
-
                 try:
                     content = json.loads(tool_msg.content) if isinstance(tool_msg.content, str) else tool_msg.content
                     if isinstance(content, list):
@@ -656,6 +686,11 @@ class ExecutorAgent:
         try:
             search_results = state.get("search_results", [])
             optional_search_results = state.get("optional_search_results", [])
+            sub_url_pool = state.get("sub_url_pool", [])
+            if not sub_url_pool:
+                logger.warning(
+                    f"处理{state.get('user_query')}----{state.get('sub_query')}时sub_url_pool 为空"
+                )
         except Exception as e:
             logger.error(f"ExecutorAgent clean_node 获取状态失败: {e}")
             raise e
@@ -687,50 +722,74 @@ class ExecutorAgent:
                     source = "context7"  # resolve-library-id 也属于 Context7
                     logger.debug(f"识别到 resolve-library-id 工具，添加 source='context7'")
 
-                # 解析 ToolMessage.content
-                if isinstance(content, str):
-                    papers = json.loads(content)
-                elif isinstance(content, list):
-                    papers = content
-                else:
-                    logger.warning(f"ToolMessage content 类型异常: {type(content)}")
+                parsed_content = self._parse_tool_content(content)
+                papers, _, _ = self._extract_papers_payload(parsed_content)
+                if not isinstance(papers, list):
+                    logger.warning(f"ToolMessage content 类型异常: {type(papers)}")
                     continue
 
                 # 为每个 paper 添加 source 字段（如果工具级别有 source）
-                if isinstance(papers, list):
-                    for paper in papers:
-                        if source and not paper.get("source"):
-                            paper["source"] = source
-                    optional_papers.extend(papers)
-                    logger.info(f"从工具 {tool_name} 提取 {len(papers)} 条结果，source={source}")
+                for paper in papers:
+                    if not isinstance(paper, dict):
+                        continue
+                    if source and not paper.get("source"):
+                        paper["source"] = source
+                    optional_papers.append(paper)
+                logger.info(f"从工具 {tool_name} 提取 {len(papers)} 条结果，source={source}")
 
             except (json.JSONDecodeError, AttributeError) as e:
                 logger.warning(f"解析 optional_search_results 失败: {e}")
 
+        # 先基于 sub_url_pool 过滤 wiki/tavily/exa/optional
+        pool_set = set(sub_url_pool or [])
+        filtered_search_results = []
+        filtered_optional_papers = []
+        for paper in search_results:
+            source = paper.get("source", "").lower()
+            if source in {"wikipedia", "tavily"} or "exa" in source:
+                url = paper.get("url")
+                if url and url in pool_set:
+                    continue
+                if url:
+                    pool_set.add(url)
+            filtered_search_results.append(paper)
+
+        for paper in optional_papers:
+            source = paper.get("source", "").lower()
+            if source in {"sec_edgar", "akshare", "optional"}:
+                url = paper.get("url")
+                if url and url in pool_set:
+                    continue
+                if url:
+                    pool_set.add(url)
+            filtered_optional_papers.append(paper)
+
         # 应用去重逻辑（优先级：wiki > tavily > exa > optional）
         deduplicated_results = self._deduplicate_with_priority(
-            search_results, optional_papers
+            filtered_search_results, filtered_optional_papers
         )
 
         logger.info(f"去重前: {len(search_results) + len(optional_papers)} 篇")
         logger.info(f"去重后: {len(deduplicated_results)} 篇")
 
-        # 更新 url_pool
-        url_pool = []
-        for paper in deduplicated_results:
-            url = paper.get("url")
-            if url:
-                url_pool.append(url)
-
         return {
             "deduplicated_results": deduplicated_results,
-            "url_pool": url_pool
+            "sub_url_pool": list(pool_set)
         }
     
     async def _download_node(self, state: ExecutorState) -> dict:
         """下载节点：下载 deduplicated_results 和 optional_search_results 中的文档"""
         deduplicated_results = state.get("deduplicated_results", [])
         optional_search_results = state.get("optional_search_results", [])
+
+        allowed_sources = {
+            "wikipedia",
+            "tavily",
+            "exa_context",
+            "exa_summary",
+            "sec_edgar",
+            "akshare"
+        }
 
         # 合并所有需要下载的文档
         all_papers = []
@@ -746,21 +805,28 @@ class ExecutorAgent:
                 try:
                     # tool_msg 是 ToolMessage 对象
                     tool_name = getattr(tool_msg, "name", "") or ""
-                    if tool_name in {"query-docs", "grep_query", "resolve-library-id"}:
+                    if tool_name in {"query-docs", "grep_query"}:
+                        self._persist_context7_grep_results(tool_name, tool_msg.content)
+                        logger.info(f"已将工具 {tool_name} 结果追加写入 context7_grep.json")
+                        continue
+                    if tool_name == "resolve-library-id":
                         logger.info(f"跳过工具 {tool_name} 的下载结果合并")
                         continue
-                    content = tool_msg.content
-                    
-                    if isinstance(content, str):
-                        papers = json.loads(content)
-                    elif isinstance(content, list):
-                        papers = content
-                    else:
+
+                    parsed_content = self._parse_tool_content(tool_msg.content)
+                    papers, _, _ = self._extract_papers_payload(parsed_content)
+                    if not isinstance(papers, list):
                         continue
-                    
-                    if isinstance(papers, list):
-                        all_papers.extend(papers)
-                        logger.info(f"从 optional_search_results 的工具 {tool_msg.name} 获取 {len(papers)} 篇文档")
+
+                    filtered_papers = [
+                        paper for paper in papers
+                        if isinstance(paper, dict) and paper.get("source") in allowed_sources
+                    ]
+                    if filtered_papers:
+                        all_papers.extend(filtered_papers)
+                        logger.info(
+                            f"从 optional_search_results 的工具 {tool_msg.name} 获取 {len(filtered_papers)} 篇文档"
+                        )
                 except (json.JSONDecodeError, AttributeError) as e:
                     logger.warning(f"解析 optional_search_results 失败: {e}")
                     continue
@@ -777,7 +843,11 @@ class ExecutorAgent:
         # 按 source 分组
         papers_by_source = {}
         for paper in all_papers:
+            if not isinstance(paper, dict):
+                continue
             source = paper.get("source", "unknown")
+            if source not in allowed_sources:
+                continue
             if source not in papers_by_source:
                 papers_by_source[source] = []
             papers_by_source[source].append(paper)
@@ -792,27 +862,26 @@ class ExecutorAgent:
                 download_tool = next((t for t in download_tools if download_tool_name in t.name.lower()), None)
 
                 if download_tool:
+                    logger.info(f"使用下载工具 {download_tool.name} 处理 {source} 数据")
                     result = await download_tool.ainvoke({
                         "papers": papers,
                         "save_path": Config.DOC_SAVE_PATH
                     })
 
                     if result:
-                        if isinstance(result, str):
-                            try:
-                                downloaded = json.loads(result)
-                            except json.JSONDecodeError as e:
-                                logger.error(f"解析下载结果 JSON 失败: {e}")
-                                return []
-                        elif isinstance(result, list):
-                            downloaded = result
-                        else:
-                            logger.warning(f"未知的下载结果类型: {type(result)}")
-                            return []
-
+                        logger.info(f"下载工具 {download_tool.name} 返回类型: {type(result)}")
+                        parsed_content = self._parse_tool_content(result)
+                        if isinstance(parsed_content, dict):
+                            logger.info(
+                                f"下载解析 payload: keys={list(parsed_content.keys())}, "
+                                f"count={parsed_content.get('count')}"
+                            )
+                        downloaded, _, _ = self._extract_papers_payload(parsed_content)
                         if isinstance(downloaded, list):
                             logger.info(f"成功下载 {len(downloaded)} 篇 {source} 文档")
                             return downloaded
+                        logger.warning(f"未知的下载结果类型: {type(parsed_content)}")
+                        return []
                 else:
                     logger.warning(f"未找到 {source} 的下载工具")
 
@@ -873,7 +942,7 @@ class ExecutorAgent:
         logger.info("完成 executor_graph 的初始化构造")
         return graph
     
-    async def invoke(self, query: str, thread_id: str,user_id:str, user_query: str = "") -> Dict:
+    async def invoke(self, query: str, thread_id: str,user_id:str, sub_url_pool:list[str],user_query: str ) -> Dict:
         """执行单个子问题的完整处理流程"""
         # 确保异步资源已初始化
         await self._ensure_initialized()
@@ -888,13 +957,13 @@ class ExecutorAgent:
             "deduplicated_results": [],
             "downloaded_papers": [],
             "executor_result": {},
-            "url_pool": []
+            "sub_url_pool": sub_url_pool
         }
         
         try:
             result = await self.graph.ainvoke(initial_state, config)
             logger.info(f"executor 完成子问题 '{query}' 的处理")
-            return result["executor_result"]
+            return result
         except Exception as e:
             logger.error(f"executor 处理子问题 '{query}' 时出错: {e}")
             import traceback

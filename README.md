@@ -157,3 +157,17 @@ ExecutorAgent 对不同数据源采用差异化处理策略：
 | 1    | `str` (JSON List) | JSON 字符串格式的列表 | `'[{"title": "paper1"}, {"title": "paper2"}]'` |
 | 2    | `list[dict]`      | Python 列表内含字典 | `[{"title": "paper1"}, {"title": "paper2"}]`   |
 | 3    | `dict`            | 单个字典（会被包装为列表） | `{"title": "paper1"}`                          |
+### searcher类工具返回格式
+
+- [TextContent]
+  - text的结构
+
+```
+{
+	source_tool: <tool_name>,
+	result_type: papers,
+	papers: [ ... ],
+	count: <int>
+}                                                 
+```
+

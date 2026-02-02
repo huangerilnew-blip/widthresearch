@@ -14,7 +14,7 @@ AkShare 是一个开源的 Python 财经数据接口库，提供股票、期货�
     
     async def main():
         searcher = AkShareSearcher()
-        papers = await searcher.search("603777", data_type="news", limit=10)
+        papers = await searcher.search("603777", data_type="news")
         papers = await searcher.download(papers)
     
     asyncio.run(main())
@@ -57,7 +57,6 @@ class AkShareSearcher:
     async def search(
         self,
         symbol: str,
-        limit: int ,
         data_type: str = "news"
     ) -> List[Paper]:
         """
@@ -67,12 +66,11 @@ class AkShareSearcher:
             symbol: 股票代码或关键词，如 "603777"
             data_type: 数据类型
                 - "news": 个股新闻 (stock_news_em)
-            limit: 结果数量限制
-            
+        
         Returns:
             List[Paper]: 解析后的 Paper 对象列表
         """
-        max_results = limit or self.max_results
+        max_results = self.max_results
         
         print(f"正在使用 AkShare 获取数据: {symbol} (类型: {data_type})...")
         

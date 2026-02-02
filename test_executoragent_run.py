@@ -3,8 +3,8 @@ import asyncio
 from agents.executoragent import ExecutorAgent
 
 
-QUERY = "langchain 中短期记忆管理的最佳实践是什么？"
-USER_QUERY = "请提供有关 langchain 短期记忆管理的建议。"
+QUERY = "人工智能的发展历史？"
+USER_QUERY = "介绍一下人工智能。"
 THREAD_ID = "test_thread_001"
 USER_ID = "user_001"
 

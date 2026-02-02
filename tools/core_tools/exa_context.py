@@ -200,7 +200,7 @@ class ExaSearcherContext:
             published_date=published_date,
             pdf_url='',
             url=url,
-            source='exa'
+            source='exa_context'
         )
 
     def search(
@@ -324,12 +324,15 @@ class ExaSearcherContext:
         for i, paper in enumerate(papers, 1):
             try:
                 # 将Paper对象转换为字典格式（用于复用_generate_markdown）
+                published_date = paper.published_date
+                if hasattr(published_date, "isoformat"):
+                    published_date = published_date.isoformat()
                 result_dict = {
                     'title': paper.title,
                     'url': paper.url,
                     'context': paper.abstract,  # abstract存储的是context
                     'text': '',
-                    'published_date': paper.published_date.isoformat() if paper.published_date else '',
+                    'published_date': published_date or '',
                     'author': ''
                 }
 
