@@ -9,6 +9,7 @@ import json
 import sys
 import os
 import logging
+from datetime import datetime
 from concurrent_log_handler import ConcurrentRotatingFileHandler
 from typing import Any, Dict, List
 from mcp.server import Server
@@ -331,7 +332,25 @@ async def handle_download(searcher, arguments: Dict) -> List[Dict]:
     )
 
     # 将字典转换回 Paper 对象
-    papers = [Paper(**p) for p in papers_data]
+    normalized_papers = []
+    for paper in papers_data:
+        if isinstance(paper, dict) and isinstance(paper.get("published_date"), str):
+            published_date = paper.get("published_date", "").strip()
+            if not published_date:
+                paper["published_date"] = None
+            else:
+                try:
+                    paper["published_date"] = datetime.fromisoformat(
+                        published_date.replace("Z", "+00:00")
+                    )
+                except ValueError:
+                    logger.warning(
+                        "handle_download: invalid published_date '%s'",
+                        published_date
+                    )
+                    paper["published_date"] = None
+        normalized_papers.append(paper)
+    papers = [Paper(**p) for p in normalized_papers]
     if isinstance(searcher, WikipediaSearcher):
         downloaded = await searcher.download(papers, save_path) if save_path else await searcher.download(papers)
     else:
@@ -389,6 +408,9 @@ async def call_tool(name: str, arguments: Any) -> List[TextContent]:
                 "count": len(results),
                 "papers": results
             }
+            logger.info(
+                f"call_tool payload: source_tool={name}, result_type=papers, count={len(results)}"
+            )
             logger.info(
                 f"call_tool: name={name}, result_type=papers, count={len(results)}"
             )

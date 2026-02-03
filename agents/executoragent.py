@@ -8,7 +8,8 @@ from core.mcp.context7_grep import Context7GrepMCPClient
 from typing import TypedDict, Annotated, List, Dict, Any
 from langgraph.graph import add_messages, StateGraph, START, END, state
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain_core.messages import AnyMessage, AIMessage, HumanMessage,ToolMessage
+from langchain_core.messages import AnyMessage, AIMessage, HumanMessage, ToolMessage
+from mcp.types import TextContent
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from psycopg_pool import AsyncConnectionPool
 import logging, json, asyncio, os
@@ -210,6 +211,8 @@ class ExecutorAgent:
         return tool_call_info
 
     def _parse_tool_content(self, content: Any) -> Any:
+        if isinstance(content, TextContent):
+            return self._parse_tool_content(content.text)
         if isinstance(content, str):
             try:
                 return json.loads(content)
@@ -218,6 +221,11 @@ class ExecutorAgent:
         if isinstance(content, dict) and "text" in content:
             return self._parse_tool_content(content.get("text"))
         if isinstance(content, list):
+            if content and all(isinstance(item, TextContent) for item in content):
+                if len(content) == 1:
+                    return self._parse_tool_content(content[0].text)
+                parsed_items = [self._parse_tool_content(item.text) for item in content]
+                return parsed_items
             if content and all(isinstance(item, dict) and "text" in item for item in content):
                 if len(content) == 1:
                     return self._parse_tool_content(content[0].get("text"))
@@ -352,6 +360,45 @@ class ExecutorAgent:
         with open(file_path, "a", encoding="utf-8") as file:
             for record in records:
                 file.write(json.dumps(record, ensure_ascii=True) + "\n")
+
+    def _truncate_tool_content(self, content: Any, limit: int = 100) -> str:
+        if isinstance(content, str):
+            text = content
+        elif isinstance(content, (dict, list)):
+            text = json.dumps(content, ensure_ascii=True)
+        else:
+            text = str(content)
+        return text[:limit]
+
+    def _compress_executor_messages(self, messages: list[AnyMessage]) -> list[AnyMessage]:
+        compressed_messages = []
+        for message in messages or []:
+            if isinstance(message, ToolMessage):
+                compressed_messages.append(
+                    ToolMessage(
+                        content=self._truncate_tool_content(message.content),
+                        tool_call_id=message.tool_call_id,
+                        name=getattr(message, "name", None)
+                    )
+                )
+            else:
+                compressed_messages.append(message)
+        return compressed_messages
+
+    def _count_required_tool_results(self, results: Any, required_tools: List[str]) -> List[Dict[str, int]]:
+        counts = {tool: 0 for tool in required_tools}
+        if isinstance(results, list):
+            for item in results:
+                if not isinstance(item, dict):
+                    continue
+                source = str(item.get("source", "")).lower()
+                if "wikipedia" in source:
+                    counts["wikipedia_search"] += 1
+                elif "tavily" in source:
+                    counts["tavily_search"] += 1
+                elif "exa" in source:
+                    counts["exa_context_search"] += 1
+        return [{tool: counts[tool]} for tool in required_tools]
     
     def _crop_observation(self, tool_messages: List[ToolMessage]) -> List[ToolMessage]:
         """
@@ -870,11 +917,19 @@ class ExecutorAgent:
 
                     if result:
                         logger.info(f"下载工具 {download_tool.name} 返回类型: {type(result)}")
+                        if isinstance(result, list) and result:
+                            logger.info(
+                                f"下载工具 {download_tool.name} 首项类型: {type(result[0])}"
+                            )
                         parsed_content = self._parse_tool_content(result)
                         if isinstance(parsed_content, dict):
                             logger.info(
                                 f"下载解析 payload: keys={list(parsed_content.keys())}, "
                                 f"count={parsed_content.get('count')}"
+                            )
+                        else:
+                            logger.warning(
+                                f"下载解析 payload 失败，返回类型: {type(parsed_content)}"
                             )
                         downloaded, _, _ = self._extract_papers_payload(parsed_content)
                         if isinstance(downloaded, list):
@@ -963,7 +1018,27 @@ class ExecutorAgent:
         try:
             result = await self.graph.ainvoke(initial_state, config)
             logger.info(f"executor 完成子问题 '{query}' 的处理")
-            return result
+            required_tools = self._get_required_tools()
+            compressed_state = dict(result)
+            compressed_state["executor_messages"] = self._compress_executor_messages(
+                result.get("executor_messages", [])
+            )
+            compressed_state["user_query"] = user_query
+            compressed_state["sub_query"] = query
+            compressed_state["optional_search_results"] = []
+            compressed_state["search_results"] = self._count_required_tool_results(
+                result.get("search_results", []),
+                required_tools
+            )
+            compressed_state["deduplicated_results"] = self._count_required_tool_results(
+                result.get("deduplicated_results", []),
+                required_tools
+            )
+            compressed_state["downloaded_papers"] = self._count_required_tool_results(
+                result.get("downloaded_papers", []),
+                required_tools
+            )
+            return compressed_state
         except Exception as e:
             logger.error(f"executor 处理子问题 '{query}' 时出错: {e}")
             import traceback

@@ -64,7 +64,7 @@ class Config:
     MINERU_BASE_URL = "http://localhost:8080"  # MinerU 服务地址
     VLLM_BASE_URL =  "http://localhost:8081"  # vllm Embedding 服务地址
     EMBEDDING_MODEL_NAME = "BAAI/bge-large-zh-v1.5"  # Embedding 模型名称
-
+    DOC_FILTER=0.8
 
 def get_rotating_file_handler(config=None):
     """

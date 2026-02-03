@@ -343,7 +343,8 @@ class ExaSearcherContext:
                     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
                     title = f"无标题_{timestamp}"
 
-                filename = f"exa_{self._sanitize_filename(title)}.md"
+                short_title = title[:10]
+                filename = f"exa_{self._sanitize_filename(short_title)}.md"
                 file_path = os.path.join(save_path, filename)
                 if os.path.exists(file_path):
                     print(f"文件已存在，跳过保存: {paper.title} -> {file_path}")

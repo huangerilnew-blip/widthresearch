@@ -1,1249 +1,287 @@
-2026-01-21 13:09:44,507 - core.llms - INFO - 成功初始化 qwen LLM
-2026-01-21 13:09:44,524 - agents.agents - INFO - 完成planner_graph的初始化构造
-2026-01-21 13:09:44,588 - core.llms - INFO - 成功初始化 qwen LLM
-2026-01-21 13:10:18,264 - core.llms - INFO - 成功初始化 qwen LLM
-2026-01-21 13:10:18,279 - agents.agents - INFO - 完成planner_graph的初始化构造
-2026-01-21 13:10:18,338 - core.llms - INFO - 成功初始化 qwen LLM
-2026-01-21 13:11:23,680 - core.llms - INFO - 成功初始化 qwen LLM
-2026-01-21 13:11:23,696 - agents.agents - INFO - 完成planner_graph的初始化构造
-2026-01-21 13:11:23,758 - core.llms - INFO - 成功初始化 qwen LLM
-2026-01-21 13:11:23,811 - core.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8080
-2026-01-21 13:17:04,192 - core.llms - INFO - 成功初始化 qwen LLM
-2026-01-21 13:17:04,206 - agents.agents - INFO - 完成planner_graph的初始化构造
-2026-01-21 13:17:04,264 - core.llms - INFO - 成功初始化 qwen LLM
-2026-01-21 13:17:04,315 - core.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8080
-2026-01-21 13:20:23,446 - core.llms - INFO - 成功初始化 qwen LLM
-2026-01-21 13:20:23,461 - agents.agents - INFO - 完成planner_graph的初始化构造
-2026-01-21 13:24:54,460 - core.llms - INFO - 成功初始化 qwen LLM
-2026-01-21 13:24:54,475 - agents.agents - INFO - 完成planner_graph的初始化构造
-2026-01-21 15:47:11,924 - core.vector_store_manager - INFO - 初始化本地 Embedding 模型: BAAI/bge-large-zh-v1.5
-2026-01-21 15:47:11,929 - core.vector_store_manager - INFO - vllm 服务地址: http://localhost:8001
-2026-01-21 15:47:48,251 - core.vector_store_manager - INFO - 初始化本地 Embedding 模型: BAAI/bge-large-zh-v1.5
-2026-01-21 15:47:48,254 - core.vector_store_manager - INFO - vllm 服务地址: http://localhost:8001
-2026-01-21 15:47:48,737 - core.vector_store_manager - INFO - 本地 Embedding 模型初始化完成（实际模型: BAAI/bge-large-zh-v1.5）
-2026-01-21 15:47:48,739 - core.vector_store_manager - INFO - 初始化 VectorStoreManager: persist_dir=vector_storage, collection=base_collection
-2026-01-21 15:52:24,048 - core.llms - INFO - 成功初始化 qwen LLM
-2026-01-21 15:52:24,053 - __main__ - INFO - 初始化 DocumentProcessor: mineru_url=http://localhost:8000, max_chunk_size=1000
-2026-01-21 15:58:24,976 - core.llms - INFO - 成功初始化 qwen LLM
-2026-01-21 15:58:25,032 - core.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8080
-2026-01-21 15:58:25,035 - __main__ - DEBUG - 创建 ExecutorAgent 1/3
-2026-01-21 15:58:25,089 - core.llms - INFO - 成功初始化 qwen LLM
-2026-01-21 15:58:25,142 - core.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8080
-2026-01-21 15:58:25,143 - __main__ - DEBUG - 创建 ExecutorAgent 2/3
-2026-01-21 15:58:25,197 - core.llms - INFO - 成功初始化 qwen LLM
-2026-01-21 15:58:25,248 - core.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8080
-2026-01-21 15:58:25,249 - __main__ - DEBUG - 创建 ExecutorAgent 3/3
-2026-01-21 15:58:25,250 - __main__ - INFO - 成功创建 3 个 ExecutorAgent 实例
-2026-01-21 15:58:25,251 - __main__ - INFO - 初始化 ExecutorAgentPool: pool_size=3, model=qwen
-2026-01-21 16:25:40,757 - core.llms - ERROR - LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:25:40,768 - core.llms - WARNING - 使用默认配置重试: LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:25:41,068 - core.llms - ERROR - LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:25:41,071 - core.llms - WARNING - 使用默认配置重试: LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:25:41,181 - core.llms - ERROR - LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:25:41,183 - core.llms - WARNING - 使用默认配置重试: LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:25:41,272 - core.vector_store_manager - INFO - 初始化本地 Embedding 模型: BAAI/bge-large-zh-v1.5
-2026-01-21 16:25:41,274 - core.vector_store_manager - INFO - vllm 服务地址: http://localhost:8001
-2026-01-21 16:25:41,330 - core.vector_store_manager - INFO - 本地 Embedding 模型初始化完成（实际模型: BAAI/bge-large-zh-v1.5）
-2026-01-21 16:25:41,333 - core.vector_store_manager - INFO - 初始化 VectorStoreManager: persist_dir=vector_storage, collection=base_collection
-2026-01-21 16:25:41,335 - core.vector_store_manager - INFO - 开始加载基础向量库: data/crunchbase_data/restructure_data/restructure_company_info.json
-2026-01-21 16:25:43,056 - core.vector_store_manager - INFO - 从 data/crunchbase_data/restructure_data/restructure_company_info.json 加载了 38276 个文档
-2026-01-21 16:25:43,068 - core.vector_store_manager - INFO - 创建向量存储目录: vector_storage
-2026-01-21 16:25:43,420 - core.vector_store_manager - INFO - 开始构建向量索引，文档数量: 38276
-2026-01-21 16:27:39,570 - core.llms - ERROR - LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:27:39,573 - core.llms - WARNING - 使用默认配置重试: LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:34:30,347 - core.llms - ERROR - LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:34:30,356 - core.llms - WARNING - 使用默认配置重试: LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:34:30,673 - core.llms - ERROR - LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:34:30,676 - core.llms - WARNING - 使用默认配置重试: LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:34:30,786 - core.llms - ERROR - LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:34:30,788 - core.llms - WARNING - 使用默认配置重试: LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:34:30,880 - core.vector_store_manager - INFO - 初始化本地 Embedding 模型: BAAI/bge-large-zh-v1.5
-2026-01-21 16:34:30,882 - core.vector_store_manager - INFO - vllm 服务地址: http://localhost:8001
-2026-01-21 16:34:30,921 - core.vector_store_manager - INFO - 本地 Embedding 模型初始化完成（实际模型: BAAI/bge-large-zh-v1.5）
-2026-01-21 16:34:30,924 - core.vector_store_manager - INFO - 初始化 VectorStoreManager: persist_dir=vector_storage, collection=base_collection
-2026-01-21 16:34:30,927 - core.vector_store_manager - INFO - 开始加载基础向量库: data/crunchbase_data/restructure_data/restructure_company_info.json
-2026-01-21 16:34:32,650 - core.vector_store_manager - INFO - 从 data/crunchbase_data/restructure_data/restructure_company_info.json 加载了 38276 个文档
-2026-01-21 16:34:32,866 - core.vector_store_manager - INFO - 开始构建向量索引，文档数量: 38276
-2026-01-21 16:36:26,819 - core.llms - ERROR - LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:36:26,822 - core.llms - WARNING - 使用默认配置重试: LLM配置错误: 1 validation error for ChatOpenAI
-model
-  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-2026-01-21 16:54:12,568 - __main__ - INFO - 初始化本地 Embedding 模型: BAAI/bge-large-zh-v1.5
-2026-01-21 16:54:12,572 - __main__ - INFO - vllm 服务地址: http://localhost:8001
-2026-02-01 17:55:42,500 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-01 17:58:13,039 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-01 18:07:23,251 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-01 18:07:23,251 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-01 18:15:52,716 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-01 18:15:52,717 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-01 18:26:49,200 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-01 18:26:49,200 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-01 18:38:14,508 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-01 18:38:14,508 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-01 18:38:17,592 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-01 18:38:29,949 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-01 18:38:29,952 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-01 18:38:29,952 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 18:38:29,954 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 18:38:29,956 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 18:38:32,649 - agents.executoragent - ERROR - 工具 wikipedia_search 返回结果异常: type=<class 'list'>
-2026-02-01 18:38:42,261 - agents.executoragent - ERROR - 工具 exa_context_search 返回结果异常: type=<class 'list'>
-2026-02-01 18:38:46,742 - agents.executoragent - ERROR - 工具 tavily_search 返回结果异常: type=<class 'list'>
-2026-02-01 18:38:46,742 - agents.executoragent - ERROR - 工具 wikipedia_search 执行失败: 工具 wikipedia_search 返回结果类型错误
-2026-02-01 18:38:46,742 - agents.executoragent - ERROR - 工具 exa_context_search 执行失败: 工具 exa_context_search 返回结果类型错误
-2026-02-01 18:38:46,742 - agents.executoragent - ERROR - 工具 tavily_search 执行失败: 工具 tavily_search 返回结果类型错误
-2026-02-01 18:38:46,743 - agents.executoragent - INFO - 搜索完成，共获得 0 条结果
-2026-02-01 18:38:46,744 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:38:48,978 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:38:48,978 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:38:48,985 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:38:48,986 - agents.executoragent - ERROR - 执行可选工具时出错: No message found in input
-2026-02-01 18:38:48,986 - agents.executoragent - ERROR - executor 处理子问题 'langchain 中短期记忆管理的最佳实践是什么？' 时出错: No message found in input
-2026-02-01 18:41:49,517 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-01 18:41:49,517 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-01 18:41:51,813 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-01 18:42:04,170 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-01 18:42:04,172 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-01 18:42:04,172 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 18:42:04,174 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 18:42:04,176 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 18:42:06,783 - agents.executoragent - ERROR - 工具 wikipedia_search 返回结果异常: type=<class 'list'>
-2026-02-01 18:42:15,702 - agents.executoragent - ERROR - 工具 tavily_search 返回结果异常: type=<class 'list'>
-2026-02-01 18:42:16,087 - agents.executoragent - ERROR - 工具 exa_context_search 返回结果异常: type=<class 'list'>
-2026-02-01 18:42:16,087 - agents.executoragent - ERROR - 工具 wikipedia_search 执行失败: 工具 wikipedia_search 返回结果类型错误
-2026-02-01 18:42:16,087 - agents.executoragent - ERROR - 工具 exa_context_search 执行失败: 工具 exa_context_search 返回结果类型错误
-2026-02-01 18:42:16,087 - agents.executoragent - ERROR - 工具 tavily_search 执行失败: 工具 tavily_search 返回结果类型错误
-2026-02-01 18:42:16,087 - agents.executoragent - INFO - 搜索完成，共获得 0 条结果
-2026-02-01 18:42:16,088 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:42:19,376 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:42:19,376 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:42:19,382 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:42:33,476 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:42:33,477 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-01 18:42:33,477 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:42:35,369 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:42:35,370 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:42:35,371 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:42:49,482 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:42:49,484 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 18:42:49,485 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:42:51,239 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:42:51,240 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:42:51,241 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:43:05,634 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:43:05,635 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 18:43:05,636 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:43:07,407 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:43:07,408 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:43:07,409 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:43:26,609 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:43:26,610 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 18:43:26,610 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:43:31,013 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:43:31,014 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:43:31,016 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:49:50,894 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-01 18:49:50,894 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-01 18:49:53,092 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-01 18:50:08,499 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-01 18:50:08,500 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-01 18:50:08,501 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 18:50:08,503 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 18:50:08,505 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 18:50:12,058 - agents.executoragent - ERROR - 工具 wikipedia_search 返回结果异常: type=<class 'list'>
-2026-02-01 18:50:22,623 - agents.executoragent - ERROR - 工具 exa_context_search 返回结果异常: type=<class 'list'>
-2026-02-01 18:50:25,185 - agents.executoragent - ERROR - 工具 tavily_search 返回结果异常: type=<class 'list'>
-2026-02-01 18:50:25,185 - agents.executoragent - ERROR - 工具 wikipedia_search 执行失败: 工具 wikipedia_search 返回结果类型错误
-2026-02-01 18:50:25,185 - agents.executoragent - ERROR - 工具 exa_context_search 执行失败: 工具 exa_context_search 返回结果类型错误
-2026-02-01 18:50:25,186 - agents.executoragent - ERROR - 工具 tavily_search 执行失败: 工具 tavily_search 返回结果类型错误
-2026-02-01 18:50:25,186 - agents.executoragent - INFO - 搜索完成，共获得 0 条结果
-2026-02-01 18:50:25,187 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:50:27,194 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:50:27,195 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:50:27,201 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:50:41,248 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:50:41,248 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-01 18:50:41,249 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:50:42,660 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:50:42,661 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:50:42,662 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:50:56,643 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:50:56,644 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 18:50:56,644 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:50:59,009 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:50:59,010 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:50:59,011 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:51:13,244 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:51:13,245 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 18:51:13,246 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:51:15,196 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:51:15,196 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:51:15,198 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:51:29,443 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:51:29,443 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 18:51:29,444 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:51:34,559 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:51:34,559 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:51:34,561 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:51:50,447 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:51:50,448 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 18:51:50,449 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:51:53,302 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:51:53,303 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:51:53,304 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:52:08,720 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:52:08,721 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 18:52:08,721 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:52:11,795 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:52:11,795 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:52:11,797 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:52:26,696 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:52:26,696 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 18:52:26,697 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:52:29,066 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:52:29,067 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:52:29,068 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:52:43,202 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:52:43,202 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 18:52:43,203 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:52:45,354 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:52:45,354 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:52:45,355 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:52:59,522 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:52:59,522 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 18:52:59,523 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:53:01,440 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:53:01,440 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:53:01,443 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:53:15,842 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:53:15,843 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 18:53:15,843 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:53:19,519 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:53:19,520 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:53:19,521 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:53:34,090 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:53:34,090 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 18:53:34,091 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 18:53:36,159 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 18:53:36,160 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 18:53:36,161 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 18:53:51,257 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 18:53:51,258 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 18:53:51,259 - agents.executoragent - ERROR - executor 处理子问题 'langchain 中短期记忆管理的最佳实践是什么？' 时出错: Recursion limit of 25 reached without hitting a stop condition. You can increase the limit by setting the `recursion_limit` config key.
+2026-02-03 16:06:38,932 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 16:06:38,939 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 16:06:38,940 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：'\n    "tasks"'
+2026-02-03 16:13:58,966 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 16:13:58,966 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 16:14:01,198 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 16:14:03,733 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
+2026-02-03 16:14:03,735 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-03 16:14:03,735 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: 人工智能的发展历史？
+2026-02-03 16:14:03,737 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: 人工智能的发展历史？
+2026-02-03 16:14:03,738 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: 人工智能的发展历史？
+2026-02-03 16:14:10,174 - agents.executoragent - INFO - tavily_search 返回了 10 条数据
+2026-02-03 16:14:10,599 - agents.executoragent - INFO - exa_context_search 返回了 10 条数据
+2026-02-03 16:14:13,376 - agents.executoragent - INFO - wikipedia_search 返回了 3 条数据
+2026-02-03 16:14:13,377 - agents.executoragent - INFO - 搜索完成，共获得 23 条结果
+2026-02-03 16:14:13,378 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-03 16:14:33,785 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
+2026-02-03 16:14:33,785 - agents.executoragent - INFO - LLM 思考: 人工智能（Artificial Intelligence, AI）的发展历史可以追溯到20世纪中叶，其演进过程经历了多个阶段，包括早期的理论奠基、几次繁荣与低谷（“AI寒冬”）、以及近年来因计算能力提升和大数据兴起而带来的复兴。以下是人工智能发展的主要阶段概述：
+
+---
+
+### 1. **萌芽与...
+2026-02-03 16:14:33,786 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
+2026-02-03 16:14:33,787 - agents.executoragent - WARNING - 处理介绍一下人工智能。----人工智能的发展历史？时sub_url_pool 为空
+2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD
+2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
+2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E9%80%9A%E7%94%A8%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%8
+2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://cdn.gecacademy.cn/oa/upload/2022-03-24%2017-49-26-%E4%BA%BA%E5%B7%A5%E6%
+2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://news.skhynix.com.cn/all-about-ai-the-origins-evolution-future-of-ai/
+2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/zh-hans/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
+2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/375549477
+2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://datawhalechina.github.io/thorough-pytorch/%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.
+2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://blog.csdn.net/jarodyv/article/details/144699658
+2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.ibm.com/cn-zh/think/topics/history-of-artificial-intelligence
+2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.cac.gov.cn/2017-01/23/c_1120366748.htm
+2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.bbc.com/zhongwen/trad/science-48380424
+2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://developer.baidu.com/article/details/2733815
+2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://cloud.tencent.com.cn/developer/article/1971641
+2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://cloud.baidu.com/article/3376781
+2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://view.inews.qq.com/a/20230301A08BTW00
+2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://news.qq.com/rain/a/20221112A04S4N00
+2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.cac.gov.cn/2019-02/16/c_1124122584.htm
+2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://finance.sina.com.cn/roll/2025-04-30/doc-ineuxwev4150658.shtml
+2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://news.qq.com/rain/a/20250425A01A5Q00
+2026-02-03 16:14:33,789 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.cas.cn/zjs/201902/t20190218_4679625.shtml
+2026-02-03 16:14:33,789 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.caai.cn/index.php?s=%2Fhome%2Farticle%2Fdetail%2Fid%2F1278.html
+2026-02-03 16:14:33,789 - agents.executoragent - INFO - 去重统计: 去重前=22, 去重后=22, 去重率=0.0%
+2026-02-03 16:14:33,789 - agents.executoragent - INFO - 去重前: 23 篇
+2026-02-03 16:14:33,789 - agents.executoragent - INFO - 去重后: 22 篇
+2026-02-03 16:14:33,789 - agents.executoragent - INFO - 从 deduplicated_results 获取 22 篇文档
+2026-02-03 16:14:33,790 - agents.executoragent - INFO - 总共需要下载 22 篇文档
+2026-02-03 16:14:33,790 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 16:14:35,865 - core.mcp.tools - INFO - 返回 6 个下载工具
+2026-02-03 16:14:35,865 - agents.executoragent - INFO - 开始下载 wikipedia 的 3 篇文档到 /home/qinshan/widthresearch/data/downloads
+2026-02-03 16:14:35,865 - agents.executoragent - INFO - 使用下载工具 wikipedia_download 处理 wikipedia 数据
+2026-02-03 16:14:35,868 - agents.executoragent - INFO - 开始下载 tavily 的 9 篇文档到 /home/qinshan/widthresearch/data/downloads
+2026-02-03 16:14:35,868 - agents.executoragent - INFO - 使用下载工具 tavily_download 处理 tavily 数据
+2026-02-03 16:14:35,872 - agents.executoragent - INFO - 开始下载 exa_context 的 10 篇文档到 /home/qinshan/widthresearch/data/downloads
+2026-02-03 16:14:35,872 - agents.executoragent - INFO - 使用下载工具 exa_context_download 处理 exa_context 数据
+2026-02-03 16:14:38,632 - agents.executoragent - INFO - 下载工具 exa_context_download 返回类型: <class 'list'>
+2026-02-03 16:14:38,632 - agents.executoragent - INFO - 下载工具 exa_context_download 首项类型: <class 'dict'>
+2026-02-03 16:14:38,632 - agents.executoragent - INFO - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=1
+2026-02-03 16:14:38,633 - agents.executoragent - INFO - 成功下载 1 篇 exa_context 文档
+2026-02-03 16:14:38,633 - agents.executoragent - INFO - 下载工具 tavily_download 返回类型: <class 'list'>
+2026-02-03 16:14:38,633 - agents.executoragent - INFO - 下载工具 tavily_download 首项类型: <class 'dict'>
+2026-02-03 16:14:38,634 - agents.executoragent - INFO - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=9
+2026-02-03 16:14:38,635 - agents.executoragent - INFO - 成功下载 9 篇 tavily 文档
+2026-02-03 16:14:38,658 - agents.executoragent - INFO - 下载工具 wikipedia_download 返回类型: <class 'list'>
+2026-02-03 16:14:38,659 - agents.executoragent - INFO - 下载工具 wikipedia_download 首项类型: <class 'dict'>
+2026-02-03 16:14:38,659 - agents.executoragent - INFO - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=3
+2026-02-03 16:14:38,659 - agents.executoragent - INFO - 成功下载 3 篇 wikipedia 文档
+2026-02-03 16:14:38,659 - agents.executoragent - INFO - 下载完成，共下载 13 篇文档
+2026-02-03 16:14:38,660 - agents.executoragent - INFO - executor 完成子问题 '人工智能的发展历史？' 的处理
+2026-02-03 16:42:52,036 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 16:42:52,043 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 16:42:52,052 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 16:42:54,425 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 16:42:56,890 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：'PlannerAgent' object has no attribute 'llm_with_tools'
+2026-02-03 16:47:32,157 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 16:47:32,163 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 16:47:32,171 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 16:47:34,344 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 16:47:40,954 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:47:43,825 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:47:45,880 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:47:50,294 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:47:53,494 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:47:55,863 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:47:58,448 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:02,680 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:05,618 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:07,645 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:11,576 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:15,325 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:18,177 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:23,622 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:26,037 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:29,577 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:33,343 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:38,225 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:40,988 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:43,459 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:47,055 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:49,060 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:52,672 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:48:58,239 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:49:01,305 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 16:49:01,306 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：Recursion limit of 25 reached without hitting a stop condition. You can increase the limit by setting the `recursion_limit` config key.
 For troubleshooting, visit: https://docs.langchain.com/oss/python/langgraph/errors/GRAPH_RECURSION_LIMIT
-2026-02-01 19:29:11,103 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-01 19:29:11,103 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-01 19:29:13,792 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-01 19:55:28,319 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-01 19:55:28,319 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-01 19:55:30,697 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-01 19:55:43,215 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-01 19:55:43,217 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-01 19:55:43,217 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 19:55:43,219 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 19:55:43,220 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 19:55:45,754 - agents.executoragent - ERROR - 工具 wikipedia_search 返回结果异常: type=<class 'list'>
-2026-02-01 19:55:55,116 - agents.executoragent - ERROR - 工具 exa_context_search 返回结果异常: type=<class 'list'>
-2026-02-01 19:55:58,133 - agents.executoragent - ERROR - 工具 tavily_search 返回结果异常: type=<class 'list'>
-2026-02-01 19:55:58,133 - agents.executoragent - ERROR - 工具 wikipedia_search 执行失败: 工具 wikipedia_search 返回结果类型错误
-2026-02-01 19:55:58,133 - agents.executoragent - ERROR - 工具 exa_context_search 执行失败: 工具 exa_context_search 返回结果类型错误
-2026-02-01 19:55:58,133 - agents.executoragent - ERROR - 工具 tavily_search 执行失败: 工具 tavily_search 返回结果类型错误
-2026-02-01 19:55:58,133 - agents.executoragent - INFO - 搜索完成，共获得 0 条结果
-2026-02-01 19:55:58,134 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 19:56:00,062 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 19:56:00,063 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 19:56:00,068 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 19:56:15,102 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 19:56:15,102 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-01 19:56:15,104 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 19:56:18,569 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 19:56:18,570 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 19:56:18,572 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 19:56:36,000 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 19:56:36,002 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 19:56:36,003 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 19:56:54,585 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-01 19:56:54,585 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆（Short-term memory）管理通常指的是在单次对话或会话中对上下文信息的维护和优化。以下是基于 LangChain 官方文档和最佳实践总结的关键策略：
-
----
-
-### 1. **动态模型选择（Dynamic Model Selection）**
-根...
-2026-02-01 19:56:54,585 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-01 19:56:54,586 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-01 19:56:54,586 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-01 19:56:54,587 - agents.executoragent - INFO - 去重统计: 去重前=0, 去重后=0, 去重率=0.0%
-2026-02-01 19:56:54,587 - agents.executoragent - INFO - 去重前: 0 篇
-2026-02-01 19:56:54,587 - agents.executoragent - INFO - 去重后: 0 篇
-2026-02-01 19:56:54,587 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-01 19:56:54,587 - agents.executoragent - INFO - 跳过工具 query-docs 的下载结果合并
-2026-02-01 19:56:54,588 - agents.executoragent - WARNING - 没有需要下载的文档
-2026-02-01 19:56:54,588 - agents.executoragent - INFO - executor 完成子问题 'langchain 中短期记忆管理的最佳实践是什么？' 的处理
-2026-02-01 20:36:16,431 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-01 20:36:16,432 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-01 20:36:19,551 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-01 20:36:32,217 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-01 20:36:32,224 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-01 20:36:32,224 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 20:36:32,227 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 20:36:32,230 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 20:36:35,543 - agents.executoragent - WARNING - 工具 wikipedia_search 返回结果缺少字段: {'source', 'title', 'url'}
-2026-02-01 20:36:35,543 - agents.executoragent - INFO - 工具 wikipedia_search 返回 0 条结果
-2026-02-01 20:37:00,526 - agents.executoragent - WARNING - 工具 tavily_search 返回结果缺少字段: {'source', 'title', 'url'}
-2026-02-01 20:37:00,527 - agents.executoragent - INFO - 工具 tavily_search 返回 0 条结果
-2026-02-01 20:37:01,814 - agents.executoragent - WARNING - 工具 exa_context_search 返回结果缺少字段: {'source', 'title', 'url'}
-2026-02-01 20:37:01,814 - agents.executoragent - INFO - 工具 exa_context_search 返回 0 条结果
-2026-02-01 20:37:01,815 - agents.executoragent - INFO - 搜索完成，共获得 0 条结果
-2026-02-01 20:37:01,817 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 20:37:11,072 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 20:37:11,073 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 20:37:11,079 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 20:37:28,834 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 20:37:28,835 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-01 20:37:28,836 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 20:37:30,935 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 20:37:30,936 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 20:37:30,937 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 20:37:45,166 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 20:37:45,168 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 20:37:45,169 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 20:38:02,163 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-01 20:38:02,164 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆（即对话上下文）的管理是构建高效、连贯的 AI 代理的关键。以下是基于 LangChain 官方文档的最佳实践：
-
----
-
-### **1. 动态选择模型以优化成本和性能**
-根据对话长度动态切换语言模型，可以平衡成本和响应质量：
-- **短对话（<10 条消息...
-2026-02-01 20:38:02,164 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-01 20:38:02,165 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-01 20:38:02,165 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-01 20:38:02,165 - agents.executoragent - INFO - 去重统计: 去重前=0, 去重后=0, 去重率=0.0%
-2026-02-01 20:38:02,165 - agents.executoragent - INFO - 去重前: 0 篇
-2026-02-01 20:38:02,166 - agents.executoragent - INFO - 去重后: 0 篇
-2026-02-01 20:38:02,166 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-01 20:38:02,166 - agents.executoragent - INFO - 跳过工具 query-docs 的下载结果合并
-2026-02-01 20:38:02,166 - agents.executoragent - WARNING - 没有需要下载的文档
-2026-02-01 20:38:02,167 - agents.executoragent - INFO - executor 完成子问题 'langchain 中短期记忆管理的最佳实践是什么？' 的处理
-2026-02-01 21:10:06,655 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-01 21:10:06,657 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-01 21:10:10,277 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-01 21:10:22,557 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-01 21:10:22,559 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-01 21:10:22,559 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 21:10:22,561 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 21:10:22,563 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 21:10:25,518 - agents.executoragent - ERROR - JSON 解析失败: Expecting value: line 1 column 1 (char 0), 原始结果: Error executing wikipedia_search: 'coroutine' object is not iterable
-
-Details:
-Traceback (most recent call last):
-  File "/home/qinshan/widthresearch/core/mcp/search_tool_mcp/mcp_server.py", line 383,
-2026-02-01 21:10:50,100 - agents.executoragent - ERROR - JSON 解析失败: Expecting value: line 1 column 1 (char 0), 原始结果: Error executing tavily_search: Request failed: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
-
-Details:
-Traceback (most recent call last):
-  File "/home/qinshan/minicon
-2026-02-01 21:10:51,778 - agents.executoragent - INFO - 工具 exa_context_search 返回 0 条结果
-2026-02-01 21:10:51,778 - agents.executoragent - ERROR - 工具 wikipedia_search 执行失败: 工具 wikipedia_search 返回的 JSON 格式错误
-2026-02-01 21:10:51,779 - agents.executoragent - ERROR - 工具 tavily_search 执行失败: 工具 tavily_search 返回的 JSON 格式错误
-2026-02-01 21:10:51,779 - agents.executoragent - INFO - 搜索完成，共获得 0 条结果
-2026-02-01 21:10:51,780 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 21:10:53,612 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 21:10:53,612 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 21:10:53,619 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 21:11:07,842 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 21:11:07,842 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-01 21:11:07,843 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 21:11:11,832 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 21:11:11,833 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 21:11:11,834 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 21:11:26,250 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 21:11:26,253 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 21:11:26,254 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 21:11:48,329 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-01 21:11:48,330 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆（即对话上下文）的管理是构建高效、连贯的 AI 代理的关键。以下是基于 LangChain 官方文档的最佳实践：
-
----
-
-### 1. **动态选择模型以优化成本和性能**
-根据对话长度动态切换语言模型，可以在保持性能的同时降低成本：
-- **短对话**（<1...
-2026-02-01 21:11:48,331 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-01 21:11:48,331 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-01 21:11:48,332 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-01 21:11:48,332 - agents.executoragent - INFO - 去重统计: 去重前=0, 去重后=0, 去重率=0.0%
-2026-02-01 21:11:48,332 - agents.executoragent - INFO - 去重前: 0 篇
-2026-02-01 21:11:48,332 - agents.executoragent - INFO - 去重后: 0 篇
-2026-02-01 21:11:48,332 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-01 21:11:48,332 - agents.executoragent - INFO - 跳过工具 query-docs 的下载结果合并
-2026-02-01 21:11:48,332 - agents.executoragent - WARNING - 没有需要下载的文档
-2026-02-01 21:11:48,333 - agents.executoragent - INFO - executor 完成子问题 'langchain 中短期记忆管理的最佳实践是什么？' 的处理
-2026-02-01 21:19:24,044 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-01 21:19:24,045 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-01 21:19:26,161 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-01 21:19:38,897 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-01 21:19:38,899 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-01 21:19:38,899 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 21:19:38,900 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 21:19:38,902 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-01 21:19:41,500 - agents.executoragent - ERROR - JSON 解析失败: Expecting value: line 1 column 1 (char 0), 原始结果: Error executing wikipedia_search: 'coroutine' object is not iterable
-
-Details:
-Traceback (most recent call last):
-  File "/home/qinshan/widthresearch/core/mcp/search_tool_mcp/mcp_server.py", line 383,
-2026-02-01 21:20:06,190 - agents.executoragent - ERROR - JSON 解析失败: Expecting value: line 1 column 1 (char 0), 原始结果: Error executing tavily_search: Request failed: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
-
-Details:
-Traceback (most recent call last):
-  File "/home/qinshan/minicon
-2026-02-01 21:20:12,571 - agents.executoragent - INFO - 工具 exa_context_search 返回 0 条结果
-2026-02-01 21:20:12,571 - agents.executoragent - ERROR - 工具 wikipedia_search 执行失败: 工具 wikipedia_search 返回的 JSON 格式错误
-2026-02-01 21:20:12,572 - agents.executoragent - ERROR - 工具 tavily_search 执行失败: 工具 tavily_search 返回的 JSON 格式错误
-2026-02-01 21:20:12,572 - agents.executoragent - INFO - 搜索完成，共获得 0 条结果
-2026-02-01 21:20:12,573 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 21:20:16,317 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 21:20:16,318 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 21:20:16,324 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 21:20:30,859 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 21:20:30,860 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-01 21:20:30,860 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-01 21:20:35,192 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-01 21:20:35,193 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-01 21:20:35,195 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-01 21:20:49,915 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-01 21:20:49,915 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-01 21:20:49,916 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 14:50:47,310 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 14:50:47,311 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 14:54:54,936 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 14:54:54,936 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 14:54:56,848 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 14:54:59,835 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-02 14:54:59,837 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-02 14:54:59,837 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 14:54:59,839 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 14:54:59,841 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 14:55:05,080 - agents.executoragent - INFO - 工具 wikipedia_search 返回 0 条结果
-2026-02-02 14:55:06,012 - agents.executoragent - INFO - 工具 exa_context_search 返回 10 条结果
-2026-02-02 14:55:14,936 - agents.executoragent - INFO - 工具 tavily_search 返回 10 条结果
-2026-02-02 14:55:14,936 - agents.executoragent - INFO - 搜索完成，共获得 20 条结果
-2026-02-02 14:55:14,937 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 14:55:18,649 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 14:55:18,649 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 14:55:18,655 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 14:55:24,002 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 14:55:24,002 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-02 14:55:24,003 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 14:55:26,689 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 14:55:26,689 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 14:55:26,690 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 14:55:33,293 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 14:55:33,293 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-02 14:55:33,294 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 14:55:52,393 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-02 14:55:52,393 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆（Short-term memory）管理通常指的是在单次对话或会话中维护和利用上下文信息。以下是基于 LangChain 官方文档和最佳实践的总结：
-
-### 1. **使用消息列表（Message List）管理对话历史**
-LangChain 的核心是通过 ...
-2026-02-02 14:55:52,394 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-02 14:55:52,395 - agents.executoragent - WARNING - 处理请提供有关 langchain 短期记忆管理的建议。----langchain 中短期记忆管理的最佳实践是什么？时sub_url_pool 为空
-2026-02-02 14:55:52,395 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-02 14:55:52,395 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-02 14:55:52,395 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://docs.langchain.com/oss/python/langchain/short-term-memory
-2026-02-02 14:55:52,395 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.reddit.com/r/LangChain/comments/1qna46j/best_practice_for_managing_l
-2026-02-02 14:55:52,395 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://python.langchain.com.cn/docs/modules/memory/
-2026-02-02 14:55:52,395 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.cnblogs.com/mangod/p/18243321
-2026-02-02 14:55:52,395 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/1981392181592871894
-2026-02-02 14:55:52,395 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraphjs/concepts/memory/
-2026-02-02 14:55:52,395 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.youtube.com/watch?v=rEhoJaNStzI
-2026-02-02 14:55:52,396 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aistudio.baidu.com/blog/detail/737084298395525
-2026-02-02 14:55:52,396 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.53ai.com/news/RAG/1732.html
-2026-02-02 14:55:52,396 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://ginonotes.com/posts/agentic-design-patterns-memory-management-translatio
-2026-02-02 14:55:52,396 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langgraph.com.cn/how-tos/memory/index.html
-2026-02-02 14:55:52,396 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aws.amazon.com/cn/blogs/china/agentic-ai-infrastructure-deep-practice-ex
-2026-02-02 14:55:52,396 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langgraph.com.cn/concepts/memory.1.html
-2026-02-02 14:55:52,396 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://github.langchain.ac.cn/langmem/concepts/conceptual_guide
-2026-02-02 14:55:52,396 - agents.executoragent - INFO - 去重统计: 去重前=14, 去重后=14, 去重率=0.0%
-2026-02-02 14:55:52,396 - agents.executoragent - INFO - 去重前: 20 篇
-2026-02-02 14:55:52,396 - agents.executoragent - INFO - 去重后: 14 篇
-2026-02-02 14:55:52,397 - agents.executoragent - INFO - 从 deduplicated_results 获取 14 篇文档
-2026-02-02 14:55:52,397 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-02 14:55:52,398 - agents.executoragent - INFO - 已将工具 query-docs 结果追加写入 context7_grep.json
-2026-02-02 14:55:52,399 - agents.executoragent - INFO - 总共需要下载 14 篇文档
-2026-02-02 14:55:52,399 - agents.executoragent - ERROR - executor 处理子问题 'langchain 中短期记忆管理的最佳实践是什么？' 时出错: No module named 'core.tools'
-2026-02-02 15:00:42,629 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 15:00:42,629 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 15:00:44,469 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 15:02:35,373 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 15:02:35,374 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 15:02:37,798 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 15:02:40,194 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-02 15:02:40,197 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-02 15:02:40,198 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 15:02:40,199 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 15:02:40,202 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 15:02:46,232 - agents.executoragent - INFO - 工具 wikipedia_search 返回 0 条结果
-2026-02-02 15:02:46,897 - agents.executoragent - INFO - 工具 exa_context_search 返回 10 条结果
-2026-02-02 15:02:50,032 - agents.executoragent - INFO - 工具 tavily_search 返回 10 条结果
-2026-02-02 15:02:50,033 - agents.executoragent - INFO - 搜索完成，共获得 20 条结果
-2026-02-02 15:02:50,034 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 15:02:52,795 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 15:02:52,796 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 15:02:52,803 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 15:02:58,745 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 15:02:58,745 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-02 15:02:58,746 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 15:03:00,821 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 15:03:00,822 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 15:03:00,823 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 15:03:06,542 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 15:03:06,543 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-02 15:03:06,543 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 15:03:27,933 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-02 15:03:27,934 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆管理的最佳实践主要围绕**对话状态的动态处理、消息合并优化以及上下文长度控制**等方面展开。以下是关键要点：
-
----
-
-### 1. **动态模型选择（基于对话长度）**
-根据对话轮次动态切换语言模型，以平衡成本与性能：
-- **短对话（<10 轮）**：使用轻...
-2026-02-02 15:03:27,934 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-02 15:03:27,935 - agents.executoragent - WARNING - 处理请提供有关 langchain 短期记忆管理的建议。----langchain 中短期记忆管理的最佳实践是什么？时sub_url_pool 为空
-2026-02-02 15:03:27,935 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-02 15:03:27,935 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-02 15:03:27,936 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://docs.langchain.com/oss/python/langchain/short-term-memory
-2026-02-02 15:03:27,936 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.reddit.com/r/LangChain/comments/1qna46j/best_practice_for_managing_l
-2026-02-02 15:03:27,936 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://python.langchain.com.cn/docs/modules/memory/
-2026-02-02 15:03:27,936 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.cnblogs.com/mangod/p/18243321
-2026-02-02 15:03:27,936 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/1981392181592871894
-2026-02-02 15:03:27,936 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraphjs/concepts/memory/
-2026-02-02 15:03:27,936 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.youtube.com/watch?v=rEhoJaNStzI
-2026-02-02 15:03:27,936 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aistudio.baidu.com/blog/detail/737084298395525
-2026-02-02 15:03:27,936 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.53ai.com/news/RAG/1732.html
-2026-02-02 15:03:27,936 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://ginonotes.com/posts/agentic-design-patterns-memory-management-translatio
-2026-02-02 15:03:27,936 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langgraph.com.cn/how-tos/memory/index.html
-2026-02-02 15:03:27,936 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aws.amazon.com/cn/blogs/china/agentic-ai-infrastructure-deep-practice-ex
-2026-02-02 15:03:27,936 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langgraph.com.cn/concepts/memory.1.html
-2026-02-02 15:03:27,937 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://github.langchain.ac.cn/langmem/concepts/conceptual_guide
-2026-02-02 15:03:27,937 - agents.executoragent - INFO - 去重统计: 去重前=14, 去重后=14, 去重率=0.0%
-2026-02-02 15:03:27,937 - agents.executoragent - INFO - 去重前: 20 篇
-2026-02-02 15:03:27,937 - agents.executoragent - INFO - 去重后: 14 篇
-2026-02-02 15:03:27,938 - agents.executoragent - INFO - 从 deduplicated_results 获取 14 篇文档
-2026-02-02 15:03:27,938 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-02 15:03:27,938 - agents.executoragent - INFO - 已将工具 query-docs 结果追加写入 context7_grep.json
-2026-02-02 15:03:27,938 - agents.executoragent - INFO - 总共需要下载 14 篇文档
-2026-02-02 15:03:27,938 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 15:03:29,907 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-02 15:03:29,908 - agents.executoragent - INFO - 开始下载 tavily 的 4 篇文档到 /home/qinshan/deepresearch/data/downloads
-2026-02-02 15:03:31,845 - agents.executoragent - INFO - 成功下载 1 篇 tavily 文档
-2026-02-02 15:03:31,846 - agents.executoragent - INFO - 下载完成，共下载 1 篇文档
-2026-02-02 15:03:31,846 - agents.executoragent - INFO - executor 完成子问题 'langchain 中短期记忆管理的最佳实践是什么？' 的处理
-2026-02-02 15:48:15,950 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 15:48:15,950 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 15:48:17,962 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 15:48:20,800 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-02 15:48:20,802 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-02 15:48:20,802 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 15:48:20,804 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 15:48:20,807 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 15:48:28,358 - agents.executoragent - WARNING - wikipedia_search 返回了 0 条数据
-2026-02-02 15:48:32,569 - agents.executoragent - WARNING - tavily_search 返回了 0 条数据
-2026-02-02 15:49:03,638 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 15:49:03,639 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 15:49:05,701 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 15:49:08,741 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-02 15:49:08,743 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-02 15:49:08,743 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 15:49:08,745 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 15:49:08,746 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 15:49:14,452 - agents.executoragent - WARNING - wikipedia_search 返回了 0 条数据
-2026-02-02 15:49:15,628 - agents.executoragent - INFO - exa_context_search 返回了 10 条数据
-2026-02-02 15:49:23,832 - agents.executoragent - WARNING - tavily_search 返回了 0 条数据
-2026-02-02 15:49:23,832 - agents.executoragent - INFO - 搜索完成，共获得 10 条结果
-2026-02-02 15:49:23,833 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 15:49:25,689 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 15:49:25,689 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 15:49:25,694 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 15:49:41,364 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 15:49:41,365 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-02 15:49:41,365 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 15:49:43,852 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 15:49:43,852 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 15:49:43,853 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 15:49:48,926 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 15:49:48,927 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-02 15:49:48,927 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 15:49:53,065 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 15:49:53,066 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 15:49:53,068 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 15:49:59,642 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 15:49:59,643 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-02 15:49:59,644 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 15:50:06,986 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 15:50:06,986 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 15:50:06,987 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 15:50:11,469 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 15:50:11,469 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-02 15:50:11,470 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 15:50:34,006 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-02 15:50:34,006 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆管理是构建高效、上下文感知的 AI 应用的关键。以下是最佳实践和核心方法：
-
-## 1. 使用 SummarizationMiddleware（推荐）
-
-这是 LangChain 中管理长期对话的最新和最有效的方法。它会自动在对话过长时进行总结，同时保留最近的消息...
-2026-02-02 15:50:34,006 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-02 15:50:34,007 - agents.executoragent - WARNING - 处理请提供有关 langchain 短期记忆管理的建议。----langchain 中短期记忆管理的最佳实践是什么？时sub_url_pool 为空
-2026-02-02 15:50:34,007 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-02 15:50:34,007 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-02 15:50:34,008 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-02 15:50:34,008 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-02 15:50:34,008 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/1981392181592871894
-2026-02-02 15:50:34,008 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraphjs/concepts/memory/
-2026-02-02 15:50:34,008 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aistudio.baidu.com/blog/detail/737084298395525
-2026-02-02 15:50:34,008 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langgraph.com.cn/how-tos/memory/index.html
-2026-02-02 15:50:34,008 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://python.langchain.ac.cn/docs/how_to/chatbots_memory
-2026-02-02 15:50:34,008 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://python.langchain.ac.cn/docs/versions/migrating_memory
-2026-02-02 15:50:34,008 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://apxml.com/zh/courses/building-llm-apps-with-langchain/chapter-4-memory-f
-2026-02-02 15:50:34,008 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aws.amazon.com/cn/blogs/china/agentic-ai-infrastructure-deep-practice-ex
-2026-02-02 15:50:34,008 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.youtube.com/watch?v=rEhoJaNStzI
-2026-02-02 15:50:34,008 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.53ai.com/news/RAG/1732.html
-2026-02-02 15:50:34,008 - agents.executoragent - INFO - 去重统计: 去重前=10, 去重后=10, 去重率=0.0%
-2026-02-02 15:50:34,009 - agents.executoragent - INFO - 去重前: 10 篇
-2026-02-02 15:50:34,009 - agents.executoragent - INFO - 去重后: 10 篇
-2026-02-02 15:50:34,009 - agents.executoragent - INFO - 从 deduplicated_results 获取 10 篇文档
-2026-02-02 15:50:34,009 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-02 15:50:34,010 - agents.executoragent - INFO - 已将工具 query-docs 结果追加写入 context7_grep.json
-2026-02-02 15:50:34,010 - agents.executoragent - INFO - 已将工具 query-docs 结果追加写入 context7_grep.json
-2026-02-02 15:50:34,010 - agents.executoragent - INFO - 已将工具 query-docs 结果追加写入 context7_grep.json
-2026-02-02 15:50:34,010 - agents.executoragent - INFO - 总共需要下载 10 篇文档
-2026-02-02 15:50:34,010 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 15:50:35,824 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-02 15:50:35,824 - agents.executoragent - INFO - 下载完成，共下载 0 篇文档
-2026-02-02 15:50:35,825 - agents.executoragent - INFO - executor 完成子问题 'langchain 中短期记忆管理的最佳实践是什么？' 的处理
-2026-02-02 15:59:43,373 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 15:59:43,374 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 16:00:14,129 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 16:00:14,129 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 16:00:16,278 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 16:00:19,747 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-02 16:00:19,749 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-02 16:00:19,750 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 16:00:19,751 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 16:00:19,754 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 16:00:28,366 - agents.executoragent - WARNING - wikipedia_search 返回了 0 条数据
-2026-02-02 16:00:29,588 - agents.executoragent - INFO - exa_context_search 返回了 10 条数据
-2026-02-02 16:00:47,022 - agents.executoragent - WARNING - tavily_search 返回了 0 条数据
-2026-02-02 16:00:47,023 - agents.executoragent - INFO - 搜索完成，共获得 10 条结果
-2026-02-02 16:00:47,023 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 16:00:54,769 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 16:00:54,770 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 16:00:54,778 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 16:01:04,448 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 16:01:04,448 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-02 16:01:04,449 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 16:01:07,637 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 16:01:07,637 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 16:01:07,638 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 16:01:14,670 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 16:01:14,671 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-02 16:01:14,674 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 16:01:38,795 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-02 16:01:38,795 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆（Short-term memory）管理通常指的是在单次对话或会话中维护和利用上下文信息。LangChain 提供了多种机制来高效地管理这些短期记忆，以优化性能、成本和用户体验。以下是基于官方文档的最佳实践总结：
-
----
-
-### 1. **动态选择模型（Mo...
-2026-02-02 16:01:38,796 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-02 16:01:38,797 - agents.executoragent - WARNING - 处理请提供有关 langchain 短期记忆管理的建议。----langchain 中短期记忆管理的最佳实践是什么？时sub_url_pool 为空
-2026-02-02 16:01:38,797 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-02 16:01:38,798 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-02 16:01:38,798 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/1981392181592871894
-2026-02-02 16:01:38,798 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraphjs/concepts/memory/
-2026-02-02 16:01:38,798 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aws.amazon.com/cn/blogs/china/agentic-ai-infrastructure-deep-practice-ex
-2026-02-02 16:01:38,798 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.youtube.com/watch?v=rEhoJaNStzI
-2026-02-02 16:01:38,798 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aistudio.baidu.com/blog/detail/737084298395525
-2026-02-02 16:01:38,798 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.53ai.com/news/RAG/1732.html
-2026-02-02 16:01:38,798 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://ginonotes.com/posts/agentic-design-patterns-memory-management-translatio
-2026-02-02 16:01:38,798 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langgraph.com.cn/concepts/memory.1.html
-2026-02-02 16:01:38,798 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://github.langchain.ac.cn/langmem/concepts/conceptual_guide
-2026-02-02 16:01:38,799 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langchain-doc.cn/v1/python/langgraph/memory.html
-2026-02-02 16:01:38,799 - agents.executoragent - INFO - 去重统计: 去重前=10, 去重后=10, 去重率=0.0%
-2026-02-02 16:01:38,799 - agents.executoragent - INFO - 去重前: 10 篇
-2026-02-02 16:01:38,799 - agents.executoragent - INFO - 去重后: 10 篇
-2026-02-02 16:01:38,799 - agents.executoragent - INFO - 从 deduplicated_results 获取 10 篇文档
-2026-02-02 16:01:38,799 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-02 16:01:38,800 - agents.executoragent - INFO - 已将工具 query-docs 结果追加写入 context7_grep.json
-2026-02-02 16:01:38,800 - agents.executoragent - INFO - 总共需要下载 10 篇文档
-2026-02-02 16:01:38,800 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 16:01:40,837 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-02 16:01:40,837 - agents.executoragent - INFO - 下载完成，共下载 0 篇文档
-2026-02-02 16:01:40,837 - agents.executoragent - INFO - executor 完成子问题 'langchain 中短期记忆管理的最佳实践是什么？' 的处理
-2026-02-02 16:21:33,386 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 16:21:33,387 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 16:21:35,443 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 16:21:38,979 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-02 16:21:38,981 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-02 16:21:38,981 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 16:21:38,983 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 16:21:38,985 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 16:22:45,209 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 16:22:45,209 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 16:22:47,228 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 16:22:58,524 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-02 16:22:58,525 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-02 16:22:58,525 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 16:22:58,527 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 16:22:58,528 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 16:23:07,668 - agents.executoragent - WARNING - wikipedia_search 返回了 0 条数据
-2026-02-02 16:23:09,150 - agents.executoragent - INFO - exa_context_search 返回了 10 条数据
-2026-02-02 16:23:45,283 - agents.executoragent - INFO - tavily_search 返回了 10 条数据
-2026-02-02 16:23:45,283 - agents.executoragent - INFO - 搜索完成，共获得 20 条结果
-2026-02-02 16:23:45,285 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 16:23:47,171 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 16:23:47,172 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 16:23:47,177 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 16:23:51,030 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 16:23:51,030 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-02 16:23:51,031 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 16:23:52,893 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 16:23:52,894 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 16:23:52,895 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 16:23:56,745 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 16:23:56,746 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-02 16:23:56,746 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 16:24:19,101 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-02 16:24:19,101 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆（Short-term memory）管理通常指的是在单次对话或会话中对上下文信息的高效处理和利用。以下是基于 LangChain 官方文档和最佳实践总结的关键策略：
-
----
-
-### 1. **动态模型选择（Dynamic Model Selection）**...
-2026-02-02 16:24:19,102 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-02 16:24:19,103 - agents.executoragent - WARNING - 处理请提供有关 langchain 短期记忆管理的建议。----langchain 中短期记忆管理的最佳实践是什么？时sub_url_pool 为空
-2026-02-02 16:24:19,103 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-02 16:24:19,103 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-02 16:24:19,103 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.reddit.com/r/LangChain/comments/1qna46j/best_practice_for_managing_l
-2026-02-02 16:24:19,103 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://damodev.csdn.net/69251f44791c233193d00f40.html
-2026-02-02 16:24:19,103 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://python.langchain.com.cn/docs/modules/memory/
-2026-02-02 16:24:19,103 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.53ai.com/news/RAG/1732.html
-2026-02-02 16:24:19,103 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://ginonotes.com/posts/agentic-design-patterns-memory-management-translatio
-2026-02-02 16:24:19,104 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://docs.langchain.com/oss/python/langchain/short-term-memory
-2026-02-02 16:24:19,104 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://cloud.tencent.com/developer/article/2557090
-2026-02-02 16:24:19,104 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.cnblogs.com/tlnshuju/p/19353187
-2026-02-02 16:24:19,104 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/1981392181592871894
-2026-02-02 16:24:19,104 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraphjs/concepts/memory/
-2026-02-02 16:24:19,104 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langgraph.com.cn/how-tos/memory/index.html
-2026-02-02 16:24:19,104 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://python.langchain.ac.cn/docs/how_to/chatbots_memory
-2026-02-02 16:24:19,104 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langchain.cadn.net.cn/python/docs/versions/migrating_memory/index.html
-2026-02-02 16:24:19,104 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://python.langchain.ac.cn/docs/versions/migrating_memory
-2026-02-02 16:24:19,104 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://docs.langchain.com.cn/docs/components/memory
-2026-02-02 16:24:19,104 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aws.amazon.com/cn/blogs/china/agentic-ai-infrastructure-deep-practice-ex
-2026-02-02 16:24:19,104 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.youtube.com/watch?v=rEhoJaNStzI
-2026-02-02 16:24:19,105 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aistudio.baidu.com/blog/detail/737084298395525
-2026-02-02 16:24:19,105 - agents.executoragent - INFO - 去重统计: 去重前=18, 去重后=18, 去重率=0.0%
-2026-02-02 16:24:19,105 - agents.executoragent - INFO - 去重前: 20 篇
-2026-02-02 16:24:19,105 - agents.executoragent - INFO - 去重后: 18 篇
-2026-02-02 16:24:19,105 - agents.executoragent - INFO - 从 deduplicated_results 获取 18 篇文档
-2026-02-02 16:24:19,105 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-02 16:24:19,106 - agents.executoragent - INFO - 已将工具 query-docs 结果追加写入 context7_grep.json
-2026-02-02 16:24:19,106 - agents.executoragent - INFO - 总共需要下载 18 篇文档
-2026-02-02 16:24:19,106 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 16:24:21,171 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-02 16:24:21,172 - agents.executoragent - INFO - 开始下载 tavily 的 8 篇文档到 /home/qinshan/deepresearch/data/downloads
-2026-02-02 16:24:21,172 - agents.executoragent - INFO - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-02 16:24:23,031 - agents.executoragent - INFO - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-02 16:24:23,031 - agents.executoragent - INFO - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=0
-2026-02-02 16:24:23,031 - agents.executoragent - INFO - 成功下载 0 篇 tavily 文档
-2026-02-02 16:24:23,031 - agents.executoragent - INFO - 下载完成，共下载 0 篇文档
-2026-02-02 16:24:23,032 - agents.executoragent - INFO - executor 完成子问题 'langchain 中短期记忆管理的最佳实践是什么？' 的处理
-2026-02-02 16:32:19,402 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 16:32:19,403 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 16:32:21,467 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 16:32:24,430 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-02 16:32:24,432 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-02 16:32:24,432 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 16:32:24,433 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 16:32:24,435 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 16:32:29,871 - agents.executoragent - WARNING - wikipedia_search 返回了 0 条数据
-2026-02-02 16:32:32,096 - agents.executoragent - INFO - exa_context_search 返回了 10 条数据
-2026-02-02 16:32:32,270 - agents.executoragent - INFO - tavily_search 返回了 10 条数据
-2026-02-02 16:32:32,270 - agents.executoragent - INFO - 搜索完成，共获得 20 条结果
-2026-02-02 16:32:32,271 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 16:32:34,334 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 16:32:34,335 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 16:32:34,341 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 16:32:38,708 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 16:32:38,708 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-02 16:32:38,708 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 16:32:41,460 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 16:32:41,461 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 16:32:41,462 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 16:32:47,708 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 16:32:47,709 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-02 16:32:47,709 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 16:33:05,899 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-02 16:33:05,900 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆（Short-term memory）管理通常指的是在单次对话或会话中维护和利用上下文信息的能力。以下是基于 LangChain 官方文档和实践总结出的**短期记忆管理最佳实践**：
-
----
-
-### 1. **使用消息列表（Message List）管理对话历...
-2026-02-02 16:33:05,900 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-02 16:33:05,901 - agents.executoragent - WARNING - 处理请提供有关 langchain 短期记忆管理的建议。----langchain 中短期记忆管理的最佳实践是什么？时sub_url_pool 为空
-2026-02-02 16:33:05,902 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-02 16:33:05,902 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-02 16:33:05,902 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.reddit.com/r/LangChain/comments/1qna46j/best_practice_for_managing_l
-2026-02-02 16:33:05,902 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://damodev.csdn.net/69251f44791c233193d00f40.html
-2026-02-02 16:33:05,902 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://python.langchain.com.cn/docs/modules/memory/
-2026-02-02 16:33:05,902 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://docs.langchain.com/oss/python/langchain/short-term-memory
-2026-02-02 16:33:05,902 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://cloud.tencent.com/developer/article/2557090
-2026-02-02 16:33:05,902 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.cnblogs.com/tlnshuju/p/19353187
-2026-02-02 16:33:05,903 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/1981392181592871894
-2026-02-02 16:33:05,903 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraphjs/concepts/memory/
-2026-02-02 16:33:05,903 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aws.amazon.com/cn/blogs/china/agentic-ai-infrastructure-deep-practice-ex
-2026-02-02 16:33:05,903 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.youtube.com/watch?v=rEhoJaNStzI
-2026-02-02 16:33:05,903 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aistudio.baidu.com/blog/detail/737084298395525
-2026-02-02 16:33:05,903 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langgraph.com.cn/how-tos/memory/index.html
-2026-02-02 16:33:05,903 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.53ai.com/news/RAG/1732.html
-2026-02-02 16:33:05,903 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://ginonotes.com/posts/agentic-design-patterns-memory-management-translatio
-2026-02-02 16:33:05,903 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langgraph.com.cn/concepts/memory.1.html
-2026-02-02 16:33:05,904 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://github.langchain.ac.cn/langmem/concepts/conceptual_guide
-2026-02-02 16:33:05,904 - agents.executoragent - INFO - 去重统计: 去重前=16, 去重后=16, 去重率=0.0%
-2026-02-02 16:33:05,904 - agents.executoragent - INFO - 去重前: 20 篇
-2026-02-02 16:33:05,904 - agents.executoragent - INFO - 去重后: 16 篇
-2026-02-02 16:33:05,905 - agents.executoragent - INFO - 从 deduplicated_results 获取 16 篇文档
-2026-02-02 16:33:05,905 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-02 16:33:05,906 - agents.executoragent - INFO - 已将工具 query-docs 结果追加写入 context7_grep.json
-2026-02-02 16:33:05,906 - agents.executoragent - INFO - 总共需要下载 16 篇文档
-2026-02-02 16:33:05,906 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 16:33:07,887 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-02 16:33:07,887 - agents.executoragent - INFO - 开始下载 tavily 的 6 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-02 16:33:07,888 - agents.executoragent - INFO - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-02 16:33:09,822 - agents.executoragent - INFO - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-02 16:33:09,822 - agents.executoragent - INFO - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=0
-2026-02-02 16:33:09,822 - agents.executoragent - INFO - 成功下载 0 篇 tavily 文档
-2026-02-02 16:33:09,822 - agents.executoragent - INFO - 下载完成，共下载 0 篇文档
-2026-02-02 16:33:09,823 - agents.executoragent - INFO - executor 完成子问题 'langchain 中短期记忆管理的最佳实践是什么？' 的处理
-2026-02-02 17:06:04,590 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 17:06:04,590 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 17:06:06,796 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 17:06:09,741 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-02 17:06:09,743 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-02 17:06:09,743 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 17:06:09,745 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 17:06:09,746 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 17:06:15,340 - agents.executoragent - WARNING - wikipedia_search 返回了 0 条数据
-2026-02-02 17:06:16,273 - agents.executoragent - INFO - exa_context_search 返回了 10 条数据
-2026-02-02 17:06:20,504 - agents.executoragent - INFO - tavily_search 返回了 1 条数据
-2026-02-02 17:06:20,505 - agents.executoragent - INFO - 搜索完成，共获得 11 条结果
-2026-02-02 17:06:20,505 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 17:06:22,656 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 17:06:22,657 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 17:06:22,663 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 17:06:27,732 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 17:06:27,733 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-02 17:06:27,733 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 17:06:29,690 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 17:06:29,690 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 17:06:29,691 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 17:06:34,475 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 17:06:34,475 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-02 17:06:34,476 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 17:06:54,961 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-02 17:06:54,961 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆（Short-term memory）管理通常指的是在单次对话或会话中维护和利用上下文信息。以下是基于 LangChain 官方文档和最佳实践的总结：
-
-### 1. **使用消息列表（Message Lists）管理对话历史**
-LangChain 的核心是通过...
-2026-02-02 17:06:54,962 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-02 17:06:54,962 - agents.executoragent - WARNING - 处理请提供有关 langchain 短期记忆管理的建议。----langchain 中短期记忆管理的最佳实践是什么？时sub_url_pool 为空
-2026-02-02 17:06:54,962 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-02 17:06:54,963 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-02 17:06:54,963 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.reddit.com/r/LangChain/comments/1qna46j/best_practice_for_managing_l
-2026-02-02 17:06:54,963 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/1981392181592871894
-2026-02-02 17:06:54,963 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraphjs/concepts/memory/
-2026-02-02 17:06:54,963 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aws.amazon.com/cn/blogs/china/agentic-ai-infrastructure-deep-practice-ex
-2026-02-02 17:06:54,963 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.youtube.com/watch?v=rEhoJaNStzI
-2026-02-02 17:06:54,963 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aistudio.baidu.com/blog/detail/737084298395525
-2026-02-02 17:06:54,963 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langgraph.com.cn/how-tos/memory/index.html
-2026-02-02 17:06:54,963 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.53ai.com/news/RAG/1732.html
-2026-02-02 17:06:54,963 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://ginonotes.com/posts/agentic-design-patterns-memory-management-translatio
-2026-02-02 17:06:54,963 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langgraph.com.cn/concepts/memory.1.html
-2026-02-02 17:06:54,963 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://github.langchain.ac.cn/langmem/concepts/conceptual_guide
-2026-02-02 17:06:54,964 - agents.executoragent - INFO - 去重统计: 去重前=11, 去重后=11, 去重率=0.0%
-2026-02-02 17:06:54,964 - agents.executoragent - INFO - 去重前: 11 篇
-2026-02-02 17:06:54,964 - agents.executoragent - INFO - 去重后: 11 篇
-2026-02-02 17:06:54,964 - agents.executoragent - INFO - 从 deduplicated_results 获取 11 篇文档
-2026-02-02 17:06:54,965 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-02 17:06:54,965 - agents.executoragent - INFO - 已将工具 query-docs 结果追加写入 context7_grep.json
-2026-02-02 17:06:54,965 - agents.executoragent - INFO - 总共需要下载 11 篇文档
-2026-02-02 17:06:54,965 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 17:06:57,252 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-02 17:06:57,253 - agents.executoragent - INFO - 开始下载 tavily 的 1 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-02 17:06:57,253 - agents.executoragent - INFO - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-02 17:06:57,255 - agents.executoragent - INFO - 开始下载 exa_context 的 10 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-02 17:06:57,255 - agents.executoragent - INFO - 使用下载工具 exa_context_download 处理 exa_context 数据
-2026-02-02 17:06:59,482 - agents.executoragent - INFO - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-02 17:06:59,482 - agents.executoragent - INFO - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=1
-2026-02-02 17:06:59,482 - agents.executoragent - INFO - 成功下载 1 篇 tavily 文档
-2026-02-02 17:06:59,501 - agents.executoragent - INFO - 下载工具 exa_context_download 返回类型: <class 'list'>
-2026-02-02 17:06:59,501 - agents.executoragent - INFO - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=0
-2026-02-02 17:06:59,502 - agents.executoragent - INFO - 成功下载 0 篇 exa_context 文档
-2026-02-02 17:06:59,502 - agents.executoragent - INFO - 下载完成，共下载 1 篇文档
-2026-02-02 17:06:59,503 - agents.executoragent - INFO - executor 完成子问题 'langchain 中短期记忆管理的最佳实践是什么？' 的处理
-2026-02-02 17:12:43,651 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 17:12:43,651 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 17:12:45,773 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 17:12:53,453 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-02 17:12:53,455 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-02 17:12:53,456 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 17:12:53,457 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 17:12:53,458 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 17:12:59,346 - agents.executoragent - INFO - exa_context_search 返回了 10 条数据
-2026-02-02 17:13:01,105 - agents.executoragent - WARNING - wikipedia_search 返回了 0 条数据
-2026-02-02 17:13:06,424 - agents.executoragent - INFO - tavily_search 返回了 1 条数据
-2026-02-02 17:13:06,424 - agents.executoragent - INFO - 搜索完成，共获得 11 条结果
-2026-02-02 17:13:06,425 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 17:13:10,891 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 17:13:10,892 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 17:13:10,901 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 17:13:15,151 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 17:13:15,152 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-02 17:13:15,152 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 17:13:17,202 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 17:13:17,202 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 17:13:17,203 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 17:13:21,164 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 17:13:21,165 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-02 17:13:21,165 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 17:13:47,676 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-02 17:13:47,676 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆管理（即对话上下文的维护）的最佳实践主要围绕**高效地维护和利用对话历史**，同时兼顾性能、成本和用户体验。以下是基于 LangChain 官方文档和最佳实践总结的核心要点：
-
-### 1. **动态模型选择（Dynamic Model Selection）**
-...
-2026-02-02 17:13:47,677 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-02 17:13:47,677 - agents.executoragent - WARNING - 处理请提供有关 langchain 短期记忆管理的建议。----langchain 中短期记忆管理的最佳实践是什么？时sub_url_pool 为空
-2026-02-02 17:13:47,678 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-02 17:13:47,678 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-02 17:13:47,678 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.reddit.com/r/LangChain/comments/1qna46j/best_practice_for_managing_l
-2026-02-02 17:13:47,678 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/1981392181592871894
-2026-02-02 17:13:47,678 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraphjs/concepts/memory/
-2026-02-02 17:13:47,678 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aistudio.baidu.com/blog/detail/737084298395525
-2026-02-02 17:13:47,678 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langgraph.com.cn/how-tos/memory/index.html
-2026-02-02 17:13:47,678 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://python.langchain.ac.cn/docs/how_to/chatbots_memory
-2026-02-02 17:13:47,678 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langchain.cadn.net.cn/python/docs/versions/migrating_memory/index.html
-2026-02-02 17:13:47,678 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://python.langchain.ac.cn/docs/versions/migrating_memory
-2026-02-02 17:13:47,678 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aws.amazon.com/cn/blogs/china/agentic-ai-infrastructure-deep-practice-ex
-2026-02-02 17:13:47,678 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.youtube.com/watch?v=rEhoJaNStzI
-2026-02-02 17:13:47,679 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.53ai.com/news/RAG/1732.html
-2026-02-02 17:13:47,679 - agents.executoragent - INFO - 去重统计: 去重前=11, 去重后=11, 去重率=0.0%
-2026-02-02 17:13:47,679 - agents.executoragent - INFO - 去重前: 11 篇
-2026-02-02 17:13:47,679 - agents.executoragent - INFO - 去重后: 11 篇
-2026-02-02 17:13:47,679 - agents.executoragent - INFO - 从 deduplicated_results 获取 11 篇文档
-2026-02-02 17:13:47,679 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-02 17:13:47,680 - agents.executoragent - INFO - 已将工具 query-docs 结果追加写入 context7_grep.json
-2026-02-02 17:13:47,680 - agents.executoragent - INFO - 总共需要下载 11 篇文档
-2026-02-02 17:13:47,680 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 17:13:49,605 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-02 17:13:49,606 - agents.executoragent - INFO - 开始下载 tavily 的 1 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-02 17:13:49,606 - agents.executoragent - INFO - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-02 17:13:49,607 - agents.executoragent - INFO - 开始下载 exa_context 的 10 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-02 17:13:49,607 - agents.executoragent - INFO - 使用下载工具 exa_context_download 处理 exa_context 数据
-2026-02-02 17:13:51,857 - agents.executoragent - INFO - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-02 17:13:51,858 - agents.executoragent - INFO - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=1
-2026-02-02 17:13:51,858 - agents.executoragent - INFO - 成功下载 1 篇 tavily 文档
-2026-02-02 17:13:51,868 - agents.executoragent - INFO - 下载工具 exa_context_download 返回类型: <class 'list'>
-2026-02-02 17:13:51,868 - agents.executoragent - INFO - 成功下载 0 篇 exa_context 文档
-2026-02-02 17:13:51,868 - agents.executoragent - INFO - 下载完成，共下载 1 篇文档
-2026-02-02 17:13:51,869 - agents.executoragent - INFO - executor 完成子问题 'langchain 中短期记忆管理的最佳实践是什么？' 的处理
-2026-02-02 19:55:24,249 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 19:55:24,251 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 19:55:27,097 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 20:05:52,304 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 20:05:52,304 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 20:05:54,159 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 20:05:56,381 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-02 20:05:56,385 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-02 20:05:56,385 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 20:05:56,388 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 20:05:56,390 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 20:06:01,527 - agents.executoragent - WARNING - wikipedia_search 返回了 0 条数据
-2026-02-02 20:06:02,204 - agents.executoragent - INFO - exa_context_search 返回了 1 条数据
-2026-02-02 20:06:02,825 - agents.executoragent - INFO - tavily_search 返回了 1 条数据
-2026-02-02 20:06:02,825 - agents.executoragent - INFO - 搜索完成，共获得 2 条结果
-2026-02-02 20:06:02,826 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 20:06:07,089 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 20:06:07,090 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 20:06:07,095 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 20:06:10,884 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 20:06:10,884 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-02 20:06:10,885 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 20:06:12,708 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 20:06:12,708 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 20:06:12,709 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 20:06:16,604 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 20:06:16,604 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-02 20:06:16,605 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 20:06:36,808 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-02 20:06:36,809 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆（Short-term memory）管理主要涉及对当前对话上下文的高效处理和维护。以下是基于 LangChain 官方文档的最佳实践总结：
-
----
-
-### 1. **使用 `messages` 管理对话状态**
-LangChain 使用 `messages`...
-2026-02-02 20:06:36,809 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-02 20:06:36,810 - agents.executoragent - WARNING - 处理请提供有关 langchain 短期记忆管理的建议。----langchain 中短期记忆管理的最佳实践是什么？时sub_url_pool 为空
-2026-02-02 20:06:36,810 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-02 20:06:36,810 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-02 20:06:36,810 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.youtube.com/watch?v=rEhoJaNStzI
-2026-02-02 20:06:36,810 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/1981392181592871894
-2026-02-02 20:06:36,810 - agents.executoragent - INFO - 去重统计: 去重前=2, 去重后=2, 去重率=0.0%
-2026-02-02 20:06:36,810 - agents.executoragent - INFO - 去重前: 2 篇
-2026-02-02 20:06:36,810 - agents.executoragent - INFO - 去重后: 2 篇
-2026-02-02 20:06:36,811 - agents.executoragent - INFO - 从 deduplicated_results 获取 2 篇文档
-2026-02-02 20:06:36,811 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-02 20:06:36,811 - agents.executoragent - INFO - 已将工具 query-docs 结果追加写入 context7_grep.json
-2026-02-02 20:06:36,811 - agents.executoragent - INFO - 总共需要下载 2 篇文档
-2026-02-02 20:06:36,811 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 20:06:38,505 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-02 20:06:38,506 - agents.executoragent - INFO - 开始下载 tavily 的 1 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-02 20:06:38,506 - agents.executoragent - INFO - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-02 20:06:38,507 - agents.executoragent - INFO - 开始下载 exa_context 的 1 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-02 20:06:38,507 - agents.executoragent - INFO - 使用下载工具 exa_context_download 处理 exa_context 数据
-2026-02-02 20:06:40,418 - agents.executoragent - INFO - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-02 20:06:40,418 - agents.executoragent - INFO - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=1
-2026-02-02 20:06:40,418 - agents.executoragent - INFO - 成功下载 1 篇 tavily 文档
-2026-02-02 20:06:40,418 - agents.executoragent - INFO - 下载工具 exa_context_download 返回类型: <class 'list'>
-2026-02-02 20:06:40,419 - agents.executoragent - INFO - 成功下载 0 篇 exa_context 文档
-2026-02-02 20:06:40,419 - agents.executoragent - INFO - 下载完成，共下载 1 篇文档
-2026-02-02 20:06:40,419 - agents.executoragent - INFO - executor 完成子问题 'langchain 中短期记忆管理的最佳实践是什么？' 的处理
-2026-02-02 20:16:58,441 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 20:16:58,442 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 20:17:00,102 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 20:17:02,347 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-02 20:17:02,349 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-02 20:17:02,349 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 20:17:02,350 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 20:17:02,352 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: langchain 中短期记忆管理的最佳实践是什么？
-2026-02-02 20:17:07,402 - agents.executoragent - WARNING - wikipedia_search 返回了 0 条数据
-2026-02-02 20:17:10,578 - agents.executoragent - INFO - exa_context_search 返回了 10 条数据
-2026-02-02 20:17:14,422 - agents.executoragent - INFO - tavily_search 返回了 10 条数据
-2026-02-02 20:17:14,422 - agents.executoragent - INFO - 搜索完成，共获得 20 条结果
-2026-02-02 20:17:14,423 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 20:17:16,107 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 20:17:16,108 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 20:17:16,114 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 20:17:19,936 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 20:17:19,937 - agents.executoragent - INFO -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-02 20:17:19,937 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 20:17:24,376 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=True
-2026-02-02 20:17:24,376 - agents.executoragent - INFO - LLM 决定调用 1 个可选工具
-2026-02-02 20:17:24,377 - agents.executoragent - INFO - 准备执行 1 个可选工具调用
-2026-02-02 20:17:28,448 - agents.executoragent - INFO - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-02 20:17:28,448 - agents.executoragent - INFO -   - 工具 query-docs 返回 1 条结果
-2026-02-02 20:17:28,449 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 20:17:54,140 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-02 20:17:54,140 - agents.executoragent - INFO - LLM 思考: 在 LangChain 中，短期记忆管理（即对话上下文的维护）的最佳实践主要围绕**高效地维护和利用对话历史**，同时兼顾性能、成本和用户体验。以下是基于 LangChain 官方文档和示例总结出的核心策略：
-
-### 1. **动态模型选择 (Dynamic Model Selection)**
-...
-2026-02-02 20:17:54,140 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-02 20:17:54,141 - agents.executoragent - WARNING - 处理请提供有关 langchain 短期记忆管理的建议。----langchain 中短期记忆管理的最佳实践是什么？时sub_url_pool 为空
-2026-02-02 20:17:54,141 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-02 20:17:54,141 - agents.executoragent - INFO - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-02 20:17:54,141 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://docs.langchain.com/oss/python/langchain/short-term-memory
-2026-02-02 20:17:54,141 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.reddit.com/r/LangChain/comments/1qna46j/best_practice_for_managing_l
-2026-02-02 20:17:54,142 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.reddit.com/r/LangChain/comments/1qna46j/best_practice_for_managing_l
-2026-02-02 20:17:54,142 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://python.langchain.com.cn/docs/modules/memory/
-2026-02-02 20:17:54,142 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.cnblogs.com/mangod/p/18243321
-2026-02-02 20:17:54,142 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/1981392181592871894
-2026-02-02 20:17:54,142 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraphjs/concepts/memory/
-2026-02-02 20:17:54,142 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aws.amazon.com/cn/blogs/china/agentic-ai-infrastructure-deep-practice-ex
-2026-02-02 20:17:54,142 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://aistudio.baidu.com/blog/detail/737084298395525
-2026-02-02 20:17:54,142 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.53ai.com/news/RAG/1732.html
-2026-02-02 20:17:54,142 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://ginonotes.com/posts/agentic-design-patterns-memory-management-translatio
-2026-02-02 20:17:54,142 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.youtube.com/watch?v=rEhoJaNStzI
-2026-02-02 20:17:54,142 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langgraph.com.cn/concepts/memory.1.html
-2026-02-02 20:17:54,143 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://github.langchain.ac.cn/langmem/concepts/conceptual_guide
-2026-02-02 20:17:54,143 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://langchain-doc.cn/v1/python/langgraph/memory.html
-2026-02-02 20:17:54,143 - agents.executoragent - INFO - 去重统计: 去重前=15, 去重后=15, 去重率=0.0%
-2026-02-02 20:17:54,143 - agents.executoragent - INFO - 去重前: 20 篇
-2026-02-02 20:17:54,143 - agents.executoragent - INFO - 去重后: 15 篇
-2026-02-02 20:17:54,143 - agents.executoragent - INFO - 从 deduplicated_results 获取 15 篇文档
-2026-02-02 20:17:54,143 - agents.executoragent - INFO - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-02 20:17:54,144 - agents.executoragent - INFO - 已将工具 query-docs 结果追加写入 context7_grep.json
-2026-02-02 20:17:54,144 - agents.executoragent - INFO - 总共需要下载 15 篇文档
-2026-02-02 20:17:54,144 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 20:17:55,769 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-02 20:17:55,770 - agents.executoragent - INFO - 开始下载 tavily 的 5 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-02 20:17:55,770 - agents.executoragent - INFO - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-02 20:17:55,772 - agents.executoragent - INFO - 开始下载 exa_context 的 10 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-02 20:17:55,772 - agents.executoragent - INFO - 使用下载工具 exa_context_download 处理 exa_context 数据
-2026-02-02 20:17:57,687 - agents.executoragent - INFO - 下载工具 exa_context_download 返回类型: <class 'list'>
-2026-02-02 20:17:57,688 - agents.executoragent - INFO - 成功下载 0 篇 exa_context 文档
-2026-02-02 20:17:57,693 - agents.executoragent - INFO - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-02 20:17:57,693 - agents.executoragent - INFO - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=5
-2026-02-02 20:17:57,693 - agents.executoragent - INFO - 成功下载 5 篇 tavily 文档
-2026-02-02 20:17:57,693 - agents.executoragent - INFO - 下载完成，共下载 5 篇文档
-2026-02-02 20:17:57,694 - agents.executoragent - INFO - executor 完成子问题 'langchain 中短期记忆管理的最佳实践是什么？' 的处理
-2026-02-02 20:24:52,774 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 20:24:52,774 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 20:24:54,915 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 20:24:57,014 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-02 20:24:57,016 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-02 20:24:57,016 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: 人工智能的发展历史？
-2026-02-02 20:24:57,017 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: 人工智能的发展历史？
-2026-02-02 20:24:57,019 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: 人工智能的发展历史？
-2026-02-02 20:25:03,263 - agents.executoragent - INFO - exa_context_search 返回了 10 条数据
-2026-02-02 20:25:05,940 - agents.executoragent - INFO - wikipedia_search 返回了 3 条数据
-2026-02-02 20:25:08,089 - agents.executoragent - INFO - tavily_search 返回了 7 条数据
-2026-02-02 20:25:08,090 - agents.executoragent - INFO - 搜索完成，共获得 20 条结果
-2026-02-02 20:25:08,091 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 20:26:10,319 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-02 20:26:10,319 - agents.executoragent - INFO - LLM 思考: 人工智能（Artificial Intelligence, AI）的发展历史可以追溯到20世纪中叶，其演进过程经历了多个阶段，包括理论奠基、技术突破、应用扩展以及近年来的爆发式增长。以下是人工智能发展的主要阶段和关键事件：
-
----
-
-### 1. **萌芽与理论奠基（1940s–1950s）**
-...
-2026-02-02 20:26:10,321 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-02 20:26:10,324 - agents.executoragent - WARNING - 处理介绍一下人工智能。----人工智能的发展历史？时sub_url_pool 为空
-2026-02-02 20:26:10,325 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD
-2026-02-02 20:26:10,325 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
-2026-02-02 20:26:10,325 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E9%80%9A%E7%94%A8%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%8
-2026-02-02 20:26:10,326 - agents.executoragent - DEBUG - 保留结果（URL去重）: http://www.npc.gov.cn/npc/c12434/c541/201905/t20190521_268525.html
-2026-02-02 20:26:10,326 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.math.pku.edu.cn/teachers/zhzhang/MAI2.pdf
-2026-02-02 20:26:10,326 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://data.beijing.gov.cn/publish/bjdata/xydt/ljhd/d48b57e85cec47f0b608e27eaae
-2026-02-02 20:26:10,326 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/zh-hans/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
-2026-02-02 20:26:10,326 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://blog.csdn.net/jarodyv/article/details/144699658
-2026-02-02 20:26:10,326 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://datawhalechina.github.io/thorough-pytorch/%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.
-2026-02-02 20:26:10,326 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.cloudflare.com/zh-cn/learning/ai/history-of-ai/
-2026-02-02 20:26:10,326 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.iso.cuhk.edu.hk/chinese/publications/CUHKUPDates/article.aspx?articl
-2026-02-02 20:26:10,327 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://developer.baidu.com/article/details/2733815
-2026-02-02 20:26:10,327 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://cloud.tencent.com.cn/developer/article/1971641
-2026-02-02 20:26:10,327 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://cloud.baidu.com/article/3376781
-2026-02-02 20:26:10,327 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.cac.gov.cn/2017-01/23/c_1120366748.htm
-2026-02-02 20:26:10,327 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.ibm.com/cn-zh/think/topics/history-of-artificial-intelligence
-2026-02-02 20:26:10,327 - agents.executoragent - INFO - 去重统计: 去重前=16, 去重后=16, 去重率=0.0%
-2026-02-02 20:26:10,327 - agents.executoragent - INFO - 去重前: 20 篇
-2026-02-02 20:26:10,327 - agents.executoragent - INFO - 去重后: 16 篇
-2026-02-02 20:26:10,328 - agents.executoragent - INFO - 从 deduplicated_results 获取 16 篇文档
-2026-02-02 20:26:10,328 - agents.executoragent - INFO - 总共需要下载 16 篇文档
-2026-02-02 20:26:10,328 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 20:26:14,812 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-02 20:26:14,812 - agents.executoragent - INFO - 开始下载 wikipedia 的 3 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-02 20:26:14,812 - agents.executoragent - INFO - 使用下载工具 wikipedia_download 处理 wikipedia 数据
-2026-02-02 20:26:14,816 - agents.executoragent - INFO - 开始下载 tavily 的 3 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-02 20:26:14,817 - agents.executoragent - INFO - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-02 20:26:14,820 - agents.executoragent - INFO - 开始下载 exa_context 的 10 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-02 20:26:14,820 - agents.executoragent - INFO - 使用下载工具 exa_context_download 处理 exa_context 数据
-2026-02-02 20:26:17,354 - agents.executoragent - INFO - 下载工具 wikipedia_download 返回类型: <class 'list'>
-2026-02-02 20:26:17,354 - agents.executoragent - INFO - 成功下载 0 篇 wikipedia 文档
-2026-02-02 20:26:17,360 - agents.executoragent - INFO - 下载工具 exa_context_download 返回类型: <class 'list'>
-2026-02-02 20:26:17,360 - agents.executoragent - INFO - 成功下载 0 篇 exa_context 文档
-2026-02-02 20:26:17,368 - agents.executoragent - INFO - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-02 20:26:17,368 - agents.executoragent - INFO - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=3
-2026-02-02 20:26:17,368 - agents.executoragent - INFO - 成功下载 3 篇 tavily 文档
-2026-02-02 20:26:17,368 - agents.executoragent - INFO - 下载完成，共下载 3 篇文档
-2026-02-02 20:26:17,369 - agents.executoragent - INFO - executor 完成子问题 '人工智能的发展历史？' 的处理
-2026-02-02 20:35:04,282 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-02 20:35:04,282 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 20:35:06,466 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-02 20:35:08,646 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-02 20:35:08,648 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-02 20:35:08,648 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: 人工智能的发展历史？
-2026-02-02 20:35:08,650 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: 人工智能的发展历史？
-2026-02-02 20:35:08,651 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: 人工智能的发展历史？
-2026-02-02 20:35:15,007 - agents.executoragent - INFO - tavily_search 返回了 7 条数据
-2026-02-02 20:35:15,159 - agents.executoragent - INFO - exa_context_search 返回了 10 条数据
-2026-02-02 20:35:17,623 - agents.executoragent - INFO - wikipedia_search 返回了 3 条数据
-2026-02-02 20:35:17,623 - agents.executoragent - INFO - 搜索完成，共获得 20 条结果
-2026-02-02 20:35:17,624 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-02 20:35:38,532 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-02 20:35:38,532 - agents.executoragent - INFO - LLM 思考: 人工智能（Artificial Intelligence, AI）的发展历史可以追溯到20世纪中叶，其演进过程大致可分为以下几个阶段：
-
-### 1. **萌芽与奠基（1940s–1950s）**
-- 1943年，沃伦·麦卡洛克（Warren McCulloch）和沃尔特·皮茨（Walter Pit...
-2026-02-02 20:35:38,533 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-02 20:35:38,533 - agents.executoragent - WARNING - 处理介绍一下人工智能。----人工智能的发展历史？时sub_url_pool 为空
-2026-02-02 20:35:38,533 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD
-2026-02-02 20:35:38,534 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
-2026-02-02 20:35:38,534 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E9%80%9A%E7%94%A8%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%8
-2026-02-02 20:35:38,534 - agents.executoragent - DEBUG - 保留结果（URL去重）: http://www.npc.gov.cn/npc/c12434/c541/201905/t20190521_268525.html
-2026-02-02 20:35:38,534 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.math.pku.edu.cn/teachers/zhzhang/MAI2.pdf
-2026-02-02 20:35:38,534 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://data.beijing.gov.cn/publish/bjdata/xydt/ljhd/d48b57e85cec47f0b608e27eaae
-2026-02-02 20:35:38,534 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/zh-hans/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
-2026-02-02 20:35:38,534 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://blog.csdn.net/jarodyv/article/details/144699658
-2026-02-02 20:35:38,534 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://datawhalechina.github.io/thorough-pytorch/%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.
-2026-02-02 20:35:38,534 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.cloudflare.com/zh-cn/learning/ai/history-of-ai/
-2026-02-02 20:35:38,534 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://developer.baidu.com/article/details/2733815
-2026-02-02 20:35:38,534 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://cloud.tencent.com.cn/developer/article/1971641
-2026-02-02 20:35:38,534 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://cloud.baidu.com/article/3376781
-2026-02-02 20:35:38,534 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://view.inews.qq.com/a/20230301A08BTW00
-2026-02-02 20:35:38,534 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://news.qq.com/rain/a/20221112A04S4N00
-2026-02-02 20:35:38,535 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.cac.gov.cn/2017-01/23/c_1120366748.htm
-2026-02-02 20:35:38,535 - agents.executoragent - INFO - 去重统计: 去重前=16, 去重后=16, 去重率=0.0%
-2026-02-02 20:35:38,535 - agents.executoragent - INFO - 去重前: 20 篇
-2026-02-02 20:35:38,535 - agents.executoragent - INFO - 去重后: 16 篇
-2026-02-02 20:35:38,535 - agents.executoragent - INFO - 从 deduplicated_results 获取 16 篇文档
-2026-02-02 20:35:38,535 - agents.executoragent - INFO - 总共需要下载 16 篇文档
-2026-02-02 20:35:38,535 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-02 20:35:40,853 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-02 20:35:40,853 - agents.executoragent - INFO - 开始下载 wikipedia 的 3 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-02 20:35:40,853 - agents.executoragent - INFO - 使用下载工具 wikipedia_download 处理 wikipedia 数据
-2026-02-02 20:35:40,855 - agents.executoragent - INFO - 开始下载 tavily 的 3 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-02 20:35:40,856 - agents.executoragent - INFO - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-02 20:35:40,857 - agents.executoragent - INFO - 开始下载 exa_context 的 10 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-02 20:35:40,857 - agents.executoragent - INFO - 使用下载工具 exa_context_download 处理 exa_context 数据
-2026-02-02 20:35:43,378 - agents.executoragent - INFO - 下载工具 exa_context_download 返回类型: <class 'list'>
-2026-02-02 20:35:43,378 - agents.executoragent - INFO - 成功下载 0 篇 exa_context 文档
-2026-02-02 20:35:43,382 - agents.executoragent - INFO - 下载工具 wikipedia_download 返回类型: <class 'list'>
-2026-02-02 20:35:43,382 - agents.executoragent - INFO - 成功下载 0 篇 wikipedia 文档
-2026-02-02 20:35:43,418 - agents.executoragent - INFO - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-02 20:35:43,418 - agents.executoragent - INFO - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=3
-2026-02-02 20:35:43,418 - agents.executoragent - INFO - 成功下载 3 篇 tavily 文档
-2026-02-02 20:35:43,418 - agents.executoragent - INFO - 下载完成，共下载 3 篇文档
-2026-02-02 20:35:43,419 - agents.executoragent - INFO - executor 完成子问题 '人工智能的发展历史？' 的处理
+2026-02-03 17:18:19,936 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 17:18:19,942 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 17:18:19,950 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 17:18:22,009 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 17:18:26,642 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:18:26,643 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
+2026-02-03 17:18:26,644 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：cannot access local variable 'tools' where it is not associated with a value
+2026-02-03 17:22:30,542 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 17:22:30,548 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 17:22:30,554 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 17:22:32,637 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 17:22:38,587 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:22:38,588 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
+2026-02-03 17:22:38,592 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：No message found in input
+2026-02-03 17:32:59,859 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 17:32:59,864 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 17:32:59,871 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 17:33:01,817 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 17:33:07,462 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:33:07,463 - agents.planneragent - INFO - planner_agent 在第0轮迭代中，未能生成有效的json结构，继续进入llm_chat节点
+2026-02-03 17:33:14,079 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:33:14,081 - agents.planneragent - INFO - planner_agent 在第0轮迭代中，未能生成有效的json结构，继续进入llm_chat节点
+2026-02-03 17:33:16,549 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:33:16,549 - agents.planneragent - INFO - planner_agent 在第0轮迭代中，未能生成有效的json结构，继续进入llm_chat节点
+2026-02-03 17:33:19,570 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:33:19,570 - agents.planneragent - INFO - planner_agent 在第0轮迭代中，未能生成有效的json结构，继续进入llm_chat节点
+2026-02-03 17:34:38,541 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 17:34:38,547 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 17:34:38,553 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 17:34:40,723 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 17:34:45,771 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:34:45,772 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
+2026-02-03 17:34:45,776 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：No message found in input
+2026-02-03 17:42:38,341 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 17:42:38,350 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 17:42:38,360 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 17:42:40,373 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 17:42:46,312 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:42:46,313 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:42:48,883 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:42:48,884 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:42:56,944 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:42:56,945 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:00,785 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:00,786 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:03,654 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:03,655 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:06,476 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:06,477 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:08,479 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:08,480 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:11,457 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:11,457 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:15,005 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:15,006 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:17,791 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:17,792 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:20,263 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:20,264 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:25,518 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:25,518 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:28,453 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:28,454 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:31,222 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:31,223 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:35,158 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:35,158 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:38,428 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:38,428 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:40,693 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:40,694 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:42,756 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:42,757 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:45,539 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:45,539 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:48,171 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:48,172 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:51,412 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:51,413 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:53,731 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:53,731 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:56,668 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:56,669 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:43:59,295 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:43:59,296 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:44:02,431 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:44:02,431 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:44:02,432 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：Recursion limit of 25 reached without hitting a stop condition. You can increase the limit by setting the `recursion_limit` config key.
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langgraph/errors/GRAPH_RECURSION_LIMIT
+2026-02-03 17:48:41,251 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 17:48:41,257 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 17:48:41,263 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 17:48:43,264 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 17:48:49,423 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:48:49,423 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
+2026-02-03 17:49:20,224 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 17:49:20,230 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 17:49:20,238 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 17:49:22,637 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 17:49:27,651 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:49:27,651 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
+2026-02-03 17:49:49,367 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:49:49,368 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
+2026-02-03 17:49:54,309 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 17:49:54,310 - agents.planneragent - WARNING - planner_agent 达到最大迭代次数3，结束planner流程
+2026-02-03 17:59:53,108 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 17:59:53,115 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 17:59:53,121 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 17:59:55,190 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 18:00:04,536 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 18:00:04,536 - agents.planneragent - INFO - planner_agent 在第1轮迭代中，未能生成有效的json结构，继续进入llm_chat节点
+2026-02-03 18:00:08,147 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 18:00:08,147 - agents.planneragent - INFO - planner_agent 在第2轮迭代中，未能生成有效的json结构，继续进入llm_chat节点
+2026-02-03 18:00:37,206 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 18:00:37,213 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 18:00:37,219 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 18:00:39,500 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 18:00:44,729 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 18:00:44,730 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
+2026-02-03 18:00:59,640 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：Message dict must contain 'role' and 'content' keys, got {'planner_messages': [ToolMessage(content=[{'type': 'text', 'text': '{\n  "source_tool": "exa_summary_search",\n  "result_type": "papers",\n  "count": 10,\n  "papers": [\n    {\n      "paper_id": "",\n      "title": "AI 大躍進：2024 年AI 發展回顧，展望未來 - Trend Micro",\n      "authors": [],\n      "abstract": "在2024年，人工智能（AI）逐渐融入人们的日常生活，成为企业解决方案的重要组成部分。知名公司如Microsoft和Salesforce已将AI技术嵌入其产品中，推动了AI应用的普及。此外，各类专门的AI应用程序和服务不断涌现，政府和监管机构也开始制定相关规范以引导AI的发展。\\n\\n2024年的一个显著趋势是代理式AI（agentic AI）的崛起，许多AI公司将研发重心转向这一领域，提供“AI代理服务”。例如，Anthropic推出的Claude 3.5 Sonnet模型能够操作计算机，标志着AI在日常任务中的应用能力提升。\\n\\n同时，检索增强生成（RAG）技术的应用使得AI系统能够更有效地获取相关信息，从而提高问题解决的准确性。小型化AI模型的开发也在加速，Meta和Nvidia等公司推出了更快速、体积更小的模型，使得AI技术在移动设备上也能高效运行。\\n\\n然而，AI的普及也带来了新的挑战，尤其是在网络安全方面。AI技术被不法分子用于网络诈骗和勒索，深伪技术的应用使得网络犯罪更加隐蔽和复杂，给社会带来了严重威胁。\\n\\n总的来说，2024年AI",\n      "doi": "",\n      "published_date": "2025-02-04T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://www.trendmicro.com/zh_tw/research/25/a/top-ai-trends-from-2024-review.html",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "2024年AI大事件盘点：谁家的产品破圈了？",\n      "authors": [],\n      "abstract": "在2024年，人工智能（AI）技术在日常生活中的应用和影响显著增强，涵盖了多个领域。以下是一些关键事件和产品的回顾：\\n\\n1. **智能手机**：三星发布的Galaxy S24系列手机深度整合AI技术，旨在提升沟通效率和生产力，推动AI创新的普及。\\n\\n2. **机器人**：斯坦福大学的“阿罗哈机器人”展示了其在厨房中的应用，能够完成复杂的烹饪任务，预示着机器人在家庭生活中的潜在角色。\\n\\n3. **混合现实设备**：苹果推出的Vision Pro头戴设备虽然技术创新，但市场反应不一，应用场景尚不明确，价格也让消费者犹豫。\\n\\n4. **AI视频生成**：OpenAI发布的Sora视频生成模型标志着视觉生成领域的重大突破，但其实际应用价值尚待提升。\\n\\n5. **AI芯片**：英伟达发布的B200 GPU在计算能力上实现了巨大飞跃，推动了AI应用的性能提升。\\n\\n6. **开源大模型**：Meta的LLaMA 3模型将支持多模态处理，增强了文本和图像的理解与生成能力，推动开源AI模型的竞争。\\n\\n7. **生命科学**：谷歌DeepMind的AlphaFold 3模型在",\n      "doi": "",\n      "published_date": "2026-02-03T18:00:59.344128",\n      "pdf_url": "",\n      "url": "https://www.woshipm.com/share/6164374.html",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "人民日报海外版\\n-\\nAI智能体，构建智慧生活新图景",\n      "authors": [],\n      "abstract": "在2024年，人工智能（AI）智能体正逐渐改变我们的日常生活，成为智能化服务的重要组成部分。AI智能体具备自主决策和交互能力，能够理解人类语言并根据用户需求提供个性化服务。例如，在智能汽车中，AI智能体可以根据用户的口味和需求自动规划出行路线，甚至在烹饪时选择合适的食材并监控烹饪过程。\\n\\nAI智能体的应用场景不断扩展，涵盖了智能家居、教育、医疗、交通等多个领域。在电商直播中，AI智能体能够实现无人化的直播，提升商品交易额。在教育领域，它可以提供智能辅导，帮助学生更好地掌握知识。\\n\\n尽管AI智能体带来了便利和创新，但其发展仍面临挑战，包括技术瓶颈、隐私和伦理问题。专家呼吁对AI智能体进行分类管理和监管，以确保其安全和有效的应用。总体来看，AI智能体在未来生活中将发挥越来越重要的作用，推动社会的智能化转型。",\n      "doi": "",\n      "published_date": "2024-11-01T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://paper.people.com.cn/hwbwap/html/2024-11/01/content_26088456.htm",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "AI智能体，构建智慧生活新图景_行业资讯_数字中国建设峰会",\n      "authors": [],\n      "abstract": "在2024年，人工智能（AI）智能体在日常生活中的应用和影响日益显著。AI智能体是具备自主决策和交互能力的智能实体，能够通过语音指令执行任务，极大地提升用户体验。例如，在智能汽车中，AI智能体可以根据用户的需求自动规划出行路线，提供个性化的服务。\\n\\n随着大模型技术的发展，AI智能体的应用场景不断拓宽，涵盖了智能家居、医疗、教育、交通等多个领域。在智能家居中，用户可以通过AI智能体进行语音控制，管理家电和日常事务；在医疗领域，AI智能体能够协助医生进行诊断和健康管理；在教育中，它们提供智能辅导，帮助学生更好地学习。\\n\\n尽管AI智能体带来了便利，但也面临技术和伦理挑战。当前的AI智能体多只能处理简单任务，且存在隐私泄露的风险。因此，行业专家呼吁对AI智能体的开发和应用进行监管，以确保安全和隐私保护。\\n\\n总体而言，AI智能体正在重塑人机互动方式，推动智慧生活的实现，未来有望在更多领域发挥重要作用。",\n      "doi": "",\n      "published_date": "2024-11-01T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://www.szzg.gov.cn/2024/szzg/xyzx/202411/t20241101_4919027.htm",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "AI智能体走热，将如何改变生活_数字快讯_数字中国建设峰会",\n      "authors": [],\n      "abstract": "AI智能体正在迅速成为日常生活中的重要工具，改变了人们的工作和生活方式。根据2024年数字中国建设峰会的报道，AI智能体被视为未来人工智能发展的关键方向，能够执行复杂任务并主动参与工作流程。与传统大模型相比，AI智能体不仅能进行语言交流，还能自动完成如下单、支付等具体操作。\\n\\n在实际应用中，AI智能体已被广泛用于客服、内容创作、编程、财务等领域，显著提高了工作效率。例如，自媒体运营者通过AI智能体可以快速生成大量文案，帮助企业节省人力成本。此外，AI智能体还在老龄化社会中发挥积极作用，辅助老年人日常生活，并在紧急情况下执行危险任务。\\n\\n随着技术的进步，AI智能体的应用场景不断扩展，预计将重塑人与技术的互动方式，创造新的商业模式。然而，技术风险、伦理和隐私问题也随之而来，行业需要建立相应的安全标准和审查机制，以确保AI智能体的健康发展。",\n      "doi": "",\n      "published_date": "2024-10-17T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://www.digitalchina.gov.cn/2024/xwzx/szkx/202410/t20241017_4909742.htm",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "AI智能體，構建智慧生活新圖景--科普中國--人民網",\n      "authors": [],\n      "abstract": "在2024年，人工智能（AI）智能体的应用正在深刻改变日常生活。AI智能体不仅在智能汽车中提供语音助手服务，还在各类设备中实现个性化的用户交互。例如，用户可以通过简单的语音指令让AI智能体规划旅行、推荐音乐或处理日常事务，极大提升了生活便利性。\\n\\nAI智能体的核心在于其基于大模型技术的自主性和交互性，使其能够理解人类语言、进行智能推理和情感分析。这种技术的进步使得人机交互变得更加自然流畅，用户无需具备复杂的技术背景即可创建和使用自己的AI智能体。\\n\\n当前，AI智能体的应用场景不断拓宽，包括智能家居、在线购物、教育辅导等领域。例如，百度的电商直播平台利用AI智能体实现了无人化的直播，提升了商家的销售效率。此外，AI智能体在医疗、交通和教育等行业也展现出巨大的潜力，能够协助专业人士进行决策和管理。\\n\\n尽管AI智能体带来了诸多便利，但其发展仍面临挑战，包括技术的推理能力不足和潜在的隐私风险。专家建议应加强对AI智能体的监管，确保其安全和合规使用，以更好地服务于社会发展。",\n      "doi": "",\n      "published_date": "2024-11-01T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://kpzg.people.com.cn/BIG5/n1/2024/1101/c404214-40351675.html",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "AI智能體走熱，將如何改變生活--經濟·科技--人民網",\n      "authors": [],\n      "abstract": "人工智能智能体（AI智能体）正在迅速成为日常生活中的重要工具，改变了人们的工作和生活方式。AI智能体被视为一种更为复杂和人性化的智能系统，能够主动执行任务并提供帮助，而不仅仅是回答问题。例如，它们可以自动处理购物、内容创作和客户服务等任务，显著提高工作效率。\\n\\n在多个行业中，AI智能体的应用正在推动生产力的提升和企业管理方式的转变。自媒体运营者和中小企业利用AI智能体快速生成内容和管理多个账户，显示出其在内容创作领域的潜力。此外，AI智能体还被应用于老龄化社会的辅助生活、自然灾害救援等场景，展现出其广泛的社会价值。\\n\\n随着技术的进步，AI智能体的开发变得更加简单，预计未来每部智能手机都将配备AI智能体，满足用户的各种需求。然而，AI智能体的发展也面临技术风险、伦理和隐私问题，业界呼吁在研发和使用过程中加强安全性和伦理审查，以确保其健康发展。\\n\\n总之，AI智能体在日常生活中的应用正逐步深入，带来效率提升和生活便利，同时也需要关注其潜在的风险和挑战。",\n      "doi": "",\n      "published_date": "2024-10-17T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://finance.people.com.cn/BIG5/n1/2024/1017/c1004-40341167.html",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "十问“AI陪伴”：现状、趋势与机会_腾讯新闻",\n      "authors": [],\n      "abstract": "该文章探讨了“AI陪伴”的现状、趋势与机会，尤其是在中国市场的潜力。随着AI技术的发展，越来越多的人开始接受AI作为一种陪伴形式，调查显示98%的受访者愿意尝试AI陪伴。文章指出，AI陪伴在消费者心中更像是一种“物”，而非“人”，用户期待AI能够提供即时回应、保护隐私和情感感知。\\n\\n在技术层面，AI陪伴的未来依赖于长期记忆、主动想象和多模态能力的突破。尽管AI在提供陪伴方面具有优势，如无需担心对方情绪和隐私泄露，但其缺乏物理实体仍是一个显著缺陷。文章还提到，AI陪伴可能会影响家庭和社会结构，尤其是在满足老年人和弱势群体需求方面。\\n\\n总体来看，AI陪伴在日常生活中的应用前景广阔，但仍面临技术和伦理挑战。随着技术的进步，AI可能成为人类生活中不可或缺的“第三类家庭成员”。",\n      "doi": "",\n      "published_date": "2024-10-29T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://news.qq.com/rain/a/20241023A0889Z00?suid=&media_id=",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "加快形成以人工智能为引擎的新质生产力--专题报道-中国共产党新闻网",\n      "authors": [],\n      "abstract": "The article discusses the acceleration of developing new productive forces driven by artificial intelligence (AI) in China. It emphasizes the transformative impact of AI on various sectors, including daily life, where it enhances efficiency and innovation. The piece highlights specific applications of AI, such as in healthcare, education, and smart cities, illustrating how these technologies improve service delivery and user experience. Additionally, it addresses the broader implications of AI integration, including economic growth and societal changes, while also considering challenges like ethical concerns and job displacement. Overall, the article underscores the importance of embracing AI to foster a modernized and efficient society in 2024 and beyond. For more detailed insights, you can read the full article [here](https://cpc.people.com.cn/n1/2024/1030/c459166-403).",\n      "doi": "",\n      "published_date": "2024-10-30T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://cpc.people.com.cn/n1/2024/1030/c459166-40350262.html",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "[PDF] 生成式人工智能应用发展报告（2024）",\n      "authors": [],\n      "abstract": "The \\"2024 Generative Artificial Intelligence Application Development Report\\" by the China Internet Network Information Center explores the rapid development and impact of generative AI in daily life. It highlights the significant advancements in AI technologies, particularly since the introduction of deep learning and generative adversarial networks (GANs), which have revolutionized content creation across various media, including text, images, and audio.\\n\\nKey findings include:\\n\\n1. **Rapid Development**: Generative AI has evolved quickly, with major contributions from Chinese tech giants like Baidu, Alibaba, Tencent, and Huawei, leading to innovative applications in sectors such as education, healthcare, and consumer services.\\n\\n2. **User Experience**: The report emphasizes how generative AI enhances daily life by providing intelligent solutions that improve convenience and efficiency. Applications range from natural language processing tools like ChatGPT to automated content generation, which facilitate communication and information access.\\n\\n3. **Economic Impact**: Generative AI is positioned as a crucial driver of the digital economy, fostering new business models and transforming traditional industries through automation and intelligent services.\\n\\n4. **Policy and Governance**: The report outlines the supportive policy environment in China, which includes various regulations aimed at promoting the healthy development of AI technologies while addressing safety and ethical concerns.\\n\\n5. **Challenges and Recommendations**: Despite its benefits, the report identifies challenges such as data privacy, ethical implications, and the need for robust governance frameworks to ensure responsible AI deployment.\\n\\nOverall, the report serves as a comprehensive resource for understanding the",\n      "doi": "",\n      "published_date": "2024-12-08T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://pdf.dfcfw.com/pdf/H3_AP202412081641219285_1.pdf",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    }\n  ]\n}', 'id': 'lc_9c6f2201-86fe-4441-a8e8-c83a3b0d07df'}], name='exa_summary_search', tool_call_id='call_63512004a9954d5c91520a51')]}
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/MESSAGE_COERCION_FAILURE 
+2026-02-03 18:01:40,273 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 18:01:40,281 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 18:01:40,287 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 18:02:11,055 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 18:02:11,065 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 18:02:11,071 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 18:02:14,564 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 18:02:19,197 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 18:02:19,198 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
+2026-02-03 18:02:40,903 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 18:02:40,904 - agents.planneragent - INFO - planner_agent 在第2轮迭代中，未能生成有效的json结构，继续进入llm_chat节点
+2026-02-03 18:02:43,170 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 18:02:43,170 - agents.planneragent - WARNING - planner_agent 达到最大迭代次数3，结束planner流程
+2026-02-03 18:11:01,548 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 18:11:01,555 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 18:11:01,563 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 18:11:03,649 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 18:11:08,686 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 18:11:08,687 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
+2026-02-03 18:11:27,275 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 18:11:27,276 - agents.planneragent - INFO - planner_agent 在第2轮迭代中，成功生成有效的json结构，进入persist_result节点
+2026-02-03 18:11:27,277 - agents.planneragent - INFO - planner_agent persist_result 节点写入结果:{'tasks': ['人工智能在日常生活中的主要应用场景有哪些（如智能助手、医疗、教育、出行等）', '生成式AI和AI智能体如何改变人们的消费、创作与社交行为', '人工智能对个人隐私、数据安全和伦理带来的具体挑战', 'AI技术普及对就业结构和新兴职业产生的影响', '当前AI在日常生活中应用的主要技术瓶颈和用户体验问题']}
+2026-02-03 18:11:27,278 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：2 validation errors for AIMessage
+content.str
+  Input should be a valid string [type=string_type, input_value={'tasks': ['人工智能...和用户体验问题']}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+content.list[union[str,dict[any,any]]]
+  Input should be a valid list [type=list_type, input_value={'tasks': ['人工智能...和用户体验问题']}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/list_type
+2026-02-03 18:11:56,064 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 18:11:56,072 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 18:11:56,079 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 18:11:58,100 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 18:12:02,818 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 18:12:02,819 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
+2026-02-03 18:12:23,363 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
+2026-02-03 18:12:23,363 - agents.planneragent - INFO - planner_agent 在第2轮迭代中，成功生成有效的json结构，进入persist_result节点
+2026-02-03 18:12:23,364 - agents.planneragent - INFO - planner_agent persist_result 节点写入结果:{"tasks": ["2024\u5e74\u751f\u6210\u5f0fAI\u5728\u65e5\u5e38\u751f\u6d3b\u4e2d\u7684\u5177\u4f53\u5e94\u7528\u573a\u666f\u53ca\u5176\u5bf9\u5185\u5bb9\u521b\u4f5c\u3001\u5a31\u4e50\u548c\u5e7f\u544a\u884c\u4e1a\u7684\u5f71\u54cd", "AI\u667a\u80fd\u4f53\u5728\u667a\u80fd\u5bb6\u5c45\u3001\u4ea4\u901a\u3001\u533b\u7597\u548c\u6559\u80b2\u7b49\u9886\u57df\u7684\u5b9e\u9645\u5e94\u7528\u65b9\u5f0f\u4e0e\u7528\u6237\u4ea4\u4e92\u6a21\u5f0f", "\u4eba\u5de5\u667a\u80fd\u5728\u63d0\u5347\u5de5\u4f5c\u6548\u7387\uff08\u5982\u7f16\u7a0b\u3001\u5ba2\u670d\u3001\u7535\u5546\u76f4\u64ad\uff09\u65b9\u9762\u7684\u5178\u578b\u6848\u4f8b\u548c\u6548\u679c", "AI\u6280\u672f\u666e\u53ca\u5e26\u6765\u7684\u9690\u79c1\u3001\u4f26\u7406\u4e0e\u5b89\u5168\u98ce\u9669\uff08\u5982deepfake\u8bc8\u9a97\u3001\u6570\u636e\u6cc4\u9732\uff09\u6709\u54ea\u4e9b\u5177\u4f53\u8868\u73b0", "\u5404\u56fd\u6216\u5730\u533a\u57282024\u5e74\u9488\u5bf9AI\u751f\u6d3b\u5e94\u7528\u51fa\u53f0\u4e86\u54ea\u4e9b\u76d1\u7ba1\u653f\u7b56\u6216\u6cbb\u7406\u6846\u67b6"]}
+2026-02-03 18:12:23,365 - agents.planneragent - INFO - planner_chatmodel对于用户的人工智能在生活中的影响？ 返回结果json解析成功，内容为:{'tasks': ['2024年生成式AI在日常生活中的具体应用场景及其对内容创作、娱乐和广告行业的影响', 'AI智能体在智能家居、交通、医疗和教育等领域的实际应用方式与用户交互模式', '人工智能在提升工作效率（如编程、客服、电商直播）方面的典型案例和效果', 'AI技术普及带来的隐私、伦理与安全风险（如deepfake诈骗、数据泄露）有哪些具体表现', '各国或地区在2024年针对AI生活应用出台了哪些监管政策或治理框架']}
+2026-02-03 18:26:59,594 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-03 18:26:59,603 - agents.planneragent - INFO - 完成planner_graph的初始化构造
+2026-02-03 18:26:59,612 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-03 18:27:01,944 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-03 18:27:07,665 - agents.planneragent - INFO - planner_agent llm_chat 节点在第0轮迭代中，成功生成AIMessage类型的消息，内容为:```
+{
+    "tasks": [
+    "人工智能在日常生活中的主要应用场景有哪些",
+    "人工智能对个人工作效率和生活方式产生了哪些具体影响",
+    "人工智能在教育、医疗、交通等民生领域带来的积极变化",
+    "人工智能普及过程中引发的隐私、就业或伦理问题有哪些",
+    "不同年龄或社会群体对人工智能技术接受度和使用差异"
+    ]
+}
+```
+2026-02-03 18:27:07,666 - agents.planneragent - INFO - planner_agent 在第1轮迭代中，成功生成有效的json结构，进入persist_result节点
+2026-02-03 18:27:07,667 - agents.planneragent - INFO - planner_agent persist_result 节点写入结果:{"tasks": ["\u4eba\u5de5\u667a\u80fd\u5728\u65e5\u5e38\u751f\u6d3b\u4e2d\u7684\u4e3b\u8981\u5e94\u7528\u573a\u666f\u6709\u54ea\u4e9b", "\u4eba\u5de5\u667a\u80fd\u5bf9\u4e2a\u4eba\u5de5\u4f5c\u6548\u7387\u548c\u751f\u6d3b\u65b9\u5f0f\u4ea7\u751f\u4e86\u54ea\u4e9b\u5177\u4f53\u5f71\u54cd", "\u4eba\u5de5\u667a\u80fd\u5728\u6559\u80b2\u3001\u533b\u7597\u3001\u4ea4\u901a\u7b49\u6c11\u751f\u9886\u57df\u5e26\u6765\u7684\u79ef\u6781\u53d8\u5316", "\u4eba\u5de5\u667a\u80fd\u666e\u53ca\u8fc7\u7a0b\u4e2d\u5f15\u53d1\u7684\u9690\u79c1\u3001\u5c31\u4e1a\u6216\u4f26\u7406\u95ee\u9898\u6709\u54ea\u4e9b", "\u4e0d\u540c\u5e74\u9f84\u6216\u793e\u4f1a\u7fa4\u4f53\u5bf9\u4eba\u5de5\u667a\u80fd\u6280\u672f\u63a5\u53d7\u5ea6\u548c\u4f7f\u7528\u5dee\u5f02"]}
+2026-02-03 18:27:07,667 - agents.planneragent - INFO - planner_chatmodel对于用户的人工智能在生活中的影响？ 返回结果json解析成功，内容为:{'tasks': ['人工智能在日常生活中的主要应用场景有哪些', '人工智能对个人工作效率和生活方式产生了哪些具体影响', '人工智能在教育、医疗、交通等民生领域带来的积极变化', '人工智能普及过程中引发的隐私、就业或伦理问题有哪些', '不同年龄或社会群体对人工智能技术接受度和使用差异']}

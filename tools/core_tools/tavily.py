@@ -97,7 +97,8 @@ class TavilySearch:
                 # 生成文件名
                 if paper.title and paper.title != "无标题":
                     # 有标题：tavily_{title}.md
-                    safe_title = self._sanitize_filename(paper.title)
+                    short_title = paper.title[:10]
+                    safe_title = self._sanitize_filename(short_title)
                     filename = f"tavily_{safe_title}.md"
                 else:
                     # 无标题：tavily_无标题_{timestamp}.md
