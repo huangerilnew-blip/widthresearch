@@ -16,23 +16,12 @@ import logging, json, asyncio, os
 from concurrent_log_handler import ConcurrentRotatingFileHandler
 from core.mcp.tools import get_tools
 from dotenv import load_dotenv
-from core.mcp.tools import get_tools
+from core.log_config import setup_logger
+
 load_dotenv()
-# 设置日志基本配置，级别为DEBUG或INFO
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-logger.handlers = []  # 清空默认处理器
-# 使用ConcurrentRotatingFileHandler
-handler = ConcurrentRotatingFileHandler(
-    Config.LOG_FILE,
-    maxBytes = Config.MAX_BYTES,
-    backupCount = Config.BACKUP_COUNT
-)
-handler.setLevel(logging.DEBUG)
-handler.setFormatter(logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-))
-logger.addHandler(handler)
+
+# 设置日志
+logger = setup_logger(__name__)
 
 class ExecutorState(TypedDict):
     sub_url_pool: list[str]  # url 池，防止重复下载

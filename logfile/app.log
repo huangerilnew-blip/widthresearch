@@ -1,287 +1,208 @@
-2026-02-03 16:06:38,932 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 16:06:38,939 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 16:06:38,940 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：'\n    "tasks"'
-2026-02-03 16:13:58,966 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 16:13:58,966 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 16:14:01,198 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 16:14:03,733 - agents.executoragent - INFO - 完成 executor_graph 的初始化构造
-2026-02-03 16:14:03,735 - agents.executoragent - INFO - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-03 16:14:03,735 - agents.executoragent - INFO - 调用工具 wikipedia_search 搜索: 人工智能的发展历史？
-2026-02-03 16:14:03,737 - agents.executoragent - INFO - 调用工具 exa_context_search 搜索: 人工智能的发展历史？
-2026-02-03 16:14:03,738 - agents.executoragent - INFO - 调用工具 tavily_search 搜索: 人工智能的发展历史？
-2026-02-03 16:14:10,174 - agents.executoragent - INFO - tavily_search 返回了 10 条数据
-2026-02-03 16:14:10,599 - agents.executoragent - INFO - exa_context_search 返回了 10 条数据
-2026-02-03 16:14:13,376 - agents.executoragent - INFO - wikipedia_search 返回了 3 条数据
-2026-02-03 16:14:13,377 - agents.executoragent - INFO - 搜索完成，共获得 23 条结果
-2026-02-03 16:14:13,378 - agents.executoragent - INFO - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-03 16:14:33,785 - agents.executoragent - INFO - LLM 决策结果: 是否调用工具=False
-2026-02-03 16:14:33,785 - agents.executoragent - INFO - LLM 思考: 人工智能（Artificial Intelligence, AI）的发展历史可以追溯到20世纪中叶，其演进过程经历了多个阶段，包括早期的理论奠基、几次繁荣与低谷（“AI寒冬”）、以及近年来因计算能力提升和大数据兴起而带来的复兴。以下是人工智能发展的主要阶段概述：
+2026-02-06 18:44:37,225 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-06 18:44:37,226 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-06 18:44:38,622 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-06 18:44:40 - agents.executoragent - INFO - [executoragent.py:986] - 完成 executor_graph 的初始化构造
+2026-02-06 18:44:40 - agents.executoragent - INFO - [executoragent.py:598] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-06 18:44:40 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 wikipedia_search 搜索: 人工智能的发展历史？
+2026-02-06 18:44:40 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 exa_context_search 搜索: 人工智能的发展历史？
+2026-02-06 18:44:40 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 tavily_search 搜索: 人工智能的发展历史？
+2026-02-06 18:45:02 - agents.executoragent - WARNING - [executoragent.py:174] - wikipedia_search 返回了 0 条数据
+2026-02-06 18:45:03 - agents.executoragent - WARNING - [executoragent.py:174] - tavily_search 返回了 0 条数据
+2026-02-06 19:03:55,714 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-06 19:03:55,714 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-06 19:03:57,145 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-06 19:03:59 - agents.executoragent - INFO - [executoragent.py:986] - 完成 executor_graph 的初始化构造
+2026-02-06 19:03:59 - agents.executoragent - INFO - [executoragent.py:598] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-06 19:03:59 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 wikipedia_search 搜索: 人工智能的发展历史？
+2026-02-06 19:03:59 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 exa_context_search 搜索: 人工智能的发展历史？
+2026-02-06 19:03:59 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 tavily_search 搜索: 人工智能的发展历史？
+2026-02-06 19:04:21 - agents.executoragent - WARNING - [executoragent.py:174] - tavily_search 返回了 0 条数据
+2026-02-06 19:04:31 - agents.executoragent - WARNING - [executoragent.py:174] - wikipedia_search 返回了 0 条数据
+2026-02-06 19:13:43,862 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-06 19:13:43,862 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-06 19:13:45,388 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-06 19:13:47 - agents.executoragent - INFO - [executoragent.py:986] - 完成 executor_graph 的初始化构造
+2026-02-06 19:13:47 - agents.executoragent - INFO - [executoragent.py:598] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-06 19:13:47 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 wikipedia_search 搜索: 人工智能的发展历史？
+2026-02-06 19:13:47 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 exa_context_search 搜索: 人工智能的发展历史？
+2026-02-06 19:13:47 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 tavily_search 搜索: 人工智能的发展历史？
+2026-02-06 19:14:41,611 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-06 19:14:41,611 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-06 19:14:43,050 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-06 19:14:45 - agents.executoragent - INFO - [executoragent.py:986] - 完成 executor_graph 的初始化构造
+2026-02-06 19:14:45 - agents.executoragent - INFO - [executoragent.py:598] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-06 19:14:45 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 wikipedia_search 搜索: 人工智能的发展历史？
+2026-02-06 19:14:45 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 exa_context_search 搜索: 人工智能的发展历史？
+2026-02-06 19:14:45 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 tavily_search 搜索: 人工智能的发展历史？
+2026-02-06 19:15:06 - agents.executoragent - WARNING - [executoragent.py:174] - tavily_search 返回了 0 条数据
+2026-02-06 19:15:06 - agents.executoragent - WARNING - [executoragent.py:174] - exa_context_search 返回了 0 条数据
+2026-02-06 19:15:06 - agents.executoragent - WARNING - [executoragent.py:174] - wikipedia_search 返回了 0 条数据
+2026-02-06 19:15:06 - agents.executoragent - INFO - [executoragent.py:622] - 搜索完成，共获得 0 条结果
+2026-02-06 19:15:06 - agents.executoragent - INFO - [executoragent.py:497] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-06 19:15:29 - agents.executoragent - INFO - [executoragent.py:507] - LLM 决策结果: 是否调用工具=False
+2026-02-06 19:15:29 - agents.executoragent - INFO - [executoragent.py:509] - LLM 思考: 人工智能（AI）的发展历史可以追溯到20世纪中叶，其演进过程大致可分为以下几个关键阶段：
 
----
+### 1. **起源与早期探索（1940s–1950s）**
+- **理论基础**：1943年，沃伦·麦卡洛克（Warren McCulloch）和沃尔特·皮茨（Walter Pitts）提出首个神经网络数...
+2026-02-06 19:15:29 - agents.executoragent - INFO - [executoragent.py:528] - LLM 决定不调用可选工具，进入清洗阶段
+2026-02-06 19:15:29 - agents.executoragent - WARNING - [executoragent.py:727] - 处理介绍一下人工智能。----人工智能的发展历史？时sub_url_pool 为空
+2026-02-06 19:15:29 - agents.executoragent - WARNING - [executoragent.py:735] - 没有搜索结果需要去重
+2026-02-06 19:15:29 - agents.executoragent - WARNING - [executoragent.py:871] - 没有需要下载的文档
+2026-02-06 19:15:29 - agents.executoragent - INFO - [executoragent.py:1009] - executor 完成子问题 '人工智能的发展历史？' 的处理
+2026-02-06 19:35:04,803 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-06 19:35:04,804 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-06 19:35:06,574 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-06 19:55:52,473 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-06 19:55:52,474 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-06 19:55:54,272 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-06 19:55:57 - agents.executoragent - INFO - [executoragent.py:986] - 完成 executor_graph 的初始化构造
+2026-02-06 19:55:57 - agents.executoragent - INFO - [executoragent.py:598] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-06 19:55:57 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 wikipedia_search 搜索: 人工智能的发展历史？
+2026-02-06 19:55:57 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 exa_context_search 搜索: 人工智能的发展历史？
+2026-02-06 19:55:57 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 tavily_search 搜索: 人工智能的发展历史？
+2026-02-06 19:56:00 - agents.executoragent - INFO - [executoragent.py:172] - exa_context_search 返回了 10 条数据
+2026-02-06 19:56:02 - agents.executoragent - INFO - [executoragent.py:172] - wikipedia_search 返回了 3 条数据
+2026-02-06 19:56:07 - agents.executoragent - INFO - [executoragent.py:172] - tavily_search 返回了 10 条数据
+2026-02-06 19:56:07 - agents.executoragent - INFO - [executoragent.py:622] - 搜索完成，共获得 23 条结果
+2026-02-06 19:56:07 - agents.executoragent - INFO - [executoragent.py:497] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-06 19:56:24 - agents.executoragent - INFO - [executoragent.py:507] - LLM 决策结果: 是否调用工具=False
+2026-02-06 19:56:24 - agents.executoragent - INFO - [executoragent.py:509] - LLM 思考: 人工智能（Artificial Intelligence, AI）的发展历史可以追溯到20世纪中叶，其演进过程大致可分为以下几个阶段：
 
-### 1. **萌芽与...
-2026-02-03 16:14:33,786 - agents.executoragent - INFO - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-03 16:14:33,787 - agents.executoragent - WARNING - 处理介绍一下人工智能。----人工智能的发展历史？时sub_url_pool 为空
-2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD
-2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
-2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E9%80%9A%E7%94%A8%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%8
-2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://cdn.gecacademy.cn/oa/upload/2022-03-24%2017-49-26-%E4%BA%BA%E5%B7%A5%E6%
-2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://news.skhynix.com.cn/all-about-ai-the-origins-evolution-future-of-ai/
-2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zh.wikipedia.org/zh-hans/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
-2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/375549477
-2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://datawhalechina.github.io/thorough-pytorch/%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.
-2026-02-03 16:14:33,787 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://blog.csdn.net/jarodyv/article/details/144699658
-2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.ibm.com/cn-zh/think/topics/history-of-artificial-intelligence
-2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.cac.gov.cn/2017-01/23/c_1120366748.htm
-2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.bbc.com/zhongwen/trad/science-48380424
-2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://developer.baidu.com/article/details/2733815
-2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://cloud.tencent.com.cn/developer/article/1971641
-2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://cloud.baidu.com/article/3376781
-2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://view.inews.qq.com/a/20230301A08BTW00
-2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://news.qq.com/rain/a/20221112A04S4N00
-2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.cac.gov.cn/2019-02/16/c_1124122584.htm
-2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://finance.sina.com.cn/roll/2025-04-30/doc-ineuxwev4150658.shtml
-2026-02-03 16:14:33,788 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://news.qq.com/rain/a/20250425A01A5Q00
-2026-02-03 16:14:33,789 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.cas.cn/zjs/201902/t20190218_4679625.shtml
-2026-02-03 16:14:33,789 - agents.executoragent - DEBUG - 保留结果（URL去重）: https://www.caai.cn/index.php?s=%2Fhome%2Farticle%2Fdetail%2Fid%2F1278.html
-2026-02-03 16:14:33,789 - agents.executoragent - INFO - 去重统计: 去重前=22, 去重后=22, 去重率=0.0%
-2026-02-03 16:14:33,789 - agents.executoragent - INFO - 去重前: 23 篇
-2026-02-03 16:14:33,789 - agents.executoragent - INFO - 去重后: 22 篇
-2026-02-03 16:14:33,789 - agents.executoragent - INFO - 从 deduplicated_results 获取 22 篇文档
-2026-02-03 16:14:33,790 - agents.executoragent - INFO - 总共需要下载 22 篇文档
-2026-02-03 16:14:33,790 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 16:14:35,865 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-03 16:14:35,865 - agents.executoragent - INFO - 开始下载 wikipedia 的 3 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-03 16:14:35,865 - agents.executoragent - INFO - 使用下载工具 wikipedia_download 处理 wikipedia 数据
-2026-02-03 16:14:35,868 - agents.executoragent - INFO - 开始下载 tavily 的 9 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-03 16:14:35,868 - agents.executoragent - INFO - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-03 16:14:35,872 - agents.executoragent - INFO - 开始下载 exa_context 的 10 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-03 16:14:35,872 - agents.executoragent - INFO - 使用下载工具 exa_context_download 处理 exa_context 数据
-2026-02-03 16:14:38,632 - agents.executoragent - INFO - 下载工具 exa_context_download 返回类型: <class 'list'>
-2026-02-03 16:14:38,632 - agents.executoragent - INFO - 下载工具 exa_context_download 首项类型: <class 'dict'>
-2026-02-03 16:14:38,632 - agents.executoragent - INFO - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=1
-2026-02-03 16:14:38,633 - agents.executoragent - INFO - 成功下载 1 篇 exa_context 文档
-2026-02-03 16:14:38,633 - agents.executoragent - INFO - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-03 16:14:38,633 - agents.executoragent - INFO - 下载工具 tavily_download 首项类型: <class 'dict'>
-2026-02-03 16:14:38,634 - agents.executoragent - INFO - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=9
-2026-02-03 16:14:38,635 - agents.executoragent - INFO - 成功下载 9 篇 tavily 文档
-2026-02-03 16:14:38,658 - agents.executoragent - INFO - 下载工具 wikipedia_download 返回类型: <class 'list'>
-2026-02-03 16:14:38,659 - agents.executoragent - INFO - 下载工具 wikipedia_download 首项类型: <class 'dict'>
-2026-02-03 16:14:38,659 - agents.executoragent - INFO - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=3
-2026-02-03 16:14:38,659 - agents.executoragent - INFO - 成功下载 3 篇 wikipedia 文档
-2026-02-03 16:14:38,659 - agents.executoragent - INFO - 下载完成，共下载 13 篇文档
-2026-02-03 16:14:38,660 - agents.executoragent - INFO - executor 完成子问题 '人工智能的发展历史？' 的处理
-2026-02-03 16:42:52,036 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 16:42:52,043 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 16:42:52,052 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 16:42:54,425 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 16:42:56,890 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：'PlannerAgent' object has no attribute 'llm_with_tools'
-2026-02-03 16:47:32,157 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 16:47:32,163 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 16:47:32,171 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 16:47:34,344 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 16:47:40,954 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:47:43,825 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:47:45,880 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:47:50,294 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:47:53,494 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:47:55,863 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:47:58,448 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:02,680 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:05,618 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:07,645 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:11,576 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:15,325 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:18,177 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:23,622 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:26,037 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:29,577 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:33,343 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:38,225 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:40,988 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:43,459 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:47,055 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:49,060 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:52,672 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:48:58,239 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:49:01,305 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 16:49:01,306 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：Recursion limit of 25 reached without hitting a stop condition. You can increase the limit by setting the `recursion_limit` config key.
-For troubleshooting, visit: https://docs.langchain.com/oss/python/langgraph/errors/GRAPH_RECURSION_LIMIT
-2026-02-03 17:18:19,936 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 17:18:19,942 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 17:18:19,950 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 17:18:22,009 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 17:18:26,642 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:18:26,643 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
-2026-02-03 17:18:26,644 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：cannot access local variable 'tools' where it is not associated with a value
-2026-02-03 17:22:30,542 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 17:22:30,548 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 17:22:30,554 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 17:22:32,637 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 17:22:38,587 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:22:38,588 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
-2026-02-03 17:22:38,592 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：No message found in input
-2026-02-03 17:32:59,859 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 17:32:59,864 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 17:32:59,871 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 17:33:01,817 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 17:33:07,462 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:33:07,463 - agents.planneragent - INFO - planner_agent 在第0轮迭代中，未能生成有效的json结构，继续进入llm_chat节点
-2026-02-03 17:33:14,079 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:33:14,081 - agents.planneragent - INFO - planner_agent 在第0轮迭代中，未能生成有效的json结构，继续进入llm_chat节点
-2026-02-03 17:33:16,549 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:33:16,549 - agents.planneragent - INFO - planner_agent 在第0轮迭代中，未能生成有效的json结构，继续进入llm_chat节点
-2026-02-03 17:33:19,570 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:33:19,570 - agents.planneragent - INFO - planner_agent 在第0轮迭代中，未能生成有效的json结构，继续进入llm_chat节点
-2026-02-03 17:34:38,541 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 17:34:38,547 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 17:34:38,553 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 17:34:40,723 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 17:34:45,771 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:34:45,772 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
-2026-02-03 17:34:45,776 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：No message found in input
-2026-02-03 17:42:38,341 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 17:42:38,350 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 17:42:38,360 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 17:42:40,373 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 17:42:46,312 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:42:46,313 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:42:48,883 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:42:48,884 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:42:56,944 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:42:56,945 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:00,785 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:00,786 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:03,654 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:03,655 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:06,476 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:06,477 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:08,479 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:08,480 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:11,457 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:11,457 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:15,005 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:15,006 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:17,791 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:17,792 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:20,263 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:20,264 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:25,518 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:25,518 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:28,453 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:28,454 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:31,222 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:31,223 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:35,158 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:35,158 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:38,428 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:38,428 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:40,693 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:40,694 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:42,756 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:42,757 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:45,539 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:45,539 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:48,171 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:48,172 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:51,412 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:51,413 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:53,731 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:53,731 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:56,668 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:56,669 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:43:59,295 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:43:59,296 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:44:02,431 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:44:02,431 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:44:02,432 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：Recursion limit of 25 reached without hitting a stop condition. You can increase the limit by setting the `recursion_limit` config key.
-For troubleshooting, visit: https://docs.langchain.com/oss/python/langgraph/errors/GRAPH_RECURSION_LIMIT
-2026-02-03 17:48:41,251 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 17:48:41,257 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 17:48:41,263 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 17:48:43,264 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 17:48:49,423 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:48:49,423 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
-2026-02-03 17:49:20,224 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 17:49:20,230 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 17:49:20,238 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 17:49:22,637 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 17:49:27,651 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:49:27,651 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
-2026-02-03 17:49:49,367 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:49:49,368 - agents.planneragent - INFO - planner_agent 条件路由器检测到空工具调用，继续进入llm_chat节点
-2026-02-03 17:49:54,309 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 17:49:54,310 - agents.planneragent - WARNING - planner_agent 达到最大迭代次数3，结束planner流程
-2026-02-03 17:59:53,108 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 17:59:53,115 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 17:59:53,121 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 17:59:55,190 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 18:00:04,536 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 18:00:04,536 - agents.planneragent - INFO - planner_agent 在第1轮迭代中，未能生成有效的json结构，继续进入llm_chat节点
-2026-02-03 18:00:08,147 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 18:00:08,147 - agents.planneragent - INFO - planner_agent 在第2轮迭代中，未能生成有效的json结构，继续进入llm_chat节点
-2026-02-03 18:00:37,206 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 18:00:37,213 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 18:00:37,219 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 18:00:39,500 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 18:00:44,729 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 18:00:44,730 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
-2026-02-03 18:00:59,640 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：Message dict must contain 'role' and 'content' keys, got {'planner_messages': [ToolMessage(content=[{'type': 'text', 'text': '{\n  "source_tool": "exa_summary_search",\n  "result_type": "papers",\n  "count": 10,\n  "papers": [\n    {\n      "paper_id": "",\n      "title": "AI 大躍進：2024 年AI 發展回顧，展望未來 - Trend Micro",\n      "authors": [],\n      "abstract": "在2024年，人工智能（AI）逐渐融入人们的日常生活，成为企业解决方案的重要组成部分。知名公司如Microsoft和Salesforce已将AI技术嵌入其产品中，推动了AI应用的普及。此外，各类专门的AI应用程序和服务不断涌现，政府和监管机构也开始制定相关规范以引导AI的发展。\\n\\n2024年的一个显著趋势是代理式AI（agentic AI）的崛起，许多AI公司将研发重心转向这一领域，提供“AI代理服务”。例如，Anthropic推出的Claude 3.5 Sonnet模型能够操作计算机，标志着AI在日常任务中的应用能力提升。\\n\\n同时，检索增强生成（RAG）技术的应用使得AI系统能够更有效地获取相关信息，从而提高问题解决的准确性。小型化AI模型的开发也在加速，Meta和Nvidia等公司推出了更快速、体积更小的模型，使得AI技术在移动设备上也能高效运行。\\n\\n然而，AI的普及也带来了新的挑战，尤其是在网络安全方面。AI技术被不法分子用于网络诈骗和勒索，深伪技术的应用使得网络犯罪更加隐蔽和复杂，给社会带来了严重威胁。\\n\\n总的来说，2024年AI",\n      "doi": "",\n      "published_date": "2025-02-04T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://www.trendmicro.com/zh_tw/research/25/a/top-ai-trends-from-2024-review.html",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "2024年AI大事件盘点：谁家的产品破圈了？",\n      "authors": [],\n      "abstract": "在2024年，人工智能（AI）技术在日常生活中的应用和影响显著增强，涵盖了多个领域。以下是一些关键事件和产品的回顾：\\n\\n1. **智能手机**：三星发布的Galaxy S24系列手机深度整合AI技术，旨在提升沟通效率和生产力，推动AI创新的普及。\\n\\n2. **机器人**：斯坦福大学的“阿罗哈机器人”展示了其在厨房中的应用，能够完成复杂的烹饪任务，预示着机器人在家庭生活中的潜在角色。\\n\\n3. **混合现实设备**：苹果推出的Vision Pro头戴设备虽然技术创新，但市场反应不一，应用场景尚不明确，价格也让消费者犹豫。\\n\\n4. **AI视频生成**：OpenAI发布的Sora视频生成模型标志着视觉生成领域的重大突破，但其实际应用价值尚待提升。\\n\\n5. **AI芯片**：英伟达发布的B200 GPU在计算能力上实现了巨大飞跃，推动了AI应用的性能提升。\\n\\n6. **开源大模型**：Meta的LLaMA 3模型将支持多模态处理，增强了文本和图像的理解与生成能力，推动开源AI模型的竞争。\\n\\n7. **生命科学**：谷歌DeepMind的AlphaFold 3模型在",\n      "doi": "",\n      "published_date": "2026-02-03T18:00:59.344128",\n      "pdf_url": "",\n      "url": "https://www.woshipm.com/share/6164374.html",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "人民日报海外版\\n-\\nAI智能体，构建智慧生活新图景",\n      "authors": [],\n      "abstract": "在2024年，人工智能（AI）智能体正逐渐改变我们的日常生活，成为智能化服务的重要组成部分。AI智能体具备自主决策和交互能力，能够理解人类语言并根据用户需求提供个性化服务。例如，在智能汽车中，AI智能体可以根据用户的口味和需求自动规划出行路线，甚至在烹饪时选择合适的食材并监控烹饪过程。\\n\\nAI智能体的应用场景不断扩展，涵盖了智能家居、教育、医疗、交通等多个领域。在电商直播中，AI智能体能够实现无人化的直播，提升商品交易额。在教育领域，它可以提供智能辅导，帮助学生更好地掌握知识。\\n\\n尽管AI智能体带来了便利和创新，但其发展仍面临挑战，包括技术瓶颈、隐私和伦理问题。专家呼吁对AI智能体进行分类管理和监管，以确保其安全和有效的应用。总体来看，AI智能体在未来生活中将发挥越来越重要的作用，推动社会的智能化转型。",\n      "doi": "",\n      "published_date": "2024-11-01T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://paper.people.com.cn/hwbwap/html/2024-11/01/content_26088456.htm",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "AI智能体，构建智慧生活新图景_行业资讯_数字中国建设峰会",\n      "authors": [],\n      "abstract": "在2024年，人工智能（AI）智能体在日常生活中的应用和影响日益显著。AI智能体是具备自主决策和交互能力的智能实体，能够通过语音指令执行任务，极大地提升用户体验。例如，在智能汽车中，AI智能体可以根据用户的需求自动规划出行路线，提供个性化的服务。\\n\\n随着大模型技术的发展，AI智能体的应用场景不断拓宽，涵盖了智能家居、医疗、教育、交通等多个领域。在智能家居中，用户可以通过AI智能体进行语音控制，管理家电和日常事务；在医疗领域，AI智能体能够协助医生进行诊断和健康管理；在教育中，它们提供智能辅导，帮助学生更好地学习。\\n\\n尽管AI智能体带来了便利，但也面临技术和伦理挑战。当前的AI智能体多只能处理简单任务，且存在隐私泄露的风险。因此，行业专家呼吁对AI智能体的开发和应用进行监管，以确保安全和隐私保护。\\n\\n总体而言，AI智能体正在重塑人机互动方式，推动智慧生活的实现，未来有望在更多领域发挥重要作用。",\n      "doi": "",\n      "published_date": "2024-11-01T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://www.szzg.gov.cn/2024/szzg/xyzx/202411/t20241101_4919027.htm",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "AI智能体走热，将如何改变生活_数字快讯_数字中国建设峰会",\n      "authors": [],\n      "abstract": "AI智能体正在迅速成为日常生活中的重要工具，改变了人们的工作和生活方式。根据2024年数字中国建设峰会的报道，AI智能体被视为未来人工智能发展的关键方向，能够执行复杂任务并主动参与工作流程。与传统大模型相比，AI智能体不仅能进行语言交流，还能自动完成如下单、支付等具体操作。\\n\\n在实际应用中，AI智能体已被广泛用于客服、内容创作、编程、财务等领域，显著提高了工作效率。例如，自媒体运营者通过AI智能体可以快速生成大量文案，帮助企业节省人力成本。此外，AI智能体还在老龄化社会中发挥积极作用，辅助老年人日常生活，并在紧急情况下执行危险任务。\\n\\n随着技术的进步，AI智能体的应用场景不断扩展，预计将重塑人与技术的互动方式，创造新的商业模式。然而，技术风险、伦理和隐私问题也随之而来，行业需要建立相应的安全标准和审查机制，以确保AI智能体的健康发展。",\n      "doi": "",\n      "published_date": "2024-10-17T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://www.digitalchina.gov.cn/2024/xwzx/szkx/202410/t20241017_4909742.htm",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "AI智能體，構建智慧生活新圖景--科普中國--人民網",\n      "authors": [],\n      "abstract": "在2024年，人工智能（AI）智能体的应用正在深刻改变日常生活。AI智能体不仅在智能汽车中提供语音助手服务，还在各类设备中实现个性化的用户交互。例如，用户可以通过简单的语音指令让AI智能体规划旅行、推荐音乐或处理日常事务，极大提升了生活便利性。\\n\\nAI智能体的核心在于其基于大模型技术的自主性和交互性，使其能够理解人类语言、进行智能推理和情感分析。这种技术的进步使得人机交互变得更加自然流畅，用户无需具备复杂的技术背景即可创建和使用自己的AI智能体。\\n\\n当前，AI智能体的应用场景不断拓宽，包括智能家居、在线购物、教育辅导等领域。例如，百度的电商直播平台利用AI智能体实现了无人化的直播，提升了商家的销售效率。此外，AI智能体在医疗、交通和教育等行业也展现出巨大的潜力，能够协助专业人士进行决策和管理。\\n\\n尽管AI智能体带来了诸多便利，但其发展仍面临挑战，包括技术的推理能力不足和潜在的隐私风险。专家建议应加强对AI智能体的监管，确保其安全和合规使用，以更好地服务于社会发展。",\n      "doi": "",\n      "published_date": "2024-11-01T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://kpzg.people.com.cn/BIG5/n1/2024/1101/c404214-40351675.html",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "AI智能體走熱，將如何改變生活--經濟·科技--人民網",\n      "authors": [],\n      "abstract": "人工智能智能体（AI智能体）正在迅速成为日常生活中的重要工具，改变了人们的工作和生活方式。AI智能体被视为一种更为复杂和人性化的智能系统，能够主动执行任务并提供帮助，而不仅仅是回答问题。例如，它们可以自动处理购物、内容创作和客户服务等任务，显著提高工作效率。\\n\\n在多个行业中，AI智能体的应用正在推动生产力的提升和企业管理方式的转变。自媒体运营者和中小企业利用AI智能体快速生成内容和管理多个账户，显示出其在内容创作领域的潜力。此外，AI智能体还被应用于老龄化社会的辅助生活、自然灾害救援等场景，展现出其广泛的社会价值。\\n\\n随着技术的进步，AI智能体的开发变得更加简单，预计未来每部智能手机都将配备AI智能体，满足用户的各种需求。然而，AI智能体的发展也面临技术风险、伦理和隐私问题，业界呼吁在研发和使用过程中加强安全性和伦理审查，以确保其健康发展。\\n\\n总之，AI智能体在日常生活中的应用正逐步深入，带来效率提升和生活便利，同时也需要关注其潜在的风险和挑战。",\n      "doi": "",\n      "published_date": "2024-10-17T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://finance.people.com.cn/BIG5/n1/2024/1017/c1004-40341167.html",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "十问“AI陪伴”：现状、趋势与机会_腾讯新闻",\n      "authors": [],\n      "abstract": "该文章探讨了“AI陪伴”的现状、趋势与机会，尤其是在中国市场的潜力。随着AI技术的发展，越来越多的人开始接受AI作为一种陪伴形式，调查显示98%的受访者愿意尝试AI陪伴。文章指出，AI陪伴在消费者心中更像是一种“物”，而非“人”，用户期待AI能够提供即时回应、保护隐私和情感感知。\\n\\n在技术层面，AI陪伴的未来依赖于长期记忆、主动想象和多模态能力的突破。尽管AI在提供陪伴方面具有优势，如无需担心对方情绪和隐私泄露，但其缺乏物理实体仍是一个显著缺陷。文章还提到，AI陪伴可能会影响家庭和社会结构，尤其是在满足老年人和弱势群体需求方面。\\n\\n总体来看，AI陪伴在日常生活中的应用前景广阔，但仍面临技术和伦理挑战。随着技术的进步，AI可能成为人类生活中不可或缺的“第三类家庭成员”。",\n      "doi": "",\n      "published_date": "2024-10-29T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://news.qq.com/rain/a/20241023A0889Z00?suid=&media_id=",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "加快形成以人工智能为引擎的新质生产力--专题报道-中国共产党新闻网",\n      "authors": [],\n      "abstract": "The article discusses the acceleration of developing new productive forces driven by artificial intelligence (AI) in China. It emphasizes the transformative impact of AI on various sectors, including daily life, where it enhances efficiency and innovation. The piece highlights specific applications of AI, such as in healthcare, education, and smart cities, illustrating how these technologies improve service delivery and user experience. Additionally, it addresses the broader implications of AI integration, including economic growth and societal changes, while also considering challenges like ethical concerns and job displacement. Overall, the article underscores the importance of embracing AI to foster a modernized and efficient society in 2024 and beyond. For more detailed insights, you can read the full article [here](https://cpc.people.com.cn/n1/2024/1030/c459166-403).",\n      "doi": "",\n      "published_date": "2024-10-30T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://cpc.people.com.cn/n1/2024/1030/c459166-40350262.html",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    },\n    {\n      "paper_id": "",\n      "title": "[PDF] 生成式人工智能应用发展报告（2024）",\n      "authors": [],\n      "abstract": "The \\"2024 Generative Artificial Intelligence Application Development Report\\" by the China Internet Network Information Center explores the rapid development and impact of generative AI in daily life. It highlights the significant advancements in AI technologies, particularly since the introduction of deep learning and generative adversarial networks (GANs), which have revolutionized content creation across various media, including text, images, and audio.\\n\\nKey findings include:\\n\\n1. **Rapid Development**: Generative AI has evolved quickly, with major contributions from Chinese tech giants like Baidu, Alibaba, Tencent, and Huawei, leading to innovative applications in sectors such as education, healthcare, and consumer services.\\n\\n2. **User Experience**: The report emphasizes how generative AI enhances daily life by providing intelligent solutions that improve convenience and efficiency. Applications range from natural language processing tools like ChatGPT to automated content generation, which facilitate communication and information access.\\n\\n3. **Economic Impact**: Generative AI is positioned as a crucial driver of the digital economy, fostering new business models and transforming traditional industries through automation and intelligent services.\\n\\n4. **Policy and Governance**: The report outlines the supportive policy environment in China, which includes various regulations aimed at promoting the healthy development of AI technologies while addressing safety and ethical concerns.\\n\\n5. **Challenges and Recommendations**: Despite its benefits, the report identifies challenges such as data privacy, ethical implications, and the need for robust governance frameworks to ensure responsible AI deployment.\\n\\nOverall, the report serves as a comprehensive resource for understanding the",\n      "doi": "",\n      "published_date": "2024-12-08T00:00:00+00:00",\n      "pdf_url": "",\n      "url": "https://pdf.dfcfw.com/pdf/H3_AP202412081641219285_1.pdf",\n      "source": "exa_summary",\n      "categories": [],\n      "keywords": [],\n      "citations": 0,\n      "references": [],\n      "extra": {}\n    }\n  ]\n}', 'id': 'lc_9c6f2201-86fe-4441-a8e8-c83a3b0d07df'}], name='exa_summary_search', tool_call_id='call_63512004a9954d5c91520a51')]}
-For troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/MESSAGE_COERCION_FAILURE 
-2026-02-03 18:01:40,273 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 18:01:40,281 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 18:01:40,287 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 18:02:11,055 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 18:02:11,065 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 18:02:11,071 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 18:02:14,564 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 18:02:19,197 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 18:02:19,198 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
-2026-02-03 18:02:40,903 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 18:02:40,904 - agents.planneragent - INFO - planner_agent 在第2轮迭代中，未能生成有效的json结构，继续进入llm_chat节点
-2026-02-03 18:02:43,170 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 18:02:43,170 - agents.planneragent - WARNING - planner_agent 达到最大迭代次数3，结束planner流程
-2026-02-03 18:11:01,548 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 18:11:01,555 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 18:11:01,563 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 18:11:03,649 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 18:11:08,686 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 18:11:08,687 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
-2026-02-03 18:11:27,275 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 18:11:27,276 - agents.planneragent - INFO - planner_agent 在第2轮迭代中，成功生成有效的json结构，进入persist_result节点
-2026-02-03 18:11:27,277 - agents.planneragent - INFO - planner_agent persist_result 节点写入结果:{'tasks': ['人工智能在日常生活中的主要应用场景有哪些（如智能助手、医疗、教育、出行等）', '生成式AI和AI智能体如何改变人们的消费、创作与社交行为', '人工智能对个人隐私、数据安全和伦理带来的具体挑战', 'AI技术普及对就业结构和新兴职业产生的影响', '当前AI在日常生活中应用的主要技术瓶颈和用户体验问题']}
-2026-02-03 18:11:27,278 - agents.planneragent - ERROR - planner_chatmodel对于用户的人工智能在生活中的影响？ 出现错误：2 validation errors for AIMessage
-content.str
-  Input should be a valid string [type=string_type, input_value={'tasks': ['人工智能...和用户体验问题']}, input_type=dict]
-    For further information visit https://errors.pydantic.dev/2.12/v/string_type
-content.list[union[str,dict[any,any]]]
-  Input should be a valid list [type=list_type, input_value={'tasks': ['人工智能...和用户体验问题']}, input_type=dict]
-    For further information visit https://errors.pydantic.dev/2.12/v/list_type
-2026-02-03 18:11:56,064 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 18:11:56,072 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 18:11:56,079 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 18:11:58,100 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 18:12:02,818 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 18:12:02,819 - agents.planneragent - INFO - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
-2026-02-03 18:12:23,363 - agents.planneragent - INFO - 完成planner_agent中chain的初始化构造
-2026-02-03 18:12:23,363 - agents.planneragent - INFO - planner_agent 在第2轮迭代中，成功生成有效的json结构，进入persist_result节点
-2026-02-03 18:12:23,364 - agents.planneragent - INFO - planner_agent persist_result 节点写入结果:{"tasks": ["2024\u5e74\u751f\u6210\u5f0fAI\u5728\u65e5\u5e38\u751f\u6d3b\u4e2d\u7684\u5177\u4f53\u5e94\u7528\u573a\u666f\u53ca\u5176\u5bf9\u5185\u5bb9\u521b\u4f5c\u3001\u5a31\u4e50\u548c\u5e7f\u544a\u884c\u4e1a\u7684\u5f71\u54cd", "AI\u667a\u80fd\u4f53\u5728\u667a\u80fd\u5bb6\u5c45\u3001\u4ea4\u901a\u3001\u533b\u7597\u548c\u6559\u80b2\u7b49\u9886\u57df\u7684\u5b9e\u9645\u5e94\u7528\u65b9\u5f0f\u4e0e\u7528\u6237\u4ea4\u4e92\u6a21\u5f0f", "\u4eba\u5de5\u667a\u80fd\u5728\u63d0\u5347\u5de5\u4f5c\u6548\u7387\uff08\u5982\u7f16\u7a0b\u3001\u5ba2\u670d\u3001\u7535\u5546\u76f4\u64ad\uff09\u65b9\u9762\u7684\u5178\u578b\u6848\u4f8b\u548c\u6548\u679c", "AI\u6280\u672f\u666e\u53ca\u5e26\u6765\u7684\u9690\u79c1\u3001\u4f26\u7406\u4e0e\u5b89\u5168\u98ce\u9669\uff08\u5982deepfake\u8bc8\u9a97\u3001\u6570\u636e\u6cc4\u9732\uff09\u6709\u54ea\u4e9b\u5177\u4f53\u8868\u73b0", "\u5404\u56fd\u6216\u5730\u533a\u57282024\u5e74\u9488\u5bf9AI\u751f\u6d3b\u5e94\u7528\u51fa\u53f0\u4e86\u54ea\u4e9b\u76d1\u7ba1\u653f\u7b56\u6216\u6cbb\u7406\u6846\u67b6"]}
-2026-02-03 18:12:23,365 - agents.planneragent - INFO - planner_chatmodel对于用户的人工智能在生活中的影响？ 返回结果json解析成功，内容为:{'tasks': ['2024年生成式AI在日常生活中的具体应用场景及其对内容创作、娱乐和广告行业的影响', 'AI智能体在智能家居、交通、医疗和教育等领域的实际应用方式与用户交互模式', '人工智能在提升工作效率（如编程、客服、电商直播）方面的典型案例和效果', 'AI技术普及带来的隐私、伦理与安全风险（如deepfake诈骗、数据泄露）有哪些具体表现', '各国或地区在2024年针对AI生活应用出台了哪些监管政策或治理框架']}
-2026-02-03 18:26:59,594 - core.llms - INFO - 成功初始化 qwen LLM
-2026-02-03 18:26:59,603 - agents.planneragent - INFO - 完成planner_graph的初始化构造
-2026-02-03 18:26:59,612 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-03 18:27:01,944 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-03 18:27:07,665 - agents.planneragent - INFO - planner_agent llm_chat 节点在第0轮迭代中，成功生成AIMessage类型的消息，内容为:```
-{
-    "tasks": [
-    "人工智能在日常生活中的主要应用场景有哪些",
-    "人工智能对个人工作效率和生活方式产生了哪些具体影响",
-    "人工智能在教育、医疗、交通等民生领域带来的积极变化",
-    "人工智能普及过程中引发的隐私、就业或伦理问题有哪些",
-    "不同年龄或社会群体对人工智能技术接受度和使用差异"
-    ]
-}
-```
-2026-02-03 18:27:07,666 - agents.planneragent - INFO - planner_agent 在第1轮迭代中，成功生成有效的json结构，进入persist_result节点
-2026-02-03 18:27:07,667 - agents.planneragent - INFO - planner_agent persist_result 节点写入结果:{"tasks": ["\u4eba\u5de5\u667a\u80fd\u5728\u65e5\u5e38\u751f\u6d3b\u4e2d\u7684\u4e3b\u8981\u5e94\u7528\u573a\u666f\u6709\u54ea\u4e9b", "\u4eba\u5de5\u667a\u80fd\u5bf9\u4e2a\u4eba\u5de5\u4f5c\u6548\u7387\u548c\u751f\u6d3b\u65b9\u5f0f\u4ea7\u751f\u4e86\u54ea\u4e9b\u5177\u4f53\u5f71\u54cd", "\u4eba\u5de5\u667a\u80fd\u5728\u6559\u80b2\u3001\u533b\u7597\u3001\u4ea4\u901a\u7b49\u6c11\u751f\u9886\u57df\u5e26\u6765\u7684\u79ef\u6781\u53d8\u5316", "\u4eba\u5de5\u667a\u80fd\u666e\u53ca\u8fc7\u7a0b\u4e2d\u5f15\u53d1\u7684\u9690\u79c1\u3001\u5c31\u4e1a\u6216\u4f26\u7406\u95ee\u9898\u6709\u54ea\u4e9b", "\u4e0d\u540c\u5e74\u9f84\u6216\u793e\u4f1a\u7fa4\u4f53\u5bf9\u4eba\u5de5\u667a\u80fd\u6280\u672f\u63a5\u53d7\u5ea6\u548c\u4f7f\u7528\u5dee\u5f02"]}
-2026-02-03 18:27:07,667 - agents.planneragent - INFO - planner_chatmodel对于用户的人工智能在生活中的影响？ 返回结果json解析成功，内容为:{'tasks': ['人工智能在日常生活中的主要应用场景有哪些', '人工智能对个人工作效率和生活方式产生了哪些具体影响', '人工智能在教育、医疗、交通等民生领域带来的积极变化', '人工智能普及过程中引发的隐私、就业或伦理问题有哪些', '不同年龄或社会群体对人工智能技术接受度和使用差异']}
+### 1. 起源与早期探索（1940s–1950s）
+- **1943年**：沃伦·麦卡洛克（Warren McCulloch）和沃尔特·皮茨（Walter P...
+2026-02-06 19:56:24 - agents.executoragent - INFO - [executoragent.py:528] - LLM 决定不调用可选工具，进入清洗阶段
+2026-02-06 19:56:24 - agents.executoragent - WARNING - [executoragent.py:727] - 处理介绍一下人工智能。----人工智能的发展历史？时sub_url_pool 为空
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E6%B7%B1%E5%BA%A6%E6%B1%82%E7%B4%A2
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://jenni.ai/zh/artificial-intelligence/history
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.ibm.com/cn-zh/think/topics/history-of-artificial-intelligence
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://docs.feishu.cn/v/wiki/F9Fiw8OPniZEe3kSY0yc7B5Un2g/a9
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.youtube.com/watch?v=btky-V4eM3c
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.woshipm.com/ai/6310260.html
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://zh.wikipedia.org/zh-hans/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://datawhalechina.github.io/thorough-pytorch/%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.qstheory.cn/dukan/qs/2019-02/16/c_1124114625.htm
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.iso.cuhk.edu.hk/chinese/publications/CUHKUPDates/article.aspx?articl
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.cloudflare.com/zh-cn/learning/ai/history-of-ai/
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://aws.amazon.com/cn/what-is/artificial-intelligence/
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://developer.baidu.com/article/details/2733815
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.cnblogs.com/ccdm/p/18694775#:~:text=AI%E9%87%8C%E7%A8%8B%E7%A2%91%E2
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.cac.gov.cn/2017-01/23/c_1120366748.htm
+2026-02-06 19:56:24 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://blog.csdn.net/jarodyv/article/details/144699658
+2026-02-06 19:56:24 - agents.executoragent - INFO - [executoragent.py:710] - 去重统计: 去重前=18, 去重后=18, 去重率=0.0%
+2026-02-06 19:56:24 - agents.executoragent - INFO - [executoragent.py:808] - 去重前: 23 篇
+2026-02-06 19:56:24 - agents.executoragent - INFO - [executoragent.py:809] - 去重后: 18 篇
+2026-02-06 19:56:24 - agents.executoragent - INFO - [executoragent.py:836] - 从 deduplicated_results 获取 18 篇文档
+2026-02-06 19:56:24 - agents.executoragent - INFO - [executoragent.py:874] - 总共需要下载 18 篇文档
+2026-02-06 19:56:24,828 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-06 19:56:26,223 - core.mcp.tools - INFO - 返回 6 个下载工具
+2026-02-06 19:56:26 - agents.executoragent - INFO - [executoragent.py:895] - 开始下载 wikipedia 的 3 篇文档到 /home/qinshan/widthresearch/data/downloads
+2026-02-06 19:56:26 - agents.executoragent - INFO - [executoragent.py:901] - 使用下载工具 wikipedia_download 处理 wikipedia 数据
+2026-02-06 19:56:26 - agents.executoragent - INFO - [executoragent.py:895] - 开始下载 tavily 的 5 篇文档到 /home/qinshan/widthresearch/data/downloads
+2026-02-06 19:56:26 - agents.executoragent - INFO - [executoragent.py:901] - 使用下载工具 tavily_download 处理 tavily 数据
+2026-02-06 19:56:26 - agents.executoragent - INFO - [executoragent.py:895] - 开始下载 exa_context 的 10 篇文档到 /home/qinshan/widthresearch/data/downloads
+2026-02-06 19:56:26 - agents.executoragent - INFO - [executoragent.py:901] - 使用下载工具 exa_context_download 处理 exa_context 数据
+2026-02-06 19:56:27 - agents.executoragent - INFO - [executoragent.py:908] - 下载工具 tavily_download 返回类型: <class 'list'>
+2026-02-06 19:56:27 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 tavily_download 首项类型: <class 'dict'>
+2026-02-06 19:56:27 - agents.executoragent - INFO - [executoragent.py:915] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=5
+2026-02-06 19:56:27 - agents.executoragent - INFO - [executoragent.py:925] - 成功下载 5 篇 tavily 文档
+2026-02-06 19:56:27 - agents.executoragent - INFO - [executoragent.py:908] - 下载工具 wikipedia_download 返回类型: <class 'list'>
+2026-02-06 19:56:27 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 wikipedia_download 首项类型: <class 'dict'>
+2026-02-06 19:56:27 - agents.executoragent - INFO - [executoragent.py:915] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=3
+2026-02-06 19:56:27 - agents.executoragent - INFO - [executoragent.py:925] - 成功下载 3 篇 wikipedia 文档
+2026-02-06 19:56:27 - agents.executoragent - INFO - [executoragent.py:908] - 下载工具 exa_context_download 返回类型: <class 'list'>
+2026-02-06 19:56:27 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 exa_context_download 首项类型: <class 'dict'>
+2026-02-06 19:56:27 - agents.executoragent - INFO - [executoragent.py:915] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=10
+2026-02-06 19:56:27 - agents.executoragent - INFO - [executoragent.py:925] - 成功下载 10 篇 exa_context 文档
+2026-02-06 19:56:27 - agents.executoragent - INFO - [executoragent.py:953] - 下载完成，共下载 18 篇文档
+2026-02-06 19:56:27 - agents.executoragent - INFO - [executoragent.py:1009] - executor 完成子问题 '人工智能的发展历史？' 的处理
+2026-02-06 20:02:22,711 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-06 20:02:22,711 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-06 20:02:24,169 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-06 20:02:27 - agents.executoragent - INFO - [executoragent.py:986] - 完成 executor_graph 的初始化构造
+2026-02-06 20:02:27 - agents.executoragent - INFO - [executoragent.py:598] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-06 20:02:27 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 wikipedia_search 搜索: 人工智能的发展历史？
+2026-02-06 20:02:27 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 exa_context_search 搜索: 人工智能的发展历史？
+2026-02-06 20:02:27 - agents.executoragent - INFO - [executoragent.py:113] - 调用工具 tavily_search 搜索: 人工智能的发展历史？
+2026-02-06 20:02:30 - agents.executoragent - INFO - [executoragent.py:172] - tavily_search 返回了 10 条数据
+2026-02-06 20:02:30 - agents.executoragent - INFO - [executoragent.py:172] - exa_context_search 返回了 10 条数据
+2026-02-06 20:02:31 - agents.executoragent - INFO - [executoragent.py:172] - wikipedia_search 返回了 3 条数据
+2026-02-06 20:02:31 - agents.executoragent - INFO - [executoragent.py:622] - 搜索完成，共获得 23 条结果
+2026-02-06 20:02:31 - agents.executoragent - INFO - [executoragent.py:497] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-06 20:02:56 - agents.executoragent - INFO - [executoragent.py:507] - LLM 决策结果: 是否调用工具=False
+2026-02-06 20:02:56 - agents.executoragent - INFO - [executoragent.py:509] - LLM 思考: 人工智能（AI）的发展历史可以追溯到20世纪中叶，其演进过程大致可分为以下几个关键阶段：
+
+### 1. **起源与早期探索（1940s–1950s）**
+- **理论基础**：1943年，沃伦·麦卡洛克（Warren McCulloch）和沃尔特·皮茨（Walter Pitts）提出首个神经网络数...
+2026-02-06 20:02:56 - agents.executoragent - INFO - [executoragent.py:528] - LLM 决定不调用可选工具，进入清洗阶段
+2026-02-06 20:02:56 - agents.executoragent - WARNING - [executoragent.py:727] - 处理介绍一下人工智能。----人工智能的发展历史？时sub_url_pool 为空
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E9%80%9A%E7%94%A8%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%8
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://jenni.ai/zh/artificial-intelligence/history
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.ibm.com/cn-zh/think/topics/history-of-artificial-intelligence
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://docs.feishu.cn/v/wiki/F9Fiw8OPniZEe3kSY0yc7B5Un2g/a9
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.youtube.com/watch?v=btky-V4eM3c
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.woshipm.com/ai/6310260.html
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://zh.wikipedia.org/zh-hans/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://datawhalechina.github.io/thorough-pytorch/%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.qstheory.cn/dukan/qs/2019-02/16/c_1124114625.htm
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.iso.cuhk.edu.hk/chinese/publications/CUHKUPDates/article.aspx?articl
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.cloudflare.com/zh-cn/learning/ai/history-of-ai/
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://aws.amazon.com/cn/what-is/artificial-intelligence/
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://developer.baidu.com/article/details/2733815
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.cnblogs.com/ccdm/p/18694775#:~:text=AI%E9%87%8C%E7%A8%8B%E7%A2%91%E2
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://www.cac.gov.cn/2017-01/23/c_1120366748.htm
+2026-02-06 20:02:56 - agents.executoragent - DEBUG - [executoragent.py:683] - 保留结果（URL去重）: https://blog.csdn.net/jarodyv/article/details/144699658
+2026-02-06 20:02:56 - agents.executoragent - INFO - [executoragent.py:710] - 去重统计: 去重前=18, 去重后=18, 去重率=0.0%
+2026-02-06 20:02:56 - agents.executoragent - INFO - [executoragent.py:808] - 去重前: 23 篇
+2026-02-06 20:02:56 - agents.executoragent - INFO - [executoragent.py:809] - 去重后: 18 篇
+2026-02-06 20:02:56 - agents.executoragent - INFO - [executoragent.py:836] - 从 deduplicated_results 获取 18 篇文档
+2026-02-06 20:02:56 - agents.executoragent - INFO - [executoragent.py:874] - 总共需要下载 18 篇文档
+2026-02-06 20:02:56,515 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-06 20:02:57,911 - core.mcp.tools - INFO - 返回 6 个下载工具
+2026-02-06 20:02:57 - agents.executoragent - INFO - [executoragent.py:895] - 开始下载 wikipedia 的 3 篇文档到 /home/qinshan/widthresearch/data/downloads
+2026-02-06 20:02:57 - agents.executoragent - INFO - [executoragent.py:901] - 使用下载工具 wikipedia_download 处理 wikipedia 数据
+2026-02-06 20:02:57 - agents.executoragent - INFO - [executoragent.py:895] - 开始下载 tavily 的 5 篇文档到 /home/qinshan/widthresearch/data/downloads
+2026-02-06 20:02:57 - agents.executoragent - INFO - [executoragent.py:901] - 使用下载工具 tavily_download 处理 tavily 数据
+2026-02-06 20:02:57 - agents.executoragent - INFO - [executoragent.py:895] - 开始下载 exa_context 的 10 篇文档到 /home/qinshan/widthresearch/data/downloads
+2026-02-06 20:02:57 - agents.executoragent - INFO - [executoragent.py:901] - 使用下载工具 exa_context_download 处理 exa_context 数据
+2026-02-06 20:02:59 - agents.executoragent - INFO - [executoragent.py:908] - 下载工具 tavily_download 返回类型: <class 'list'>
+2026-02-06 20:02:59 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 tavily_download 首项类型: <class 'dict'>
+2026-02-06 20:02:59 - agents.executoragent - INFO - [executoragent.py:915] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=5
+2026-02-06 20:02:59 - agents.executoragent - INFO - [executoragent.py:925] - 成功下载 5 篇 tavily 文档
+2026-02-06 20:02:59 - agents.executoragent - INFO - [executoragent.py:908] - 下载工具 exa_context_download 返回类型: <class 'list'>
+2026-02-06 20:02:59 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 exa_context_download 首项类型: <class 'dict'>
+2026-02-06 20:02:59 - agents.executoragent - INFO - [executoragent.py:915] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=0
+2026-02-06 20:02:59 - agents.executoragent - INFO - [executoragent.py:925] - 成功下载 0 篇 exa_context 文档
+2026-02-06 20:02:59 - agents.executoragent - INFO - [executoragent.py:908] - 下载工具 wikipedia_download 返回类型: <class 'list'>
+2026-02-06 20:02:59 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 wikipedia_download 首项类型: <class 'dict'>
+2026-02-06 20:02:59 - agents.executoragent - INFO - [executoragent.py:915] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=3
+2026-02-06 20:02:59 - agents.executoragent - INFO - [executoragent.py:925] - 成功下载 3 篇 wikipedia 文档
+2026-02-06 20:02:59 - agents.executoragent - INFO - [executoragent.py:953] - 下载完成，共下载 8 篇文档
+2026-02-06 20:02:59 - agents.executoragent - INFO - [executoragent.py:1009] - executor 完成子问题 '人工智能的发展历史？' 的处理
+2026-02-06 20:21:28 - core.file_deduplicator - WARNING - [file_deduplicator.py:27] - scikit-learn 未安装，将使用 MD5 哈希去重作为回退方案
+2026-02-06 20:21:28 - core.file_deduplicator - INFO - [file_deduplicator.py:48] - 初始化 FileDeduplicator: threshold=0.8, sklearn=不可用
+2026-02-06 20:21:28 - core.file_deduplicator - INFO - [file_deduplicator.py:270] - 扫描到 19 个有效文件（已过滤空文件）
+2026-02-06 20:21:28 - core.file_deduplicator - INFO - [file_deduplicator.py:89] - 使用 MD5 哈希去重: 19 个文件
+2026-02-06 20:21:28 - core.file_deduplicator - INFO - [file_deduplicator.py:110] - MD5 去重完成: 保留 19 个, 删除 0 个
+2026-02-06 20:22:26 - core.file_deduplicator - INFO - [file_deduplicator.py:48] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
+2026-02-06 20:22:26 - core.file_deduplicator - INFO - [file_deduplicator.py:270] - 扫描到 19 个有效文件（已过滤空文件）
+2026-02-06 20:22:26 - core.file_deduplicator - INFO - [file_deduplicator.py:125] - 使用 TF-IDF 去重: 19 个文件, 阈值=0.8
+2026-02-06 20:22:26 - core.file_deduplicator - INFO - [file_deduplicator.py:225] - TF-IDF 去重完成: 保留 19 个, 删除 0 个
+2026-02-06 20:24:25 - core.file_deduplicator - INFO - [file_deduplicator.py:48] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
+2026-02-06 20:24:25 - core.file_deduplicator - INFO - [file_deduplicator.py:270] - 扫描到 22 个有效文件（已过滤空文件）
+2026-02-06 20:24:25 - core.file_deduplicator - INFO - [file_deduplicator.py:125] - 使用 TF-IDF 去重: 22 个文件, 阈值=0.8
+2026-02-06 20:24:25 - core.file_deduplicator - DEBUG - [file_deduplicator.py:216] - 检测到相似文件 (sim=1.000): test_original.md vs test_duplicate.md
+2026-02-06 20:24:25 - core.file_deduplicator - INFO - [file_deduplicator.py:225] - TF-IDF 去重完成: 保留 21 个, 删除 1 个
+2026-02-06 20:26:57 - core.file_deduplicator - INFO - [file_deduplicator.py:48] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
+2026-02-06 20:26:57 - core.file_deduplicator - INFO - [file_deduplicator.py:270] - 扫描到 23 个有效文件（已过滤空文件）
+2026-02-06 20:26:57 - core.file_deduplicator - INFO - [file_deduplicator.py:125] - 使用 TF-IDF 去重: 23 个文件, 阈值=0.8
+2026-02-06 20:26:57 - core.file_deduplicator - DEBUG - [file_deduplicator.py:216] - 检测到相似文件 (sim=1.000): test_similar_v2.md vs test_original.md
+2026-02-06 20:26:57 - core.file_deduplicator - DEBUG - [file_deduplicator.py:216] - 检测到相似文件 (sim=1.000): test_similar_v2.md vs test_duplicate.md
+2026-02-06 20:26:57 - core.file_deduplicator - INFO - [file_deduplicator.py:225] - TF-IDF 去重完成: 保留 21 个, 删除 2 个
+2026-02-06 20:27:27 - core.file_deduplicator - INFO - [file_deduplicator.py:48] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
+2026-02-06 20:27:27 - core.file_deduplicator - INFO - [file_deduplicator.py:270] - 扫描到 19 个有效文件（已过滤空文件）
+2026-02-06 20:27:27 - core.file_deduplicator - INFO - [file_deduplicator.py:125] - 使用 TF-IDF 去重: 19 个文件, 阈值=0.8
+2026-02-06 20:27:27 - core.file_deduplicator - INFO - [file_deduplicator.py:225] - TF-IDF 去重完成: 保留 19 个, 删除 0 个

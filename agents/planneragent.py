@@ -14,23 +14,12 @@ from core.llms import get_llm
 from core.mcp.tools import get_tools
 from core.mcp.context7_grep import Context7GrepMCPClient
 from dotenv import load_dotenv
-load_dotenv()
-# 设置日志基本配置，级别为DEBUG或INFO
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-logger.handlers = []  # 清空默认处理器
-# 使用ConcurrentRotatingFileHandler
+from core.log_config import setup_logger
 
-handler = ConcurrentRotatingFileHandler(
-    Config.LOG_FILE,
-    maxBytes = Config.MAX_BYTES,
-    backupCount = Config.BACKUP_COUNT
-)
-handler.setLevel(logging.DEBUG)
-handler.setFormatter(logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-))
-logger.addHandler(handler)
+load_dotenv()
+
+# 设置日志
+logger = setup_logger(__name__)
 prompt = """请你按照**“书记书签页”的思维方式拆解以下问题，目标是生成一组可直接用于检索的子问题**。
 
 拆解要求：

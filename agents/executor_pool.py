@@ -15,25 +15,13 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from agents.agents import ExecutorAgent
+from agents.executoragent import ExecutorAgent
 from core.config import Config
 from langchain_core.messages import HumanMessage
+from core.log_config import setup_logger
 
 # 设置日志
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-logger.handlers = []
-
-handler = ConcurrentRotatingFileHandler(
-    Config.LOG_FILE,
-    maxBytes=Config.MAX_BYTES,
-    backupCount=Config.BACKUP_COUNT
-)
-handler.setLevel(logging.DEBUG)
-handler.setFormatter(logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-))
-logger.addHandler(handler)
+logger = setup_logger(__name__)
 
 
 class ExecutorAgentPool:
@@ -76,22 +64,31 @@ class ExecutorAgentPool:
     async def execute_questions(
         self,
         questions: List[str],
-        base_thread_id: str
-    ) -> List[Dict]:
+        base_thread_id: str,
+        user_id: str = "default_user",
+        url_pool: List[str] = None,
+        user_query: str = ""
+    ) -> tuple[List[Dict], List[str]]:
         """并发执行多个子问题
 
         Args:
             questions: 子问题列表
             base_thread_id: 基础线程 ID
+            user_id: 用户标识
+            url_pool: 全局 URL 池（用于去重）
+            user_query: 用户原始查询
 
         Returns:
-            所有 ExecutorAgent 的结果列表
+            tuple[List[Dict], List[str]]: (所有 ExecutorAgent 的结果列表, 更新后的 URL 池)
         """
         if not questions:
             logger.warning("没有子问题需要执行")
-            return []
+            return [], url_pool or []
 
-        logger.info(f"开始并发执行 {len(questions)} 个子问题")
+        if url_pool is None:
+            url_pool = []
+
+        logger.info(f"开始并发执行 {len(questions)} 个子问题 (user_id={user_id}, url_pool_size={len(url_pool)})")
 
         # 创建任务列表
         tasks = []
@@ -100,10 +97,10 @@ class ExecutorAgentPool:
             agent = self.agents[i % self.pool_size]
             thread_id = f"{base_thread_id}_executor_{i}"
 
-            # 创建异步任务
-            # 注意：直接调用 graph.ainvoke 而不是 agent.invoke，
-            # 以便正确初始化 executor_messages 包含初始查询消息
-            task = self._invoke_agent_with_message(agent, question, thread_id)
+            # 创建异步任务（传递新参数）
+            task = self._invoke_agent_with_message(
+                agent, question, thread_id, user_id, url_pool, user_query
+            )
             tasks.append(task)
 
             logger.debug(f"分配子问题 {i+1} 到 Agent {i % self.pool_size}")
@@ -113,6 +110,7 @@ class ExecutorAgentPool:
 
         # 处理结果
         valid_results = []
+        all_sub_url_pools = []
         failed_count = 0
 
         for i, result in enumerate(results):
@@ -121,44 +119,69 @@ class ExecutorAgentPool:
                 failed_count += 1
             else:
                 valid_results.append(result)
+                # 收集每个 Agent 返回的 sub_url_pool
+                if isinstance(result, dict) and "sub_url_pool" in result:
+                    all_sub_url_pools.extend(result["sub_url_pool"])
                 logger.debug(f"子问题 {i+1} 执行成功")
 
+        # 全局去重合并 URL 池
+        updated_url_pool = list(set(url_pool + all_sub_url_pools))
+
         logger.info(f"并发执行完成: 成功 {len(valid_results)}/{len(questions)}, 失败 {failed_count}")
+        logger.info(f"URL 池更新: {len(url_pool)} -> {len(updated_url_pool)} 个 URL")
 
-        return valid_results
+        return valid_results, updated_url_pool
 
-    async def _invoke_agent_with_message(self, agent: ExecutorAgent, question: str, thread_id: str) -> Dict:
+    async def _invoke_agent_with_message(
+        self,
+        agent: ExecutorAgent,
+        question: str,
+        thread_id: str,
+        user_id: str,
+        url_pool: List[str],
+        user_query: str
+    ) -> Dict:
         """执行单个 ExecutorAgent，正确初始化 executor_messages
 
         Args:
             agent: ExecutorAgent 实例
             question: 子问题（字符串）
             thread_id: 线程 ID
+            user_id: 用户标识
+            url_pool: 全局 URL 池
+            user_query: 用户原始查询
 
         Returns:
-            执行结果
+            执行结果（包含 sub_url_pool）
         """
         # 确保异步资源已初始化
         await agent._ensure_initialized()
 
-        config = {"configurable": {"thread_id": thread_id}}
+        config = {"configurable": {"thread_id": thread_id, "user_id": user_id}}
 
         # 正确初始化 state：将 question 包装为 HumanMessage 放入 executor_messages
-        # 这样 _llm_decision_node 可以通过 state["executor_messages"][0].content 获取查询
         initial_state = {
             "executor_messages": [HumanMessage(content=question)],
-            "current_query": question,
+            "user_query": user_query,
+            "sub_query": question,
             "optional_search_results": [],
             "search_results": [],
-            "reranked_results": [],
+            "deduplicated_results": [],
             "downloaded_papers": [],
-            "executor_result": {}
+            "executor_result": {},
+            "sub_url_pool": list(url_pool)  # 传递副本
         }
 
         try:
             result = await agent.graph.ainvoke(initial_state, config)
             logger.info(f"executor 完成子问题 '{question}' 的处理")
-            return result["executor_result"]
+            
+            # 返回完整结果，包括 sub_url_pool
+            return {
+                "executor_result": result.get("executor_result", {}),
+                "sub_url_pool": result.get("sub_url_pool", []),
+                "downloaded_papers": result.get("downloaded_papers", [])
+            }
         except Exception as e:
             logger.error(f"executor 处理子问题 '{question}' 时出错: {e}")
             import traceback

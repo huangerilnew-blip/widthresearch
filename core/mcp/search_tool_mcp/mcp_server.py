@@ -309,7 +309,7 @@ async def handle_search(searcher, arguments: Dict) -> List[Dict]:
         papers = await searcher.search(query)
     # ExaSearcher 是同步的，支持 type 参数
     elif search_type and (isinstance(searcher, ExaSearcherSummary) or isinstance(searcher, ExaSearcherContext)):
-        papers = searcher.search(query, type=search_type)
+        papers =searcher.search(query, type=search_type)
     # 其他搜索器（Tavily, SEC EDGAR, AkShare）都是同步的
     else:
         papers = searcher.search(query)

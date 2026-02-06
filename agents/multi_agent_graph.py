@@ -21,7 +21,7 @@ from typing import Dict, Any, List, Optional, TypedDict, Annotated
 from psycopg_pool import AsyncConnectionPool
 from concurrent_log_handler import ConcurrentRotatingFileHandler
 
-from agents.agents import PlannerAgent
+from agents.planneragent import PlannerAgent
 from agents.executor_pool import ExecutorAgentPool
 from core.rag.rag_preprocess_module import VectorStoreManager
 from core.rag.document_processor import DocumentProcessor
@@ -30,27 +30,17 @@ from core.rag.models import QuestionsPool, BGERerankNodePostprocessor
 from core.config.config import Config
 from core.llms import get_llm
 from core.rag.reranker import BGEReranker
+from core.file_deduplicator import FileDeduplicator
+from core.log_config import setup_logger
 
 # LangGraph 相关导入
 from langgraph.graph import StateGraph, START, END, add_messages
 from langchain_core.messages import AnyMessage, AIMessage, HumanMessage
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from langchain_core.messages import HumanMessage
-# 设置日志
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-logger.handlers = []
 
-handler = ConcurrentRotatingFileHandler(
-    Config.LOG_FILE,
-    maxBytes=Config.MAX_BYTES,
-    backupCount=Config.BACKUP_COUNT
-)
-handler.setLevel(logging.DEBUG)
-handler.setFormatter(logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-))
-logger.addHandler(handler)
+# 设置日志
+logger = setup_logger(__name__)
 
 
 # ============================================================================
@@ -67,15 +57,19 @@ class MultiAgentState(TypedDict):
 
     # 输入
     original_query: str  # 用户原始查询
+    thread_id: str  # 跨节点传播的唯一会话标识
+    user_id: str  # 用户标识，用于权限和日志
 
     # Planner 阶段
     sub_questions: List[str]  # Planner 生成的子问题
 
     # Executor 阶段
     executor_results: List[Dict]  # ExecutorAgent 执行结果
+    url_pool: List[str]  # 全局去重后的 URL 列表
 
     # 文档处理阶段
     all_documents: List[Dict]  # 收集的所有文档
+    processed_file_paths: List[Dict]  # 已扫描并准备处理的文件路径及其元数据
     llama_docs: List  # 处理后的文档片段
 
     # RAG 阶段
@@ -147,6 +141,11 @@ class MultiAgentGraph:
             llm=self.llm
         )
 
+        # 文档去重器
+        self.file_deduplicator = FileDeduplicator(
+            similarity_threshold=Config.DOC_FILTER
+        )
+
         # 向量存储索引（延迟初始化）
         self.vector_store_index = None
 
@@ -189,50 +188,49 @@ class MultiAgentGraph:
 
         original_query = state.get("original_query", "")
         thread_id = state.get("thread_id", "default")
+        user_id = state.get("user_id", "default_user")
 
         try:
-            
+            # 使用 PlannerAgent.invoke() 方法调用
+            result = await self.planner_agent.invoke(
+                user_query=original_query,
+                thread_id=f"{thread_id}_planner",
+                user_id=user_id
+            )
 
-            config = {"configurable": {"thread_id": f"{thread_id}_planner"}}
-            initial_state = {
-                "planner_messages": [HumanMessage(content=original_query)],
-                "planner_result": None,
-                "epoch": 0
-            }
-
-            result = await self.planner_agent.graph.ainvoke(initial_state, config)
-
-            # 解析结果
-            planner_result = result.get('planner_result')
-            if planner_result:
-                content = planner_result.content
+            # result 可能是 dict 或 str (JSON 字符串)
+            if isinstance(result, str):
                 try:
-                    data = json.loads(content)
-                    tasks = data.get('tasks', [])
-
-                    if isinstance(tasks, list) and len(tasks) >= 3:
-                        logger.info(f"查询拆解完成，生成 {len(tasks)} 个子问题")
-                        return {
-                            "sub_questions": tasks,
-                            "messages": [AIMessage(content=f"已生成 {len(tasks)} 个子问题")]
-                        }
-                    else:
-                        logger.warning(f"子问题数量不足: {len(tasks)}")
-                        return {
-                            "sub_questions": tasks if tasks else [original_query],
-                            "messages": [AIMessage(content=f"生成 {len(tasks)} 个子问题")]
-                        }
+                    data = json.loads(result)
                 except json.JSONDecodeError:
-                    logger.error(f"解析 JSON 失败: {content}")
+                    logger.error(f"解析 JSON 失败: {result}")
                     return {
                         "sub_questions": [original_query],
                         "messages": [AIMessage(content="JSON 解析失败，使用原始查询")]
                     }
+            elif isinstance(result, dict):
+                data = result
             else:
-                logger.error("PlannerAgent 未返回结果")
+                logger.error(f"PlannerAgent 返回了非预期的类型: {type(result)}")
                 return {
                     "sub_questions": [original_query],
-                    "messages": [AIMessage(content="PlannerAgent 未返回结果，使用原始查询")]
+                    "messages": [AIMessage(content="PlannerAgent 返回类型错误，使用原始查询")]
+                }
+
+            # 提取 tasks
+            tasks = data.get('tasks', [])
+
+            if isinstance(tasks, list) and len(tasks) >= 3:
+                logger.info(f"查询拆解完成，生成 {len(tasks)} 个子问题")
+                return {
+                    "sub_questions": tasks,
+                    "messages": [AIMessage(content=f"已生成 {len(tasks)} 个子问题")]
+                }
+            else:
+                logger.warning(f"子问题数量不足: {len(tasks)}")
+                return {
+                    "sub_questions": tasks if tasks else [original_query],
+                    "messages": [AIMessage(content=f"生成 {len(tasks)} 个子问题")]
                 }
 
         except Exception as e:
@@ -242,61 +240,199 @@ class MultiAgentGraph:
                 "messages": [AIMessage(content=f"查询拆解失败: {str(e)}")]
             }
 
-    async def _execute_subquestions_node(self, state: MultiAgentState) -> Dict[str, Any]:
-        """节点 3: 调用 ExecutorAgent Pool 并发执行
+    async def _execute_first_node(self, state: MultiAgentState) -> Dict[str, Any]:
+        """节点 3a: 第一阶段执行 - 探索阶段 (Exploration)
 
-        对每个子问题进行完整的信息检索流程
+        使用空 url_pool，让 ExecutorAgent 自由探索
         """
-        logger.info("[节点 3] 调用 ExecutorAgent Pool 并发执行")
+        logger.info("[节点 3a] 第一阶段执行 - 探索阶段（url_pool=[]）")
 
         sub_questions = state.get("sub_questions", [])
         thread_id = state.get("thread_id", "default")
+        user_id = state.get("user_id", "default_user")
+        user_query = state.get("original_query", "")
 
         try:
             # 初始化 Questions Pool
             questions_pool = QuestionsPool()
             questions_pool.add_original_questions(sub_questions)
 
-            # 调用 ExecutorAgent Pool 并发执行
-            executor_results = await self.executor_pool.execute_questions(
+            # 第一阶段：url_pool=[] (探索)
+            executor_results, updated_url_pool = await self.executor_pool.execute_questions(
                 sub_questions,
-                thread_id
+                thread_id,
+                user_id,
+                [],  # 空 url_pool
+                user_query
             )
 
-            logger.info(f"ExecutorAgent Pool 执行完成，获得 {len(executor_results)} 个结果")
+            logger.info(f"第一阶段执行完成，获得 {len(executor_results)} 个结果")
+            logger.info(f"第一阶段收集到 {len(updated_url_pool)} 个 URL")
 
             return {
                 "executor_results": executor_results,
-                "messages": [AIMessage(content=f"完成 {len(executor_results)} 个子问题的执行")]
+                "url_pool": updated_url_pool,
+                "messages": [AIMessage(content=f"第一阶段完成 {len(executor_results)} 个子问题的执行")]
             }
 
         except Exception as e:
-            logger.error(f"执行子问题失败: {e}")
+            logger.error(f"第一阶段执行失败: {e}")
+            return {
+                "executor_results": [],
+                "url_pool": [],
+                "error": str(e)
+            }
+
+    async def _execute_second_node(self, state: MultiAgentState) -> Dict[str, Any]:
+        """节点 3b: 第二阶段执行 - 精炼阶段 (Refinement)
+
+        使用第一阶段收集的 url_pool，进行精准检索
+        """
+        logger.info("[节点 3b] 第二阶段执行 - 精炼阶段（使用第一阶段的 url_pool）")
+
+        sub_questions = state.get("sub_questions", [])
+        thread_id = state.get("thread_id", "default")
+        user_id = state.get("user_id", "default_user")
+        user_query = state.get("original_query", "")
+        url_pool = state.get("url_pool", [])  # 来自第一阶段
+
+        try:
+            # 第二阶段：使用第一阶段收集的 url_pool
+            executor_results, updated_url_pool = await self.executor_pool.execute_questions(
+                sub_questions,
+                thread_id,
+                user_id,
+                url_pool,  # 使用第一阶段的 url_pool
+                user_query
+            )
+
+            logger.info(f"第二阶段执行完成，获得 {len(executor_results)} 个结果")
+            logger.info(f"第二阶段 URL Pool: {len(url_pool)} -> {len(updated_url_pool)}")
+
+            return {
+                "executor_results": executor_results,
+                "url_pool": updated_url_pool,
+                "messages": [AIMessage(content=f"第二阶段完成 {len(executor_results)} 个子问题的执行")]
+            }
+
+        except Exception as e:
+            logger.error(f"第二阶段执行失败: {e}")
             return {
                 "executor_results": [],
                 "error": str(e)
             }
 
-    async def _collect_documents_node(self, state: MultiAgentState) -> Dict[str, Any]:
-        """节点 4: 收集所有下载的文档
+    async def _collect_first_node(self, state: MultiAgentState) -> Dict[str, Any]:
+        """节点 4a: 第一次文档收集与去重
 
-        从 ExecutorAgent 的结果中提取下载的文档
+        在第一阶段执行后，对下载的文档进行去重
         """
-        logger.info("[节点 4] 收集所有下载的文档")
+        logger.info("[节点 4a] 第一次文档收集与去重")
 
         executor_results = state.get("executor_results", [])
-        all_documents = []
 
-        for result in executor_results:
-            downloaded_papers = result.get('downloaded_papers', [])
-            all_documents.extend(downloaded_papers)
+        try:
+            # 执行第一次文件去重
+            unique_files, duplicate_files = self.file_deduplicator.deduplicate(
+                directory=Config.DOC_SAVE_PATH,
+                remove_duplicates=True  # 物理删除重复文件
+            )
 
-        logger.info(f"共收集到 {len(all_documents)} 个文档")
+            logger.info(f"第一次去重完成: 保留 {len(unique_files)} 个, 删除 {len(duplicate_files)} 个")
 
-        return {
-            "all_documents": all_documents,
-            "messages": [AIMessage(content=f"收集到 {len(all_documents)} 个文档")]
-        }
+            # 构建文件元数据列表
+            processed_file_paths = []
+            for file_path in unique_files:
+                file_info = {
+                    "path": file_path,
+                    "filename": os.path.basename(file_path),
+                    "size": os.path.getsize(file_path),
+                    "extension": os.path.splitext(file_path)[1]
+                }
+                processed_file_paths.append(file_info)
+
+            # 从 executor_results 中提取 downloaded_papers
+            all_documents = []
+            for result in executor_results:
+                if isinstance(result, dict):
+                    downloaded_papers = result.get('downloaded_papers', [])
+                    all_documents.extend(downloaded_papers)
+
+            logger.info(f"从第一阶段 executor_results 提取到 {len(all_documents)} 个文档元数据")
+
+            return {
+                "all_documents": all_documents,
+                "processed_file_paths": processed_file_paths,
+                "messages": [AIMessage(content=f"第一次收集到 {len(unique_files)} 个去重后的文档")]
+            }
+
+        except Exception as e:
+            logger.error(f"第一次文档收集失败: {e}")
+            import traceback
+            traceback.print_exc()
+
+            return {
+                "all_documents": [],
+                "processed_file_paths": [],
+                "error": str(e)
+            }
+
+    async def _collect_second_node(self, state: MultiAgentState) -> Dict[str, Any]:
+        """节点 4b: 第二次文档收集与去重
+
+        在第二阶段执行后，对下载的文档进行第二次去重
+        """
+        logger.info("[节点 4b] 第二次文档收集与去重")
+
+        executor_results = state.get("executor_results", [])
+        previous_file_paths = state.get("processed_file_paths", [])
+
+        try:
+            # 执行第二次文件去重
+            unique_files, duplicate_files = self.file_deduplicator.deduplicate(
+                directory=Config.DOC_SAVE_PATH,
+                remove_duplicates=True  # 物理删除重复文件
+            )
+
+            logger.info(f"第二次去重完成: 保留 {len(unique_files)} 个, 删除 {len(duplicate_files)} 个")
+
+            # 构建文件元数据列表
+            processed_file_paths = []
+            for file_path in unique_files:
+                file_info = {
+                    "path": file_path,
+                    "filename": os.path.basename(file_path),
+                    "size": os.path.getsize(file_path),
+                    "extension": os.path.splitext(file_path)[1]
+                }
+                processed_file_paths.append(file_info)
+
+            # 从 executor_results 中提取 downloaded_papers
+            all_documents = []
+            for result in executor_results:
+                if isinstance(result, dict):
+                    downloaded_papers = result.get('downloaded_papers', [])
+                    all_documents.extend(downloaded_papers)
+
+            logger.info(f"从第二阶段 executor_results 提取到 {len(all_documents)} 个文档元数据")
+            logger.info(f"两阶段总计：{len(previous_file_paths)} + {len(processed_file_paths)} = {len(unique_files)} 个去重后的文档")
+
+            return {
+                "all_documents": all_documents,
+                "processed_file_paths": processed_file_paths,
+                "messages": [AIMessage(content=f"第二次收集到 {len(unique_files)} 个去重后的文档")]
+            }
+
+        except Exception as e:
+            logger.error(f"第二次文档收集失败: {e}")
+            import traceback
+            traceback.print_exc()
+
+            return {
+                "all_documents": [],
+                "processed_file_paths": [],
+                "error": str(e)
+            }
 
     async def _process_documents_node(self, state: MultiAgentState) -> Dict[str, Any]:
         """节点 5: 处理文档
@@ -439,7 +575,6 @@ class MultiAgentGraph:
         sub_questions = state.get("sub_questions", [])
         retrieved_nodes = state.get("retrieved_nodes", [])
         question_pool = state.get("question_pool")
-
         try:
             # 转换 question_pool 为列表
             question_pool_list = list(question_pool) if question_pool else sub_questions
@@ -462,24 +597,87 @@ class MultiAgentGraph:
             questions_str = "\n".join([f"- {q}" for q in question_pool_list])
 
             # 构建提示词
-            prompt = f"""你是一个专业的研究助手。基于以下信息回答用户的问题。
+            prompt = f"""你是一名严谨的知识整合与分析专家。
+            你的任务是：
+            基于以下三个输入：
+            1）用户原始问题：{original_query}
+            2）基于向量检索生成的改写问题{question_pool_list}
+            3）向量检索得到的参考内容：{retrieved_contexts}
 
-用户问题：
-{original_query}
+            生成一个结构清晰、层次分明、严格基于证据的回答。
 
-相关子问题：
-{questions_str}
+            ========================
+            【工作原则】
 
-检索到的相关信息：
-{contexts_str}
+            1. 优先使用“检索内容”中的信息。
+            2. 不得凭空补充事实。
+            3. 若信息不足，应明确指出“不足以回答”。
+            4. 回答必须围绕“用户原始问题”，而不是仅围绕改写问题。
+            5. 改写问题的作用是辅助理解与语义扩展，而不是替代原问题。
+            6. 输出必须分层组织，并体现逻辑结构。
+            7. 所有结论必须能够在“检索内容”中找到依据或合理推导路径。
 
-要求：
-1. 回答应该全面且准确
-2. 引用具体的来源信息
-3. 如果信息不足，明确说明
-4. 使用清晰的结构组织回答
+            ========================
+            【思考步骤】
 
-回答："""
+            在生成回答时，请遵循以下步骤：
+
+            第一步：问题对齐
+            - 分析用户原始问题的核心意图
+            - 分析改写问题与原问题之间的语义关系
+            - 明确最终要回答的“真实问题边界”
+
+            第二步：信息筛选
+            - 从检索内容中提取与问题高度相关的事实
+            - 过滤掉与问题无关或弱相关的信息
+            - 若存在冲突信息，优先选择更直接相关的信息
+
+            第三步：结构化生成
+            - 先给出核心结论（如果信息足够）
+            - 再分点展开关键支撑逻辑
+            - 每一部分都必须与问题直接相关
+
+            第四步：证据标注
+            - 明确说明哪些内容来自检索文本
+            - 哪些属于基于检索内容的合理推理
+            - 如果存在信息不足，单独说明
+            ========================
+            【输出格式】
+
+            请严格按照以下结构输出：
+
+            ————————————
+            【问题理解】
+            - 原始问题核心意图：
+            - 改写问题的补充作用：
+            - 最终回答边界：
+
+            【关键信息提取】
+            - 事实1：
+            - 事实2：
+            - 事实3：
+
+            【结构化回答】
+
+            一、核心结论  
+            （简洁回答原问题）
+
+            二、关键支撑点  
+            1.  
+            2.  
+            3.  
+
+            三、详细解释  
+            （分层展开，逻辑清晰）
+
+            【证据说明】
+            - 直接来源：
+            - 合理推断：
+            - 信息不足部分（如有）：
+            ————————————
+
+            请确保回答严格围绕用户原始问题展开。
+"""
 
             # 调用 LLM 生成答案
             response = await self.llm.ainvoke(prompt)
@@ -537,37 +735,55 @@ class MultiAgentGraph:
     # ========================================================================
 
     def _build_graph(self) -> StateGraph:
-        """构建 MultiAgent 的状态图
+        """构建 MultiAgent 的状态图（两阶段执行版本）
 
-        流程：
-            START → init_vector_store → plan_query → execute_subquestions
-                → collect_documents → process_documents → vectorize_documents
-                → rag_retrieve → build_question_pool → generate_answer → END
+        两阶段执行流程：
+            START ├──> init_vector_store (异步，独立执行)
+                  └──> plan_query → execute_first (探索, url_pool=[])
+                        → collect_first (第一次去重)
+                        → execute_second (精炼, url_pool=<从第一阶段>)
+                        → collect_second (第二次去重)
+                        → process_documents → [屏障：等待向量库] → vectorize_documents
+                        → rag_retrieve → build_question_pool → generate_answer → END
+
+        关键设计：
+        - 两阶段执行：探索（空url_pool） + 精炼（使用第一阶段url_pool）
+        - 每阶段后立即去重，避免重复下载
+        - 同步屏障位于 vectorize_documents 前（真正需要向量库的节点）
         """
         builder = StateGraph(MultiAgentState)
 
         # 添加节点
         builder.add_node("init_vector_store", self._init_vector_store_node)
         builder.add_node("plan_query", self._plan_query_node)
-        builder.add_node("execute_subquestions", self._execute_subquestions_node)
-        builder.add_node("collect_documents", self._collect_documents_node)
+        builder.add_node("execute_first", self._execute_first_node)
+        builder.add_node("collect_first", self._collect_first_node)
+        builder.add_node("execute_second", self._execute_second_node)
+        builder.add_node("collect_second", self._collect_second_node)
         builder.add_node("process_documents", self._process_documents_node)
         builder.add_node("vectorize_documents", self._vectorize_documents_node)
         builder.add_node("rag_retrieve", self._rag_retrieve_node)
         builder.add_node("build_question_pool", self._build_question_pool_node)
         builder.add_node("generate_answer", self._generate_answer_node)
 
-        # 添加边
+        # 添加边（两阶段执行流程）
         # START 后并行执行 init_vector_store 和 plan_query
         builder.add_edge(START, "init_vector_store")
         builder.add_edge(START, "plan_query")
 
-        # 两个并行任务都完成后，进入 execute_subquestions
-        builder.add_edge("init_vector_store", "execute_subquestions")
-        builder.add_edge("plan_query", "execute_subquestions")
-        builder.add_edge("execute_subquestions", "collect_documents")
-        builder.add_edge("collect_documents", "process_documents")
+        # 两阶段执行流程
+        builder.add_edge("plan_query", "execute_first")
+        builder.add_edge("execute_first", "collect_first")
+        builder.add_edge("collect_first", "execute_second")
+        builder.add_edge("execute_second", "collect_second")
+        builder.add_edge("collect_second", "process_documents")
+
+        # 同步屏障：init_vector_store 和 process_documents 都完成后才能进入 vectorize_documents
+        # LangGraph 会自动等待两个前置节点都完成
+        builder.add_edge("init_vector_store", "vectorize_documents")
         builder.add_edge("process_documents", "vectorize_documents")
+
+        # 后续流程保持不变
         builder.add_edge("vectorize_documents", "rag_retrieve")
         builder.add_edge("rag_retrieve", "build_question_pool")
         builder.add_edge("build_question_pool", "generate_answer")
@@ -575,34 +791,39 @@ class MultiAgentGraph:
 
         # 编译图
         graph = builder.compile(checkpointer=self.memory)
-        logger.info("MultiAgentGraph 构建完成")
+        logger.info("MultiAgentGraph 构建完成（两阶段执行版本）")
         return graph
 
     # ========================================================================
     # 对外接口
     # ========================================================================
 
-    async def run(self, user_query: str, thread_id: str) -> Dict[str, Any]:
+    async def run(self, user_query: str, thread_id: str, user_id: str = "default_user") -> Dict[str, Any]:
         """执行完整的查询处理流程
 
         Args:
             user_query: 用户查询
             thread_id: 会话线程 ID
+            user_id: 用户标识（可选，默认为 "default_user"）
 
         Returns:
             包含最终回答和元数据的字典
         """
-        logger.info(f"开始处理用户查询: {user_query}")
+        logger.info(f"开始处理用户查询: {user_query} (user_id={user_id}, thread_id={thread_id})")
 
-        config = {"configurable": {"thread_id": thread_id}}
+        config = {"configurable": {" thread_id": thread_id}}
 
-        # 初始状态
+        # 初始状态（补充新增字段）
         initial_state: MultiAgentState = {
             "messages": [HumanMessage(content=user_query)],
             "original_query": user_query,
+            "thread_id": thread_id,
+            "user_id": user_id,
             "sub_questions": [],
             "executor_results": [],
+            "url_pool": [],
             "all_documents": [],
+            "processed_file_paths": [],
             "llama_docs": [],
             "retrieved_nodes": [],
             "question_pool": None,
@@ -618,10 +839,13 @@ class MultiAgentGraph:
             # 构建返回结果
             final_result = {
                 'query': user_query,
+                'user_id': user_id,
+                'thread_id': thread_id,
                 'sub_questions': result.get('sub_questions', []),
                 'rewritten_questions_count': len(result.get('question_pool', [])) if result.get('question_pool') else 0,
                 'total_questions': len(result.get('question_pool', [])) if result.get('question_pool') else 0,
                 'documents_processed': len(result.get('all_documents', [])),
+                'url_pool_size': len(result.get('url_pool', [])),
                 'answer': result.get('final_answer', ''),
                 'metadata': {
                     'retrieved_count': len(result.get('retrieved_nodes', [])),
@@ -640,6 +864,8 @@ class MultiAgentGraph:
 
             return {
                 'query': user_query,
+                'user_id': user_id,
+                'thread_id': thread_id,
                 'error': str(e),
                 'answer': f"抱歉，处理您的查询时出现错误: {str(e)}"
             }
