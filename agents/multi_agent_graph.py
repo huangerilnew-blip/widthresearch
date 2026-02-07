@@ -35,9 +35,8 @@ from core.log_config import setup_logger
 
 # LangGraph 相关导入
 from langgraph.graph import StateGraph, START, END, add_messages
-from langchain_core.messages import AnyMessage, AIMessage, HumanMessage
+from langchain_core.messages import AnyMessage, AIMessage, HumanMessage, SystemMessage
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
-from langchain_core.messages import HumanMessage
 
 # 设置日志
 logger = setup_logger(__name__)
@@ -82,6 +81,9 @@ class MultiAgentState(TypedDict):
     # 内部状态
     vector_store_initialized: bool  # 向量库是否已初始化
     error: Optional[str]  # 错误信息
+    epoch: int  # 生成答案迭代次数
+    last_answer: str  # 上一次生成的答案
+    last_evaluation: Optional[Dict[str, Any]]  # 上一次评估结果
 
 
 # ============================================================================
@@ -94,7 +96,7 @@ class MultiAgentGraph:
     流程图：
         START → init_vector_store → plan_query → execute_subquestions
             → collect_documents → process_documents → vectorize_documents
-            → rag_retrieve → build_question_pool → generate_answer → END
+            → rag_retrieve → build_question_pool → generate_answer → eval_answer → END
 
     每个节点负责一个具体任务，状态在节点间流转
     """
@@ -126,6 +128,8 @@ class MultiAgentGraph:
 
         # LLM 和 Reranker
         self.llm = get_llm(executor_model)[0]
+        self.eval_llm = get_llm(Config.LLM_MUTI_AGENT)[0]
+        self.answer_system_prompt = self._build_answer_system_prompt()
         self.reranker = BGEReranker()
 
         # 创建 BGE Reranker 节点后处理器
@@ -571,13 +575,18 @@ class MultiAgentGraph:
         """
         logger.info("[节点 9] 生成最终答案")
 
-        original_query = state.get("original_query", "")
         sub_questions = state.get("sub_questions", [])
         retrieved_nodes = state.get("retrieved_nodes", [])
         question_pool = state.get("question_pool")
+        last_evaluation = state.get("last_evaluation")
+        last_answer = state.get("last_answer", "")
+        epoch = state.get("epoch", 0)
         try:
             # 转换 question_pool 为列表
-            question_pool_list = list(question_pool) if question_pool else sub_questions
+            if question_pool:
+                question_pool_list = question_pool.get_all_questions()
+            else:
+                question_pool_list = sub_questions
 
             # 构建检索上下文
             retrieved_contexts = []
@@ -593,100 +602,49 @@ class MultiAgentGraph:
 
                 retrieved_contexts.append(f"来源: {source}\n内容: {content}\n")
 
-            contexts_str = "\n".join(retrieved_contexts)
-            questions_str = "\n".join([f"- {q}" for q in question_pool_list])
+            contexts_str = "\n".join(retrieved_contexts) if retrieved_contexts else "无"
+            questions_str = "\n".join([f"- {q}" for q in question_pool_list]) if question_pool_list else "无"
 
-            # 构建提示词
-            prompt = f"""你是一名严谨的知识整合与分析专家。
-            你的任务是：
-            基于以下三个输入：
-            1）用户原始问题：{original_query}
-            2）基于向量检索生成的改写问题{question_pool_list}
-            3）向量检索得到的参考内容：{retrieved_contexts}
+            base_messages: List[AnyMessage] = [
+                message
+                for message in state.get("messages", [])
+                if isinstance(message, (SystemMessage, HumanMessage))
+            ]
 
-            生成一个结构清晰、层次分明、严格基于证据的回答。
+            if last_answer:
+                base_messages.append(AIMessage(content=last_answer))
 
-            ========================
-            【工作原则】
+            if last_evaluation and last_evaluation.get("suggestions"):
+                suggestions_text = "\n".join(
+                    [f"- {suggestion}" for suggestion in last_evaluation.get("suggestions", [])]
+                )
+                context_prompt = (
+                    "以下是评估建议，请基于建议修改上一次回答，保持原有结构并修正问题。\n\n"
+                    f"上一次回答：\n{last_answer}\n\n"
+                    f"评估建议：\n{suggestions_text}\n\n"
+                    "补充资料：\n"
+                    f"改写问题：\n{questions_str}\n\n"
+                    f"检索内容：\n{contexts_str}\n"
+                )
+            else:
+                context_prompt = (
+                    "补充资料如下，请根据系统指令回答用户问题。\n\n"
+                    f"改写问题：\n{questions_str}\n\n"
+                    f"检索内容：\n{contexts_str}\n"
+                )
 
-            1. 优先使用“检索内容”中的信息。
-            2. 不得凭空补充事实。
-            3. 若信息不足，应明确指出“不足以回答”。
-            4. 回答必须围绕“用户原始问题”，而不是仅围绕改写问题。
-            5. 改写问题的作用是辅助理解与语义扩展，而不是替代原问题。
-            6. 输出必须分层组织，并体现逻辑结构。
-            7. 所有结论必须能够在“检索内容”中找到依据或合理推导路径。
-
-            ========================
-            【思考步骤】
-
-            在生成回答时，请遵循以下步骤：
-
-            第一步：问题对齐
-            - 分析用户原始问题的核心意图
-            - 分析改写问题与原问题之间的语义关系
-            - 明确最终要回答的“真实问题边界”
-
-            第二步：信息筛选
-            - 从检索内容中提取与问题高度相关的事实
-            - 过滤掉与问题无关或弱相关的信息
-            - 若存在冲突信息，优先选择更直接相关的信息
-
-            第三步：结构化生成
-            - 先给出核心结论（如果信息足够）
-            - 再分点展开关键支撑逻辑
-            - 每一部分都必须与问题直接相关
-
-            第四步：证据标注
-            - 明确说明哪些内容来自检索文本
-            - 哪些属于基于检索内容的合理推理
-            - 如果存在信息不足，单独说明
-            ========================
-            【输出格式】
-
-            请严格按照以下结构输出：
-
-            ————————————
-            【问题理解】
-            - 原始问题核心意图：
-            - 改写问题的补充作用：
-            - 最终回答边界：
-
-            【关键信息提取】
-            - 事实1：
-            - 事实2：
-            - 事实3：
-
-            【结构化回答】
-
-            一、核心结论  
-            （简洁回答原问题）
-
-            二、关键支撑点  
-            1.  
-            2.  
-            3.  
-
-            三、详细解释  
-            （分层展开，逻辑清晰）
-
-            【证据说明】
-            - 直接来源：
-            - 合理推断：
-            - 信息不足部分（如有）：
-            ————————————
-
-            请确保回答严格围绕用户原始问题展开。
-"""
+            base_messages.append(HumanMessage(content=context_prompt))
 
             # 调用 LLM 生成答案
-            response = await self.llm.ainvoke(prompt)
+            response = await self.llm.ainvoke(base_messages)
             answer = response.content if hasattr(response, 'content') else str(response)
 
             logger.info(f"答案生成完成，长度: {len(answer)} 字符")
 
             return {
                 "final_answer": answer,
+                "last_answer": answer,
+                "epoch": epoch + 1,
                 "messages": [AIMessage(content=answer)]
             }
 
@@ -694,12 +652,135 @@ class MultiAgentGraph:
             logger.error(f"生成答案失败: {e}")
             return {
                 "final_answer": f"抱歉，生成答案时出现错误: {str(e)}",
-                "error": str(e)
+                "error": str(e),
+                "epoch": epoch + 1
             }
 
     # ========================================================================
     # 辅助方法
     # ========================================================================
+
+    def _build_answer_system_prompt(self) -> str:
+        """构建回答生成的系统提示词"""
+        return (
+            "你是一名严谨的知识整合与分析专家。\n"
+            "你的任务是基于对话中提供的用户问题、改写问题和检索内容生成回答。\n\n"
+            "========================\n"
+            "【工作原则】\n"
+            "1. 优先使用“检索内容”中的信息。\n"
+            "2. 不得凭空补充事实。\n"
+            "3. 若信息不足，应明确指出“不足以回答”。\n"
+            "4. 回答必须围绕用户原始问题。\n"
+            "5. 改写问题的作用是辅助理解与语义扩展，而不是替代原问题。\n"
+            "6. 输出必须分层组织，并体现逻辑结构。\n"
+            "7. 所有结论必须能够在检索内容中找到依据或合理推导路径。\n\n"
+            "========================\n"
+            "【思考步骤】\n"
+            "第一步：问题对齐，明确最终要回答的边界。\n"
+            "第二步：信息筛选，提取高度相关事实。\n"
+            "第三步：结构化生成，先给核心结论，再展开支撑逻辑。\n"
+            "第四步：证据标注，说明来源、推理与不足。\n\n"
+            "========================\n"
+            "【输出格式】\n"
+            "————————————\n"
+            "【问题理解】\n"
+            "- 原始问题核心意图：\n"
+            "- 改写问题的补充作用：\n"
+            "- 最终回答边界：\n\n"
+            "【关键信息提取】\n"
+            "- 事实1：\n"
+            "- 事实2：\n"
+            "- 事实3：\n\n"
+            "【结构化回答】\n"
+            "一、核心结论（简洁回答原问题）\n"
+            "二、关键支撑点\n"
+            "1.\n2.\n3.\n"
+            "三、详细解释（分层展开，逻辑清晰）\n\n"
+            "【证据说明】\n"
+            "- 直接来源：\n"
+            "- 合理推断：\n"
+            "- 信息不足部分（如有）：\n"
+            "————————————\n"
+            "请确保回答严格围绕用户原始问题展开。"
+        )
+
+    def _build_eval_messages(self, answer: str) -> List[AnyMessage]:
+        """构建评估消息"""
+        system_prompt = (
+            "你是一名严格的答案评估器。\n"
+            "请从两个维度评估答案质量：\n"
+            "1) 回答维度是否合理（是否围绕原问题、结构清晰、无明显矛盾）。\n"
+            "2) 证据标注是否准确（关键结论是否有来源标注、证据是否匹配、是否说明不足）。\n\n"
+            "输出必须是 JSON，格式如下：\n"
+            "{\"passed\": true/false, \"suggestions\": [\"问题1\", \"问题2\"]}\n"
+            "若通过，suggestions 为空数组。若不通过，提供具体可操作建议。"
+        )
+        user_prompt = f"需要评估的答案如下：\n\n{answer}\n"
+        return [SystemMessage(content=system_prompt), HumanMessage(content=user_prompt)]
+
+    def _parse_eval_response(self, content: str) -> Dict[str, Any]:
+        """解析评估结果"""
+        cleaned = content.strip()
+        if cleaned.startswith("```") and cleaned.endswith("```"):
+            cleaned_lines = [
+                line for line in cleaned.splitlines() if not line.strip().startswith("```")
+            ]
+            cleaned = "\n".join(cleaned_lines).strip()
+
+        try:
+            result = json.loads(cleaned)
+        except json.JSONDecodeError:
+            logger.warning("评估结果解析失败，返回默认不通过")
+            return {
+                "passed": False,
+                "suggestions": ["评估结果解析失败，请重新生成评估结果"]
+            }
+
+        passed = bool(result.get("passed", False))
+        suggestions = result.get("suggestions", [])
+        if not isinstance(suggestions, list):
+            suggestions = [str(suggestions)]
+        suggestions = [str(item) for item in suggestions if item]
+        return {"passed": passed, "suggestions": suggestions}
+
+    async def _eval_answer_node(self, state: MultiAgentState) -> Dict[str, Any]:
+        """节点 10: 评估生成答案"""
+        logger.info("[节点 10] 评估生成答案")
+
+        messages = state.get("messages", [])
+        last_message = messages[-1] if messages else None
+        if isinstance(last_message, AIMessage):
+            answer = str(last_message.content)
+        else:
+            answer = str(state.get("final_answer", ""))
+
+        eval_messages = self._build_eval_messages(answer)
+        try:
+            response = await self.eval_llm.ainvoke(eval_messages)
+            content = response.content if hasattr(response, "content") else str(response)
+            eval_result = self._parse_eval_response(content)
+        except Exception as e:
+            logger.error(f"评估答案失败: {e}")
+            eval_result = {
+                "passed": False,
+                "suggestions": ["评估过程出错，请重新生成答案"]
+            }
+
+        logger.info(f"评估结果: passed={eval_result.get('passed')}, 建议数={len(eval_result.get('suggestions', []))}")
+        return {"last_evaluation": eval_result}
+
+    def _should_continue_generation(self, state: MultiAgentState) -> str:
+        """根据评估结果决定是否继续生成"""
+        evaluation = state.get("last_evaluation") or {}
+        passed = bool(evaluation.get("passed", False))
+        epoch = state.get("epoch", 0)
+
+        if passed:
+            return "end"
+        if epoch >= Config.GENER_EPOCH:
+            logger.warning(f"达到最大迭代次数 {Config.GENER_EPOCH}，结束生成")
+            return "end"
+        return "generate_answer"
 
     def _extract_questions_from_nodes(self, retrieved_nodes: list) -> List[str]:
         """从检索结果的 nodes 中提取 metadata 中的 questions
@@ -744,7 +825,7 @@ class MultiAgentGraph:
                         → execute_second (精炼, url_pool=<从第一阶段>)
                         → collect_second (第二次去重)
                         → process_documents → [屏障：等待向量库] → vectorize_documents
-                        → rag_retrieve → build_question_pool → generate_answer → END
+                        → rag_retrieve → build_question_pool → generate_answer → eval_answer → END
 
         关键设计：
         - 两阶段执行：探索（空url_pool） + 精炼（使用第一阶段url_pool）
@@ -765,6 +846,7 @@ class MultiAgentGraph:
         builder.add_node("rag_retrieve", self._rag_retrieve_node)
         builder.add_node("build_question_pool", self._build_question_pool_node)
         builder.add_node("generate_answer", self._generate_answer_node)
+        builder.add_node("eval_answer", self._eval_answer_node)
 
         # 添加边（两阶段执行流程）
         # START 后并行执行 init_vector_store 和 plan_query
@@ -787,7 +869,15 @@ class MultiAgentGraph:
         builder.add_edge("vectorize_documents", "rag_retrieve")
         builder.add_edge("rag_retrieve", "build_question_pool")
         builder.add_edge("build_question_pool", "generate_answer")
-        builder.add_edge("generate_answer", END)
+        builder.add_edge("generate_answer", "eval_answer")
+        builder.add_conditional_edges(
+            "eval_answer",
+            self._should_continue_generation,
+            {
+                "generate_answer": "generate_answer",
+                "end": END
+            }
+        )
 
         # 编译图
         graph = builder.compile(checkpointer=self.memory)
@@ -811,11 +901,14 @@ class MultiAgentGraph:
         """
         logger.info(f"开始处理用户查询: {user_query} (user_id={user_id}, thread_id={thread_id})")
 
-        config = {"configurable": {" thread_id": thread_id}}
+        config = {"configurable": {" thread_id": thread_id,"user_id": user_id}}
 
         # 初始状态（补充新增字段）
         initial_state: MultiAgentState = {
-            "messages": [HumanMessage(content=user_query)],
+            "messages": [
+                SystemMessage(content=self.answer_system_prompt),
+                HumanMessage(content=user_query)
+            ],
             "original_query": user_query,
             "thread_id": thread_id,
             "user_id": user_id,
@@ -829,7 +922,10 @@ class MultiAgentGraph:
             "question_pool": None,
             "final_answer": "",
             "vector_store_initialized": False,
-            "error": None
+            "error": None,
+            "epoch": 0,
+            "last_answer": "",
+            "last_evaluation": None
         }
 
         try:

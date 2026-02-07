@@ -21,7 +21,9 @@ class Config:
     LLM_TYPE = "qwen"
     LLM_PLANNER="qwen"
     LLM_EXECUTOR="qwen"
-    PLANNER_EPOCH=3
+    LLM_MUTI_AGENT="qwen"
+    PLANNER_EPOCH=3#planneragent循环轮数，默认为3轮
+    GENER_EPOCH=3#multiagent生成最终答案的循环轮数，默认为3轮
     # API服务地址和端口
     HOST = "0.0.0.0"
     PORT = 8001
