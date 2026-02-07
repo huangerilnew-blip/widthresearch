@@ -74,6 +74,8 @@ class MultiAgentState(TypedDict):
     # RAG 阶段
     retrieved_nodes: List  # RAG 检索结果
     question_pool: Optional[QuestionsPool]  # 问题池
+    retrieved_epoch: int  # 检索重试次数
+    set_ques_pool_epoch: int  # 问题池重试次数
 
     # 输出
     final_answer: str  # 最终答案
@@ -502,6 +504,7 @@ class MultiAgentGraph:
 
         sub_questions = state.get("sub_questions", [])
         thread_id = state.get("thread_id", "default")
+        retrieved_epoch = state.get("retrieved_epoch", 0)
 
         try:
             # 创建检索器
@@ -522,6 +525,17 @@ class MultiAgentGraph:
 
             logger.info(f"RAG 检索完成，获得 {len(retrieved_nodes)} 个节点")
 
+            if not retrieved_nodes:
+                updated_epoch = retrieved_epoch + 1
+                logger.warning(
+                    f"RAG 检索为空，准备重试: retrieved_epoch={updated_epoch}"
+                )
+                return {
+                    "retrieved_nodes": [],
+                    "retrieved_epoch": updated_epoch,
+                    "messages": [AIMessage(content="检索结果为空，准备重试")]
+                }
+
             return {
                 "retrieved_nodes": retrieved_nodes,
                 "messages": [AIMessage(content=f"检索到 {len(retrieved_nodes)} 个相关节点")]
@@ -529,8 +543,10 @@ class MultiAgentGraph:
 
         except Exception as e:
             logger.error(f"RAG 检索失败: {e}")
+            updated_epoch = retrieved_epoch + 1
             return {
                 "retrieved_nodes": [],
+                "retrieved_epoch": updated_epoch,
                 "error": str(e)
             }
 
@@ -543,6 +559,7 @@ class MultiAgentGraph:
 
         sub_questions = state.get("sub_questions", [])
         retrieved_nodes = state.get("retrieved_nodes", [])
+        set_ques_pool_epoch = state.get("set_ques_pool_epoch", 0)
 
         try:
             # 从检索结果中提取问题
@@ -556,6 +573,18 @@ class MultiAgentGraph:
 
             logger.info(f"Question Pool 构建完成，共 {len(questions_pool)} 个问题")
 
+            if len(questions_pool) == 0:
+                updated_epoch = set_ques_pool_epoch + 1
+                logger.warning(
+                    "问题池为空，准备重试: "
+                    f"set_ques_pool_epoch={updated_epoch}"
+                )
+                return {
+                    "question_pool": questions_pool,
+                    "set_ques_pool_epoch": updated_epoch,
+                    "messages": [AIMessage(content="问题池为空，准备重试")]
+                }
+
             return {
                 "question_pool": questions_pool,
                 "messages": [AIMessage(content=f"问题池包含 {len(questions_pool)} 个问题")]
@@ -563,8 +592,10 @@ class MultiAgentGraph:
 
         except Exception as e:
             logger.error(f"构建问题池失败: {e}")
+            updated_epoch = set_ques_pool_epoch + 1
             return {
                 "question_pool": None,
+                "set_ques_pool_epoch": updated_epoch,
                 "error": str(e)
             }
 
@@ -590,7 +621,8 @@ class MultiAgentGraph:
 
             # 构建检索上下文
             retrieved_contexts = []
-            for node_with_score in retrieved_nodes:
+            limited_nodes = retrieved_nodes[:Config.TOP_K] if len(retrieved_nodes) > Config.TOP_K else retrieved_nodes
+            for node_with_score in limited_nodes:
                 node = node_with_score.node
                 metadata = node.metadata
                 source = metadata.get('file_name', metadata.get('source', 'Unknown'))
@@ -704,7 +736,24 @@ class MultiAgentGraph:
             "请确保回答严格围绕用户原始问题展开。"
         )
 
-    def _build_eval_messages(self, answer: str) -> List[AnyMessage]:
+    def _format_retrieved_contexts(self, retrieved_nodes: list) -> str:
+        """构建检索上下文字符串"""
+        retrieved_contexts = []
+        limited_nodes = retrieved_nodes[:Config.TOP_K] if len(retrieved_nodes) > Config.TOP_K else retrieved_nodes
+        for node_with_score in limited_nodes:
+            node = node_with_score.node
+            metadata = node.metadata
+            source = metadata.get('file_name', metadata.get('source', 'Unknown'))
+            content = node.get_content()
+
+            if len(content) > 500:
+                content = content[:500] + "..."
+
+            retrieved_contexts.append(f"来源: {source}\n内容: {content}\n")
+
+        return "\n".join(retrieved_contexts) if retrieved_contexts else "无"
+
+    def _build_eval_messages(self, answer: str, contexts_str: str) -> List[AnyMessage]:
         """构建评估消息"""
         system_prompt = (
             "你是一名严格的答案评估器。\n"
@@ -715,7 +764,11 @@ class MultiAgentGraph:
             "{\"passed\": true/false, \"suggestions\": [\"问题1\", \"问题2\"]}\n"
             "若通过，suggestions 为空数组。若不通过，提供具体可操作建议。"
         )
-        user_prompt = f"需要评估的答案如下：\n\n{answer}\n"
+        user_prompt = (
+            "需要评估的答案如下：\n\n"
+            f"{answer}\n\n"
+            f"检索内容：\n{contexts_str}\n"
+        )
         return [SystemMessage(content=system_prompt), HumanMessage(content=user_prompt)]
 
     def _parse_eval_response(self, content: str) -> Dict[str, Any]:
@@ -748,13 +801,15 @@ class MultiAgentGraph:
         logger.info("[节点 10] 评估生成答案")
 
         messages = state.get("messages", [])
+        retrieved_nodes = state.get("retrieved_nodes", [])
         last_message = messages[-1] if messages else None
         if isinstance(last_message, AIMessage):
             answer = str(last_message.content)
         else:
             answer = str(state.get("final_answer", ""))
 
-        eval_messages = self._build_eval_messages(answer)
+        contexts_str = self._format_retrieved_contexts(retrieved_nodes)
+        eval_messages = self._build_eval_messages(answer, contexts_str)
         try:
             response = await self.eval_llm.ainvoke(eval_messages)
             content = response.content if hasattr(response, "content") else str(response)
@@ -811,6 +866,48 @@ class MultiAgentGraph:
 
         return list(questions_set)
 
+    def _route_after_retrieve(self, state: MultiAgentState) -> str:
+        if state.get("retrieved_nodes"):
+            return "build_question_pool"
+
+        retrieved_epoch = state.get("retrieved_epoch", 0)
+        if retrieved_epoch >= Config.GENER_EPOCH:
+            logger.error(
+                f"检索重试达到上限 {Config.GENER_EPOCH}/{Config.GENER_EPOCH}，终止流程"
+            )
+            return "terminal_error"
+
+        logger.info(f"检索为空，继续重试 ({retrieved_epoch}/{Config.GENER_EPOCH})")
+        return "rag_retrieve"
+
+    def _route_after_question_pool(self, state: MultiAgentState) -> str:
+        question_pool = state.get("question_pool")
+        if question_pool and len(question_pool) > 0:
+            return "generate_answer"
+
+        set_ques_pool_epoch = state.get("set_ques_pool_epoch", 0)
+        if set_ques_pool_epoch >= Config.GENER_EPOCH:
+            logger.error(
+                f"问题池重试达到上限 {Config.GENER_EPOCH}/{Config.GENER_EPOCH}，终止流程"
+            )
+            return "terminal_error"
+
+        logger.info(f"问题池为空，继续重试 ({set_ques_pool_epoch}/{Config.GENER_EPOCH})")
+        return "build_question_pool"
+
+    async def _terminal_error_node(self, state: MultiAgentState) -> Dict[str, Any]:
+        """终止节点: 返回系统错误回答"""
+        error_message = "系统错误，无法正确回答"
+        logger.error(
+            f"流程终止: retrieved_epoch={state.get('retrieved_epoch', 0)}, "
+            f"set_ques_pool_epoch={state.get('set_ques_pool_epoch', 0)}"
+        )
+        return {
+            "final_answer": error_message,
+            "messages": [AIMessage(content=error_message)],
+            "error": error_message
+        }
+
     # ========================================================================
     # 图构建
     # ========================================================================
@@ -847,6 +944,7 @@ class MultiAgentGraph:
         builder.add_node("build_question_pool", self._build_question_pool_node)
         builder.add_node("generate_answer", self._generate_answer_node)
         builder.add_node("eval_answer", self._eval_answer_node)
+        builder.add_node("terminal_error", self._terminal_error_node)
 
         # 添加边（两阶段执行流程）
         # START 后并行执行 init_vector_store 和 plan_query
@@ -867,9 +965,26 @@ class MultiAgentGraph:
 
         # 后续流程保持不变
         builder.add_edge("vectorize_documents", "rag_retrieve")
-        builder.add_edge("rag_retrieve", "build_question_pool")
-        builder.add_edge("build_question_pool", "generate_answer")
+        builder.add_conditional_edges(
+            "rag_retrieve",
+            self._route_after_retrieve,
+            {
+                "build_question_pool": "build_question_pool",
+                "rag_retrieve": "rag_retrieve",
+                "terminal_error": "terminal_error"
+            }
+        )
+        builder.add_conditional_edges(
+            "build_question_pool",
+            self._route_after_question_pool,
+            {
+                "generate_answer": "generate_answer",
+                "build_question_pool": "build_question_pool",
+                "terminal_error": "terminal_error"
+            }
+        )
         builder.add_edge("generate_answer", "eval_answer")
+        builder.add_edge("terminal_error", END)
         builder.add_conditional_edges(
             "eval_answer",
             self._should_continue_generation,
@@ -925,7 +1040,9 @@ class MultiAgentGraph:
             "error": None,
             "epoch": 0,
             "last_answer": "",
-            "last_evaluation": None
+            "last_evaluation": None,
+            "retrieved_epoch": 0,
+            "set_ques_pool_epoch": 0
         }
 
         try:

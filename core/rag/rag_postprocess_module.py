@@ -5,16 +5,17 @@ RAG 检索后处理模块--负责从index->retirever->重排序->过滤->去重-
 构建好问题池
 """
 
-import hashlib
 import logging
-from typing import List, Dict, Any
+import re
+from typing import List
 from concurrent_log_handler import ConcurrentRotatingFileHandler
-
 from llama_index.core import VectorStoreIndex
 from llama_index.core.schema import NodeWithScore, QueryBundle
 from core.config import Config
-from core.models import BGERerankNodePostprocessor
+from core.rag.models import BGERerankNodePostprocessor
 from llama_index.core.base.base_retriever import BaseRetriever
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 # 设置日志
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -30,6 +31,15 @@ handler.setFormatter(logging.Formatter(
     "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 ))
 logger.addHandler(handler)
+
+try:
+
+    SKLEARN_AVAILABLE = True
+except ImportError:
+    SKLEARN_AVAILABLE = False
+    TfidfVectorizer = None
+    cosine_similarity = None
+    logger.warning("scikit-learn 未安装，将跳过内容相似度去重")
 
 
 # 答案生成提示词
@@ -128,6 +138,10 @@ class RAGPostProcessModule:
         # 2. 去重（根据 node_id，保留最大分数）
         unique_nodes = self._deduplicate_by_node_id(all_reranked_nodes)
         logger.info(f"去重后保留 {len(unique_nodes)} 个节点")
+
+        # 2.1 内容相似度去重（保留高分节点）
+        unique_nodes = self._deduplicate_by_text_similarity(unique_nodes)
+        logger.info(f"内容去重后保留 {len(unique_nodes)} 个节点")
         
         # 3. 构建 question_pool
         self._build_question_pool(planner_questions, unique_nodes)
@@ -216,6 +230,54 @@ class RAGPostProcessModule:
         unique_nodes.sort(key=lambda x: x.score, reverse=True)
 
         return unique_nodes
+
+    def _normalize_content(self, content: str) -> str:
+        cleaned = content.lower()
+        cleaned = re.sub(r"[^\w\s]", " ", cleaned)
+        cleaned = " ".join(cleaned.split())
+        return cleaned
+
+    def _deduplicate_by_text_similarity(
+        self,
+        nodes: List[NodeWithScore]
+    ) -> List[NodeWithScore]:
+        """基于 TF-IDF + 余弦相似度的内容去重"""
+        if not nodes or len(nodes) <= 1:
+            return nodes
+
+        if not SKLEARN_AVAILABLE or TfidfVectorizer is None or cosine_similarity is None:
+            return nodes
+
+        assert TfidfVectorizer is not None
+        assert cosine_similarity is not None
+
+        contents = [self._normalize_content(node.node.get_content()) for node in nodes]
+        if not any(contents):
+            return nodes
+
+        vectorizer = TfidfVectorizer(
+            max_features=5000,
+            stop_words=None,
+            ngram_range=(1, 2)
+        )
+
+        tfidf_matrix = vectorizer.fit_transform(contents)
+        similarity_matrix = cosine_similarity(tfidf_matrix)
+
+        to_keep = set(range(len(nodes)))
+        for i in range(len(nodes)):
+            if i not in to_keep:
+                continue
+
+            for j in range(i + 1, len(nodes)):
+                if j not in to_keep:
+                    continue
+
+                if similarity_matrix[i, j] >= Config.DOC_FILTER:
+                    to_keep.discard(j)
+
+        deduped = [node for idx, node in enumerate(nodes) if idx in to_keep]
+        return deduped
     
     def _build_question_pool(
         self,
