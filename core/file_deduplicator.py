@@ -298,19 +298,22 @@ if __name__ == "__main__":
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
     
-    print("=" * 80)
-    print("FileDeduplicator 测试")
-    print("=" * 80)
+    logger.debug("=" * 80)
+    logger.info("FileDeduplicator 测试")
+    logger.debug("=" * 80)
     
-    print(f"\n✓ scikit-learn 可用性: {'是' if SKLEARN_AVAILABLE else '否（将使用 MD5 回退）'}")
+    if SKLEARN_AVAILABLE:
+        logger.info("✓ scikit-learn 可用: 是")
+    else:
+        logger.warning("✓ scikit-learn 可用: 否（将使用 MD5 回退）")
     
     # 创建去重器实例
     deduplicator = FileDeduplicator(similarity_threshold=0.8)
-    print(f"✓ FileDeduplicator 初始化成功")
-    print(f"  - 相似度阈值: {deduplicator.similarity_threshold}")
-    print(f"  - 批处理大小: {deduplicator.batch_size}")
-    print(f"  - 支持的文件类型: {deduplicator.allowed_extensions}")
+    logger.info("✓ FileDeduplicator 初始化成功")
+    logger.debug(f"  - 相似度阈值: {deduplicator.similarity_threshold}")
+    logger.debug(f"  - 批处理大小: {deduplicator.batch_size}")
+    logger.debug(f"  - 支持的文件类型: {deduplicator.allowed_extensions}")
     
-    print("\n" + "=" * 80)
-    print("测试通过！")
-    print("=" * 80)
+    logger.debug("=" * 80)
+    logger.info("测试通过！")
+    logger.debug("=" * 80)
