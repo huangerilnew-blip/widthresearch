@@ -206,3 +206,15 @@
 2026-02-06 20:27:27 - core.file_deduplicator - INFO - [file_deduplicator.py:270] - 扫描到 19 个有效文件（已过滤空文件）
 2026-02-06 20:27:27 - core.file_deduplicator - INFO - [file_deduplicator.py:125] - 使用 TF-IDF 去重: 19 个文件, 阈值=0.8
 2026-02-06 20:27:27 - core.file_deduplicator - INFO - [file_deduplicator.py:225] - TF-IDF 去重完成: 保留 19 个, 删除 0 个
+2026-02-07 14:01:10 - __main__ - DEBUG - [file_deduplicator.py:301] - ================================================================================
+2026-02-07 14:01:10 - __main__ - INFO - [file_deduplicator.py:302] - FileDeduplicator 测试
+2026-02-07 14:01:10 - __main__ - DEBUG - [file_deduplicator.py:303] - ================================================================================
+2026-02-07 14:01:10 - __main__ - INFO - [file_deduplicator.py:306] - ✓ scikit-learn 可用: 是
+2026-02-07 14:01:10 - __main__ - INFO - [file_deduplicator.py:48] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
+2026-02-07 14:01:10 - __main__ - INFO - [file_deduplicator.py:312] - ✓ FileDeduplicator 初始化成功
+2026-02-07 14:01:10 - __main__ - DEBUG - [file_deduplicator.py:313] -   - 相似度阈值: 0.8
+2026-02-07 14:01:10 - __main__ - DEBUG - [file_deduplicator.py:314] -   - 批处理大小: 500
+2026-02-07 14:01:10 - __main__ - DEBUG - [file_deduplicator.py:315] -   - 支持的文件类型: {'.md', '.pdf', '.json'}
+2026-02-07 14:01:10 - __main__ - DEBUG - [file_deduplicator.py:317] - ================================================================================
+2026-02-07 14:01:10 - __main__ - INFO - [file_deduplicator.py:318] - 测试通过！
+2026-02-07 14:01:10 - __main__ - DEBUG - [file_deduplicator.py:319] - ================================================================================

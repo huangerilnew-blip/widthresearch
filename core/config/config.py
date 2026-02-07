@@ -38,7 +38,7 @@ class Config:
     BASEDATA_RESTRUCTURE_PATH="data/crunchbase_data/restructure_data/restructure_company_info.json" #清洗与重构后的基础数据路径
     TOP_K=5 #向量检索top_k
     TAVILY_NUM=10 #Tavily文献检索返回数量
-    TAVILY_FLOOR_SCORE=0.6 #Tavily文献检索最低分数线
+    TAVILY_FLOOR_SCORE=0.8 #Tavily文献检索最低分数线
     EXA_NUM=10 #EXA检索的结果
     SEC_NUM=3 #SEC检索返回数量
     AKSHARE_NUM=3 #Akshare检索返回数量

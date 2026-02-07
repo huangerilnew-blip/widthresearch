@@ -88,7 +88,8 @@ class DocumentProcessor:
         
         # 初始化 QuestionsAnsweredExtractor（从节点中抽取可回答的问题）
         self.question_extractor = QuestionsAnsweredExtractor(
-            questions=3  # 每个 chunk 抽取的问题数量
+            questions=3,  # 每个 chunk 抽取的问题数量
+            llm=llm
         )
         
         # 构建 IngestionPipeline：MarkdownElementNodeParser -> SentenceSplitter -> QuestionsAnsweredExtractor

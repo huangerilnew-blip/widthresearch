@@ -233,7 +233,7 @@ class FileDeduplicator:
     def deduplicate(
         self,
         directory: str,
-        remove_duplicates: bool = True
+        remove_duplicates: bool = False
     ) -> Tuple[List[str], List[str]]:
         """对目录中的文件进行去重
         
