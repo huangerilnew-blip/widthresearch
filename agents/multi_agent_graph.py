@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import json
 import logging
-from typing import Dict, Any, List, Optional, TypedDict, Annotated
+from typing import Dict, Any, List, Optional, TypedDict, Annotated, Union
 from psycopg_pool import AsyncConnectionPool
 from concurrent_log_handler import ConcurrentRotatingFileHandler
 
@@ -40,6 +40,31 @@ from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 
 # 设置日志
 logger = setup_logger(__name__)
+
+NODE_FLAG_KEYS = [
+    "init_vector_store",
+    "plan_query",
+    "execute_first",
+    "collect_first",
+    "execute_second",
+    "collect_second",
+    "process_documents",
+    "vectorize_documents",
+    "rag_retrieve",
+    "build_question_pool",
+    "generate_answer",
+    "eval_answer",
+    "terminal_error"
+]
+
+
+def merge_flags(
+    left: Optional[Dict[str, Union[bool, str]]],
+    right: Optional[Dict[str, Union[bool, str]]]
+) -> Dict[str, Union[bool, str]]:
+    merged = dict(left or {})
+    merged.update(right or {})
+    return merged
 
 
 # ============================================================================
@@ -82,7 +107,8 @@ class MultiAgentState(TypedDict):
 
     # 内部状态
     vector_store_initialized: bool  # 向量库是否已初始化
-    error: Optional[str]  # 错误信息
+    inited_vector_index: bool  # 向量索引是否已初始化
+    flags: Annotated[Dict[str, Union[bool, str]], merge_flags]  # 节点执行状态
     epoch: int  # 生成答案迭代次数
     last_answer: str  # 上一次生成的答案
     last_evaluation: Optional[Dict[str, Any]]  # 上一次评估结果
@@ -179,11 +205,19 @@ class MultiAgentGraph:
                 self.vector_store_index = self.vector_store_manager.load_base_vector_store()
                 logger.info("向量存储初始化完成")
 
-            return {"vector_store_initialized": True}
+            return {
+                "vector_store_initialized": True,
+                "inited_vector_index": True,
+                **self._with_flag(state, "init_vector_store", True)
+            }
 
         except Exception as e:
             logger.error(f"向量存储初始化失败: {e}")
-            return {"error": str(e), "vector_store_initialized": False}
+            return {
+                "vector_store_initialized": False,
+                "inited_vector_index": False,
+                **self._with_flag(state, "init_vector_store", "error")
+            }
 
     async def _plan_query_node(self, state: MultiAgentState) -> Dict[str, Any]:
         """节点 2: 调用 PlannerAgent 拆解查询
@@ -212,7 +246,8 @@ class MultiAgentGraph:
                     logger.error(f"解析 JSON 失败: {result}")
                     return {
                         "sub_questions": [original_query],
-                        "messages": [AIMessage(content="JSON 解析失败，使用原始查询")]
+                        "messages": [AIMessage(content="JSON 解析失败，使用原始查询")],
+                        **self._with_flag(state, "plan_query", "error")
                     }
             elif isinstance(result, dict):
                 data = result
@@ -220,7 +255,8 @@ class MultiAgentGraph:
                 logger.error(f"PlannerAgent 返回了非预期的类型: {type(result)}")
                 return {
                     "sub_questions": [original_query],
-                    "messages": [AIMessage(content="PlannerAgent 返回类型错误，使用原始查询")]
+                    "messages": [AIMessage(content="PlannerAgent 返回类型错误，使用原始查询")],
+                    **self._with_flag(state, "plan_query", "error")
                 }
 
             # 提取 tasks
@@ -230,20 +266,23 @@ class MultiAgentGraph:
                 logger.info(f"查询拆解完成，生成 {len(tasks)} 个子问题")
                 return {
                     "sub_questions": tasks,
-                    "messages": [AIMessage(content=f"已生成 {len(tasks)} 个子问题")]
+                    "messages": [AIMessage(content=f"已生成 {len(tasks)} 个子问题")],
+                    **self._with_flag(state, "plan_query", True)
                 }
             else:
                 logger.warning(f"子问题数量不足: {len(tasks)}")
                 return {
                     "sub_questions": tasks if tasks else [original_query],
-                    "messages": [AIMessage(content=f"生成 {len(tasks)} 个子问题")]
+                    "messages": [AIMessage(content=f"生成 {len(tasks)} 个子问题")],
+                    **self._with_flag(state, "plan_query", True)
                 }
 
         except Exception as e:
             logger.error(f"查询拆解失败: {e}")
             return {
                 "sub_questions": [original_query],
-                "messages": [AIMessage(content=f"查询拆解失败: {str(e)}")]
+                "messages": [AIMessage(content=f"查询拆解失败: {str(e)}")],
+                **self._with_flag(state, "plan_query", "error")
             }
 
     async def _execute_first_node(self, state: MultiAgentState) -> Dict[str, Any]:
@@ -278,7 +317,8 @@ class MultiAgentGraph:
             return {
                 "executor_results": executor_results,
                 "url_pool": updated_url_pool,
-                "messages": [AIMessage(content=f"第一阶段完成 {len(executor_results)} 个子问题的执行")]
+                "messages": [AIMessage(content=f"第一阶段完成 {len(executor_results)} 个子问题的执行")],
+                **self._with_flag(state, "execute_first", True)
             }
 
         except Exception as e:
@@ -286,7 +326,7 @@ class MultiAgentGraph:
             return {
                 "executor_results": [],
                 "url_pool": [],
-                "error": str(e)
+                **self._with_flag(state, "execute_first", "error")
             }
 
     async def _execute_second_node(self, state: MultiAgentState) -> Dict[str, Any]:
@@ -318,14 +358,15 @@ class MultiAgentGraph:
             return {
                 "executor_results": executor_results,
                 "url_pool": updated_url_pool,
-                "messages": [AIMessage(content=f"第二阶段完成 {len(executor_results)} 个子问题的执行")]
+                "messages": [AIMessage(content=f"第二阶段完成 {len(executor_results)} 个子问题的执行")],
+                **self._with_flag(state, "execute_second", True)
             }
 
         except Exception as e:
             logger.error(f"第二阶段执行失败: {e}")
             return {
                 "executor_results": [],
-                "error": str(e)
+                **self._with_flag(state, "execute_second", "error")
             }
 
     async def _collect_first_node(self, state: MultiAgentState) -> Dict[str, Any]:
@@ -369,7 +410,8 @@ class MultiAgentGraph:
             return {
                 "all_documents": all_documents,
                 "processed_file_paths": processed_file_paths,
-                "messages": [AIMessage(content=f"第一次收集到 {len(unique_files)} 个去重后的文档")]
+                "messages": [AIMessage(content=f"第一次收集到 {len(unique_files)} 个去重后的文档")],
+                **self._with_flag(state, "collect_first", True)
             }
 
         except Exception as e:
@@ -380,7 +422,7 @@ class MultiAgentGraph:
             return {
                 "all_documents": [],
                 "processed_file_paths": [],
-                "error": str(e)
+                **self._with_flag(state, "collect_first", "error")
             }
 
     async def _collect_second_node(self, state: MultiAgentState) -> Dict[str, Any]:
@@ -426,7 +468,8 @@ class MultiAgentGraph:
             return {
                 "all_documents": all_documents,
                 "processed_file_paths": processed_file_paths,
-                "messages": [AIMessage(content=f"第二次收集到 {len(unique_files)} 个去重后的文档")]
+                "messages": [AIMessage(content=f"第二次收集到 {len(unique_files)} 个去重后的文档")],
+                **self._with_flag(state, "collect_second", True)
             }
 
         except Exception as e:
@@ -437,7 +480,7 @@ class MultiAgentGraph:
             return {
                 "all_documents": [],
                 "processed_file_paths": [],
-                "error": str(e)
+                **self._with_flag(state, "collect_second", "error")
             }
 
     async def _process_documents_node(self, state: MultiAgentState) -> Dict[str, Any]:
@@ -453,7 +496,8 @@ class MultiAgentGraph:
             logger.info("没有文档需要处理")
             return {
                 "llama_docs": [],
-                "messages": [AIMessage(content="没有文档需要处理")]
+                "messages": [AIMessage(content="没有文档需要处理")],
+                **self._with_flag(state, "process_documents", False)
             }
 
         try:
@@ -462,14 +506,14 @@ class MultiAgentGraph:
 
             return {
                 "llama_docs": llama_docs,
-                "messages": [AIMessage(content=f"处理完成，生成 {len(llama_docs)} 个文档片段")]
+                **self._with_flag(state, "process_documents", True)
             }
 
         except Exception as e:
             logger.error(f"文档处理失败: {e}")
             return {
                 "llama_docs": [],
-                "error": str(e)
+                **self._with_flag(state, "process_documents", "error")
             }
 
     async def _vectorize_documents_node(self, state: MultiAgentState) -> Dict[str, Any]:
@@ -483,17 +527,23 @@ class MultiAgentGraph:
 
         if not llama_docs:
             logger.info("没有文档需要向量化")
-            return {"messages": [AIMessage(content="没有文档需要向量化")]}
+            return {
+                "messages": [AIMessage(content="没有文档需要向量化")],
+                **self._with_flag(state, "vectorize_documents", False)
+            }
 
         try:
             self.vector_store_manager.add_nodes(llama_docs)
             logger.info(f"成功添加 {len(llama_docs)} 个文档到向量库")
 
-            return {"messages": [AIMessage(content=f"成功向量化 {len(llama_docs)} 个文档")]}
+            return {
+                "messages": [AIMessage(content=f"成功向量化 {len(llama_docs)} 个文档")],
+                **self._with_flag(state, "vectorize_documents", True)
+            }
 
         except Exception as e:
             logger.error(f"向量化失败: {e}")
-            return {"error": str(e)}
+            return {**self._with_flag(state, "vectorize_documents", "error")}
 
     async def _rag_retrieve_node(self, state: MultiAgentState) -> Dict[str, Any]:
         """节点 7: RAG 检索
@@ -533,12 +583,14 @@ class MultiAgentGraph:
                 return {
                     "retrieved_nodes": [],
                     "retrieved_epoch": updated_epoch,
-                    "messages": [AIMessage(content="检索结果为空，准备重试")]
+                    "messages": [AIMessage(content="检索结果为空，准备重试")],
+                    **self._with_flag(state, "rag_retrieve", True)
                 }
 
             return {
                 "retrieved_nodes": retrieved_nodes,
-                "messages": [AIMessage(content=f"检索到 {len(retrieved_nodes)} 个相关节点")]
+                "messages": [AIMessage(content=f"检索到 {len(retrieved_nodes)} 个相关节点")],
+                **self._with_flag(state, "rag_retrieve", True)
             }
 
         except Exception as e:
@@ -547,7 +599,7 @@ class MultiAgentGraph:
             return {
                 "retrieved_nodes": [],
                 "retrieved_epoch": updated_epoch,
-                "error": str(e)
+                **self._with_flag(state, "rag_retrieve", "error")
             }
 
     async def _build_question_pool_node(self, state: MultiAgentState) -> Dict[str, Any]:
@@ -582,12 +634,14 @@ class MultiAgentGraph:
                 return {
                     "question_pool": questions_pool,
                     "set_ques_pool_epoch": updated_epoch,
-                    "messages": [AIMessage(content="问题池为空，准备重试")]
+                    "messages": [AIMessage(content="问题池为空，准备重试")],
+                    **self._with_flag(state, "build_question_pool", True)
                 }
 
             return {
                 "question_pool": questions_pool,
-                "messages": [AIMessage(content=f"问题池包含 {len(questions_pool)} 个问题")]
+                "messages": [AIMessage(content=f"问题池包含 {len(questions_pool)} 个问题")],
+                **self._with_flag(state, "build_question_pool", True)
             }
 
         except Exception as e:
@@ -596,7 +650,7 @@ class MultiAgentGraph:
             return {
                 "question_pool": None,
                 "set_ques_pool_epoch": updated_epoch,
-                "error": str(e)
+                **self._with_flag(state, "build_question_pool", "error")
             }
 
     async def _generate_answer_node(self, state: MultiAgentState) -> Dict[str, Any]:
@@ -677,20 +731,32 @@ class MultiAgentGraph:
                 "final_answer": answer,
                 "last_answer": answer,
                 "epoch": epoch + 1,
-                "messages": [AIMessage(content=answer)]
+                "messages": [AIMessage(content=answer)],
+                **self._with_flag(state, "generate_answer", True)
             }
 
         except Exception as e:
             logger.error(f"生成答案失败: {e}")
             return {
                 "final_answer": f"抱歉，生成答案时出现错误: {str(e)}",
-                "error": str(e),
-                "epoch": epoch + 1
+                "epoch": epoch + 1,
+                **self._with_flag(state, "generate_answer", "error")
             }
 
     # ========================================================================
     # 辅助方法
     # ========================================================================
+
+    def _init_flags(self) -> Dict[str, Union[bool, str]]:
+        return {node_name: False for node_name in NODE_FLAG_KEYS}
+
+    def _with_flag(
+        self,
+        state: MultiAgentState,
+        node_name: str,
+        status: Union[bool, str]
+    ) -> Dict[str, Dict[str, Union[bool, str]]]:
+        return {"flags": {node_name: status}}
 
     def _build_answer_system_prompt(self) -> str:
         """构建回答生成的系统提示词"""
@@ -820,9 +886,16 @@ class MultiAgentGraph:
                 "passed": False,
                 "suggestions": ["评估过程出错，请重新生成答案"]
             }
+            return {
+                "last_evaluation": eval_result,
+                **self._with_flag(state, "eval_answer", "error")
+            }
 
         logger.info(f"评估结果: passed={eval_result.get('passed')}, 建议数={len(eval_result.get('suggestions', []))}")
-        return {"last_evaluation": eval_result}
+        return {
+            "last_evaluation": eval_result,
+            **self._with_flag(state, "eval_answer", True)
+        }
 
     def _should_continue_generation(self, state: MultiAgentState) -> str:
         """根据评估结果决定是否继续生成"""
@@ -905,7 +978,7 @@ class MultiAgentGraph:
         return {
             "final_answer": error_message,
             "messages": [AIMessage(content=error_message)],
-            "error": error_message
+            **self._with_flag(state, "terminal_error", "error")
         }
 
     # ========================================================================
@@ -1016,7 +1089,7 @@ class MultiAgentGraph:
         """
         logger.info(f"开始处理用户查询: {user_query} (user_id={user_id}, thread_id={thread_id})")
 
-        config = {"configurable": {" thread_id": thread_id,"user_id": user_id}}
+        config = {"configurable": {"thread_id": thread_id,"user_id": user_id}}
 
         # 初始状态（补充新增字段）
         initial_state: MultiAgentState = {
@@ -1037,7 +1110,8 @@ class MultiAgentGraph:
             "question_pool": None,
             "final_answer": "",
             "vector_store_initialized": False,
-            "error": None,
+            "inited_vector_index": False,
+            "flags": self._init_flags(),
             "epoch": 0,
             "last_answer": "",
             "last_evaluation": None,
@@ -1050,6 +1124,15 @@ class MultiAgentGraph:
             result = await self.graph.ainvoke(initial_state, config)
 
             # 构建返回结果
+            flags = result.get("flags") or self._init_flags()
+            failed_nodes = [
+                node_name for node_name, status in flags.items() if status == "error"
+            ]
+            execution_succeeded = bool(flags) and all(
+                status is True for status in flags.values()
+            )
+            logger.info(f"节点执行状态: {flags}")
+
             final_result = {
                 'query': user_query,
                 'user_id': user_id,
@@ -1063,7 +1146,10 @@ class MultiAgentGraph:
                 'metadata': {
                     'retrieved_count': len(result.get('retrieved_nodes', [])),
                     'unique_count': len(result.get('retrieved_nodes', [])),
-                    'reranked_count': len(result.get('retrieved_nodes', []))
+                    'reranked_count': len(result.get('retrieved_nodes', [])),
+                    'execution_succeeded': execution_succeeded,
+                    'failed_nodes': failed_nodes,
+                    'node_flags': flags
                 }
             }
 
