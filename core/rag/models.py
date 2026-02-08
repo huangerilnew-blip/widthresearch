@@ -20,50 +20,6 @@ from llama_index.core.schema import NodeWithScore, QueryBundle
 from core.config.config import Config
 
 @dataclass
-class QuestionsPool:
-    """问题池数据模型
-    
-    存储 PlannerAgent 生成的原始子问题以及从 Markdown 文档中改写的问题
-    """
-    original_questions: List[str] = field(default_factory=list)  # PlannerAgent 生成的原始子问题
-    rewritten_questions: List[str] = field(default_factory=list)  # 从文档改写的问题
-    
-    def get_all_questions(self) -> List[str]:
-        """获取所有问题
-        
-        Returns:
-            所有问题的列表（原始 + 改写）
-        """
-        return self.original_questions + self.rewritten_questions
-    
-    def add_rewritten_questions(self, questions: List[str]):
-        """添加改写的问题（自动去重）
-        
-        Args:
-            questions: 新的改写问题列表
-        """
-        # 去重：只添加不存在的问题
-        existing = set(self.get_all_questions())
-        new_questions = [q for q in questions if q not in existing]
-        self.rewritten_questions.extend(new_questions)
-    
-    def add_original_questions(self, questions: List[str]):
-        """添加原始子问题
-        
-        Args:
-            questions: 原始子问题列表
-        """
-        self.original_questions.extend(questions)
-    
-    def __len__(self) -> int:
-        """返回问题总数"""
-        return len(self.original_questions) + len(self.rewritten_questions)
-    
-    def __repr__(self) -> str:
-        return f"QuestionsPool(original={len(self.original_questions)}, rewritten={len(self.rewritten_questions)}, total={len(self)})"
-
-
-@dataclass
 class DocumentMetadata:
     """文档元数据
     
@@ -409,25 +365,8 @@ if __name__ == "__main__":
     print("数据模型测试")
     print("=" * 60)
     
-    # 测试 QuestionsPool
-    print("\n1. 测试 QuestionsPool:")
-    pool = QuestionsPool()
-    pool.add_original_questions(["问题1？", "问题2？", "问题3？"])
-    print(f"   添加原始问题后: {pool}")
-    
-    pool.add_rewritten_questions(["改写问题1？", "改写问题2？"])
-    print(f"   添加改写问题后: {pool}")
-    
-    # 测试去重
-    pool.add_rewritten_questions(["改写问题1？", "新问题？"])
-    print(f"   测试去重后: {pool}")
-    
-    all_questions = pool.get_all_questions()
-    print(f"   所有问题: {all_questions}")
-    print(f"   ✓ QuestionsPool 测试通过")
-    
     # 测试 DocumentMetadata
-    print("\n2. 测试 DocumentMetadata:")
+    print("\n1. 测试 DocumentMetadata:")
     doc_meta = DocumentMetadata(
         source="openalex",
         title="测试文档",
@@ -446,7 +385,7 @@ if __name__ == "__main__":
     print(f"   ✓ DocumentMetadata 序列化测试通过")
     
     # 测试 MarkdownChunk
-    print("\n3. 测试 MarkdownChunk:")
+    print("\n2. 测试 MarkdownChunk:")
     chunk = MarkdownChunk(
         content="这是一个测试片段",
         doc_title="测试文档",
@@ -463,7 +402,7 @@ if __name__ == "__main__":
     print(f"   ✓ MarkdownChunk 序列化测试通过")
     
     # 测试 RetrievedContext
-    print("\n4. 测试 RetrievedContext:")
+    print("\n3. 测试 RetrievedContext:")
     context = RetrievedContext(
         content="这是检索到的相关内容",
         source="base_data",
@@ -479,13 +418,13 @@ if __name__ == "__main__":
     print(f"   ✓ RetrievedContext 序列化测试通过")
     
     # 测试 BGERerankNodePostprocessor
-    print("\n5. 测试 BGERerankNodePostprocessor:")
+    print("\n4. 测试 BGERerankNodePostprocessor:")
     print("   BGERerankNodePostprocessor 类创建成功")
     print(f"   类名: {BGERerankNodePostprocessor.class_name()}")
     print(f"   ✓ BGERerankNodePostprocessor 测试通过")
     
     # 测试 PDFParser
-    print("\n6. 测试 PDFParser:")
+    print("\n5. 测试 PDFParser:")
     parser = PDFParser(mineru_server_url="http://localhost:30000")
     print(f"   PDFParser 实例化成功")
     print(f"   MinerU 服务器 URL: {parser.mineru_server_url}")

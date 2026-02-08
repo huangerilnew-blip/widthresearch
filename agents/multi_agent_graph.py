@@ -26,7 +26,7 @@ from agents.executor_pool import ExecutorAgentPool
 from core.rag.rag_preprocess_module import VectorStoreManager
 from core.rag.document_processor import DocumentProcessor
 from core.rag.rag_postprocess_module import RAGPostProcessModule as RAGModule
-from core.rag.models import QuestionsPool, BGERerankNodePostprocessor
+from core.rag.models import BGERerankNodePostprocessor
 from core.config.config import Config
 from core.llms import get_llm
 from core.rag.reranker import BGEReranker
@@ -106,7 +106,7 @@ class MultiAgentState(TypedDict):
 
     # RAG 阶段
     retrieved_nodes: List  # RAG 检索结果
-    question_pool: Optional[QuestionsPool]  # 问题池
+    question_pool: List[str]  # 问题池
     retrieved_epoch: int  # 检索重试次数
     set_ques_pool_epoch: int  # 问题池重试次数
 
@@ -212,7 +212,7 @@ class MultiAgentGraph:
 
         try:
             if self.vector_store_index is None:
-                self.vector_store_index = self.vector_store_manager.load_base_vector_store()
+                self.vector_store_index = self.vector_store_manager.load_or_build_index()
                 logger.info("向量存储初始化完成")
 
             return {
@@ -256,7 +256,6 @@ class MultiAgentGraph:
                     logger.error(f"解析 JSON 失败: {result}")
                     return {
                         "sub_questions": [original_query],
-                        "messages": [AIMessage(content="JSON 解析失败，使用原始查询")],
                         **self._with_flag(state, "plan_query", "error")
                     }
             elif isinstance(result, dict):
@@ -265,7 +264,6 @@ class MultiAgentGraph:
                 logger.error(f"PlannerAgent 返回了非预期的类型: {type(result)}")
                 return {
                     "sub_questions": [original_query],
-                    "messages": [AIMessage(content="PlannerAgent 返回类型错误，使用原始查询")],
                     **self._with_flag(state, "plan_query", "error")
                 }
 
@@ -276,14 +274,12 @@ class MultiAgentGraph:
                 logger.info(f"查询拆解完成，生成 {len(tasks)} 个子问题")
                 return {
                     "sub_questions": tasks,
-                    "messages": [AIMessage(content=f"已生成 {len(tasks)} 个子问题")],
                     **self._with_flag(state, "plan_query", True)
                 }
             else:
                 logger.warning(f"子问题数量不足: {len(tasks)}")
                 return {
                     "sub_questions": tasks if tasks else [original_query],
-                    "messages": [AIMessage(content=f"生成 {len(tasks)} 个子问题")],
                     **self._with_flag(state, "plan_query", True)
                 }
 
@@ -291,7 +287,6 @@ class MultiAgentGraph:
             logger.error(f"查询拆解失败: {e}")
             return {
                 "sub_questions": [original_query],
-                "messages": [AIMessage(content=f"查询拆解失败: {str(e)}")],
                 **self._with_flag(state, "plan_query", "error")
             }
 
@@ -308,10 +303,6 @@ class MultiAgentGraph:
         user_query = state.get("original_query", "")
 
         try:
-            # 初始化 Questions Pool
-            questions_pool = QuestionsPool()
-            questions_pool.add_original_questions(sub_questions)
-
             # 第一阶段：url_pool=[] (探索)
             executor_results, updated_url_pool = await self.executor_pool.execute_questions(
                 sub_questions,
@@ -327,7 +318,6 @@ class MultiAgentGraph:
             return {
                 "first_executor_results": executor_results,
                 "url_pool": updated_url_pool,
-                "messages": [AIMessage(content=f"第一阶段完成 {len(executor_results)} 个子问题的执行")],
                 **self._with_flag(state, "execute_first", True)
             }
 
@@ -368,7 +358,6 @@ class MultiAgentGraph:
             return {
                 "second_executor_results": executor_results,
                 "url_pool": updated_url_pool,
-                "messages": [AIMessage(content=f"第二阶段完成 {len(executor_results)} 个子问题的执行")],
                 **self._with_flag(state, "execute_second", True)
             }
 
@@ -445,7 +434,6 @@ class MultiAgentGraph:
             return {
                 "first_all_documents": unique_documents,
                 "first_processed_file_paths": processed_file_paths,
-                "messages": [AIMessage(content=f"第一次收集到 {len(unique_files)} 个去重后的文档")],
                 **self._with_flag(state, "collect_first", True)
             }
 
@@ -530,7 +518,6 @@ class MultiAgentGraph:
             return {
                 "second_all_documents": unique_documents,
                 "second_processed_file_paths": processed_file_paths,
-                "messages": [AIMessage(content=f"第二次收集到 {len(stage_unique_files)} 个去重后的文档")],
                 **self._with_flag(state, "collect_second", True)
             }
 
@@ -567,7 +554,6 @@ class MultiAgentGraph:
         if not documents:
             return {
                 "first_llama_docs": existing_docs,
-                "messages": [AIMessage(content="第一阶段没有文档需要处理")],
                 **self._with_flag(state, "process_first_documents", False)
             }
 
@@ -576,7 +562,6 @@ class MultiAgentGraph:
             merged_docs = existing_docs + processed_docs
             return {
                 "first_llama_docs": merged_docs,
-                "messages": [AIMessage(content=f"第一阶段处理 {len(processed_docs)} 个文档片段")],
                 **self._with_flag(state, "process_first_documents", True)
             }
         except Exception as e:
@@ -599,7 +584,6 @@ class MultiAgentGraph:
         if not documents:
             return {
                 "second_llama_docs": existing_docs,
-                "messages": [AIMessage(content="第二阶段没有文档需要处理")],
                 **self._with_flag(state, "process_second_documents", False)
             }
 
@@ -608,7 +592,6 @@ class MultiAgentGraph:
             merged_docs = existing_docs + processed_docs
             return {
                 "second_llama_docs": merged_docs,
-                "messages": [AIMessage(content=f"第二阶段处理 {len(processed_docs)} 个文档片段")],
                 **self._with_flag(state, "process_second_documents", True)
             }
         except Exception as e:
@@ -628,7 +611,6 @@ class MultiAgentGraph:
         if not state.get("inited_vector_index", False):
             logger.info("向量库尚未初始化，跳过向量化")
             return {
-                "messages": [AIMessage(content="向量库尚未初始化，跳过向量化")],
                 **self._with_flag(state, "vectorize_documents", False)
             }
 
@@ -638,7 +620,6 @@ class MultiAgentGraph:
         vectorized_first = state.get("vectorized_first_docs", False)
         vectorized_second = state.get("vectorized_second_docs", False)
 
-        messages: List[AIMessage] = []
         updated_state: Dict[str, Any] = {}
         vectorized_any = False
 
@@ -647,36 +628,29 @@ class MultiAgentGraph:
                 if first_llama_docs:
                     self.vector_store_index = self.vector_store_manager.add_nodes(first_llama_docs)
                     logger.info(f"成功添加 {len(first_llama_docs)} 个第一阶段文档到向量库")
-                    messages.append(AIMessage(content=f"成功向量化 {len(first_llama_docs)} 个第一阶段文档"))
                     updated_state["vectorized_first_docs"] = True
                     vectorized_any = True
                 else:
                     logger.info("第一阶段已完成但无可向量化文档")
-                    messages.append(AIMessage(content="第一阶段无可向量化文档"))
                     updated_state["vectorized_first_docs"] = True
 
             if flags.get("process_second_documents") is True and not vectorized_second:
                 if second_llama_docs:
                     self.vector_store_index = self.vector_store_manager.add_nodes(second_llama_docs)
                     logger.info(f"成功添加 {len(second_llama_docs)} 个第二阶段文档到向量库")
-                    messages.append(AIMessage(content=f"成功向量化 {len(second_llama_docs)} 个第二阶段文档"))
                     updated_state["vectorized_second_docs"] = True
                     vectorized_any = True
                 else:
                     logger.info("第二阶段已完成但无可向量化文档")
-                    messages.append(AIMessage(content="第二阶段无可向量化文档"))
                     updated_state["vectorized_second_docs"] = True
 
             if not vectorized_any:
-                messages.append(AIMessage(content="暂无可向量化文档"))
                 return {
-                    "messages": messages,
                     **updated_state,
                     **self._with_flag(state, "vectorize_documents", False)
                 }
 
             return {
-                "messages": messages,
                 **updated_state,
                 **self._with_flag(state, "vectorize_documents", True)
             }
@@ -766,10 +740,16 @@ class MultiAgentGraph:
             retrieved_questions = self._extract_questions_from_nodes(retrieved_nodes)
             logger.info(f"从检索结果中提取到 {len(retrieved_questions)} 个问题")
 
-            # 构建问题池
-            questions_pool = QuestionsPool()
-            questions_pool.add_original_questions(sub_questions)
-            questions_pool.add_rewritten_questions(retrieved_questions)
+            questions_pool: List[str] = []
+            seen_questions: Set[str] = set()
+            for question in sub_questions + retrieved_questions:
+                if not isinstance(question, str):
+                    continue
+                cleaned = question.strip()
+                if not cleaned or cleaned in seen_questions:
+                    continue
+                seen_questions.add(cleaned)
+                questions_pool.append(cleaned)
 
             logger.info(f"Question Pool 构建完成，共 {len(questions_pool)} 个问题")
 
@@ -780,7 +760,7 @@ class MultiAgentGraph:
                     f"set_ques_pool_epoch={updated_epoch}"
                 )
                 return {
-                    "question_pool": questions_pool,
+                    "question_pool": [],
                     "set_ques_pool_epoch": updated_epoch,
                     "messages": [AIMessage(content="问题池为空，准备重试")],
                     **self._with_flag(state, "build_question_pool", True)
@@ -796,7 +776,7 @@ class MultiAgentGraph:
             logger.error(f"构建问题池失败: {e}")
             updated_epoch = set_ques_pool_epoch + 1
             return {
-                "question_pool": None,
+                "question_pool": [],
                 "set_ques_pool_epoch": updated_epoch,
                 **self._with_flag(state, "build_question_pool", "error")
             }
@@ -815,9 +795,8 @@ class MultiAgentGraph:
         last_answer = state.get("last_answer", "")
         epoch = state.get("epoch", 0)
         try:
-            # 转换 question_pool 为列表
-            if question_pool:
-                question_pool_list = question_pool.get_all_questions()
+            if question_pool is not None:
+                question_pool_list = question_pool
             else:
                 question_pool_list = sub_questions
 
@@ -1102,8 +1081,8 @@ class MultiAgentGraph:
         return "rag_retrieve"
 
     def _route_after_question_pool(self, state: MultiAgentState) -> str:
-        question_pool = state.get("question_pool")
-        if question_pool and len(question_pool) > 0:
+        question_pool = state.get("question_pool") or []
+        if len(question_pool) > 0:
             return "generate_answer"
 
         set_ques_pool_epoch = state.get("set_ques_pool_epoch", 0)
@@ -1125,7 +1104,6 @@ class MultiAgentGraph:
         )
         return {
             "final_answer": error_message,
-            "messages": [AIMessage(content=error_message)],
             **self._with_flag(state, "terminal_error", "error")
         }
 
@@ -1263,7 +1241,7 @@ class MultiAgentGraph:
             "first_llama_docs": [],
             "second_llama_docs": [],
             "retrieved_nodes": [],
-            "question_pool": None,
+            "question_pool": [],
             "final_answer": "",
             "vector_store_initialized": False,
             "inited_vector_index": False,
@@ -1296,8 +1274,12 @@ class MultiAgentGraph:
                 'user_id': user_id,
                 'thread_id': thread_id,
                 'sub_questions': result.get('sub_questions', []),
-                'rewritten_questions_count': len(result.get('question_pool', [])) if result.get('question_pool') else 0,
-                'total_questions': len(result.get('question_pool', [])) if result.get('question_pool') else 0,
+                'rewritten_questions_count': max(
+                    len(result.get('question_pool', []) or [])
+                    - len(result.get('sub_questions', []) or []),
+                    0
+                ),
+                'total_questions': len(result.get('question_pool', []) or []),
                 'documents_processed': len(result.get('first_all_documents', []))
                 + len(result.get('second_all_documents', [])),
                 'url_pool_size': len(result.get('url_pool', [])),
