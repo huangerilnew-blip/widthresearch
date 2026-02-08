@@ -46,9 +46,10 @@ NODE_FLAG_KEYS = [
     "plan_query",
     "execute_first",
     "collect_first",
+    "process_first_documents",
     "execute_second",
     "collect_second",
-    "process_documents",
+    "process_second_documents",
     "vectorize_documents",
     "rag_retrieve",
     "build_question_pool",
@@ -88,12 +89,15 @@ class MultiAgentState(TypedDict):
     sub_questions: List[str]  # Planner 生成的子问题
 
     # Executor 阶段
-    executor_results: List[Dict]  # ExecutorAgent 执行结果
+    first_executor_results: List[Dict]  # 第一阶段执行结果
+    second_executor_results: List[Dict]  # 第二阶段执行结果
     url_pool: List[str]  # 全局去重后的 URL 列表
 
     # 文档处理阶段
-    all_documents: List[Dict]  # 收集的所有文档
-    processed_file_paths: List[Dict]  # 已扫描并准备处理的文件路径及其元数据
+    first_all_documents: List[Dict]  # 第一阶段收集的文档
+    second_all_documents: List[Dict]  # 第二阶段收集的文档
+    first_processed_file_paths: List[Dict]  # 第一阶段去重后的文件路径元数据
+    second_processed_file_paths: List[Dict]  # 第二阶段去重后的文件路径元数据
     llama_docs: List  # 处理后的文档片段
 
     # RAG 阶段
@@ -123,7 +127,7 @@ class MultiAgentGraph:
 
     流程图：
         START → init_vector_store → plan_query → execute_subquestions
-            → collect_documents → process_documents → vectorize_documents
+            → collect_documents → process_stage_documents → vectorize_documents
             → rag_retrieve → build_question_pool → generate_answer → eval_answer → END
 
     每个节点负责一个具体任务，状态在节点间流转
@@ -315,7 +319,7 @@ class MultiAgentGraph:
             logger.info(f"第一阶段收集到 {len(updated_url_pool)} 个 URL")
 
             return {
-                "executor_results": executor_results,
+                "first_executor_results": executor_results,
                 "url_pool": updated_url_pool,
                 "messages": [AIMessage(content=f"第一阶段完成 {len(executor_results)} 个子问题的执行")],
                 **self._with_flag(state, "execute_first", True)
@@ -324,7 +328,7 @@ class MultiAgentGraph:
         except Exception as e:
             logger.error(f"第一阶段执行失败: {e}")
             return {
-                "executor_results": [],
+                "first_executor_results": [],
                 "url_pool": [],
                 **self._with_flag(state, "execute_first", "error")
             }
@@ -356,7 +360,7 @@ class MultiAgentGraph:
             logger.info(f"第二阶段 URL Pool: {len(url_pool)} -> {len(updated_url_pool)}")
 
             return {
-                "executor_results": executor_results,
+                "second_executor_results": executor_results,
                 "url_pool": updated_url_pool,
                 "messages": [AIMessage(content=f"第二阶段完成 {len(executor_results)} 个子问题的执行")],
                 **self._with_flag(state, "execute_second", True)
@@ -365,7 +369,7 @@ class MultiAgentGraph:
         except Exception as e:
             logger.error(f"第二阶段执行失败: {e}")
             return {
-                "executor_results": [],
+                "second_executor_results": [],
                 **self._with_flag(state, "execute_second", "error")
             }
 
@@ -376,7 +380,7 @@ class MultiAgentGraph:
         """
         logger.info("[节点 4a] 第一次文档收集与去重")
 
-        executor_results = state.get("executor_results", [])
+        executor_results = state.get("first_executor_results", [])
 
         try:
             # 执行第一次文件去重
@@ -408,8 +412,8 @@ class MultiAgentGraph:
             logger.info(f"从第一阶段 executor_results 提取到 {len(all_documents)} 个文档元数据")
 
             return {
-                "all_documents": all_documents,
-                "processed_file_paths": processed_file_paths,
+                "first_all_documents": all_documents,
+                "first_processed_file_paths": processed_file_paths,
                 "messages": [AIMessage(content=f"第一次收集到 {len(unique_files)} 个去重后的文档")],
                 **self._with_flag(state, "collect_first", True)
             }
@@ -420,8 +424,8 @@ class MultiAgentGraph:
             traceback.print_exc()
 
             return {
-                "all_documents": [],
-                "processed_file_paths": [],
+                "first_all_documents": [],
+                "first_processed_file_paths": [],
                 **self._with_flag(state, "collect_first", "error")
             }
 
@@ -432,8 +436,8 @@ class MultiAgentGraph:
         """
         logger.info("[节点 4b] 第二次文档收集与去重")
 
-        executor_results = state.get("executor_results", [])
-        previous_file_paths = state.get("processed_file_paths", [])
+        executor_results = state.get("second_executor_results", [])
+        previous_file_paths = state.get("first_processed_file_paths", [])
 
         try:
             # 执行第二次文件去重
@@ -466,8 +470,8 @@ class MultiAgentGraph:
             logger.info(f"两阶段总计：{len(previous_file_paths)} + {len(processed_file_paths)} = {len(unique_files)} 个去重后的文档")
 
             return {
-                "all_documents": all_documents,
-                "processed_file_paths": processed_file_paths,
+                "second_all_documents": all_documents,
+                "second_processed_file_paths": processed_file_paths,
                 "messages": [AIMessage(content=f"第二次收集到 {len(unique_files)} 个去重后的文档")],
                 **self._with_flag(state, "collect_second", True)
             }
@@ -478,42 +482,82 @@ class MultiAgentGraph:
             traceback.print_exc()
 
             return {
-                "all_documents": [],
-                "processed_file_paths": [],
+                "second_all_documents": [],
+                "second_processed_file_paths": [],
                 **self._with_flag(state, "collect_second", "error")
             }
 
-    async def _process_documents_node(self, state: MultiAgentState) -> Dict[str, Any]:
-        """节点 5: 处理文档
+    async def _process_documents(self, documents: List[Dict], stage_label: str) -> List:
+        if not documents:
+            logger.info(f"{stage_label}没有文档需要处理")
+            return []
+
+        llama_docs = await self.document_processor.get_nodes(documents)
+        logger.info(f"{stage_label}文档处理完成: {len(llama_docs)} 个片段")
+        return llama_docs
+
+    async def _process_first_documents_node(self, state: MultiAgentState) -> Dict[str, Any]:
+        """节点 5a: 第一阶段文档处理
 
         PDF 转 Markdown、切割、问题改写
         """
-        logger.info("[节点 5] 处理文档（PDF → Markdown → 切割）")
+        logger.info("[节点 5a] 第一阶段文档处理（去重后）")
 
-        all_documents = state.get("all_documents", [])
+        documents = state.get("first_all_documents", [])
+        existing_docs = state.get("llama_docs", [])
 
-        if not all_documents:
-            logger.info("没有文档需要处理")
+        if not documents:
             return {
-                "llama_docs": [],
-                "messages": [AIMessage(content="没有文档需要处理")],
-                **self._with_flag(state, "process_documents", False)
+                "llama_docs": existing_docs,
+                "messages": [AIMessage(content="第一阶段没有文档需要处理")],
+                **self._with_flag(state, "process_first_documents", False)
             }
 
         try:
-            llama_docs = await self.document_processor.get_nodes(all_documents)
-            logger.info(f"文档处理完成: {len(llama_docs)} 个片段")
-
+            processed_docs = await self._process_documents(documents, "第一阶段")
+            merged_docs = existing_docs + processed_docs
             return {
-                "llama_docs": llama_docs,
-                **self._with_flag(state, "process_documents", True)
+                "llama_docs": merged_docs,
+                "messages": [AIMessage(content=f"第一阶段处理 {len(processed_docs)} 个文档片段")],
+                **self._with_flag(state, "process_first_documents", True)
+            }
+        except Exception as e:
+            logger.error(f"第一阶段文档处理失败: {e}")
+            return {
+                "llama_docs": existing_docs,
+                **self._with_flag(state, "process_first_documents", "error")
             }
 
-        except Exception as e:
-            logger.error(f"文档处理失败: {e}")
+    async def _process_second_documents_node(self, state: MultiAgentState) -> Dict[str, Any]:
+        """节点 5b: 第二阶段文档处理
+
+        PDF 转 Markdown、切割、问题改写
+        """
+        logger.info("[节点 5b] 第二阶段文档处理（去重后）")
+
+        documents = state.get("second_all_documents", [])
+        existing_docs = state.get("llama_docs", [])
+
+        if not documents:
             return {
-                "llama_docs": [],
-                **self._with_flag(state, "process_documents", "error")
+                "llama_docs": existing_docs,
+                "messages": [AIMessage(content="第二阶段没有文档需要处理")],
+                **self._with_flag(state, "process_second_documents", False)
+            }
+
+        try:
+            processed_docs = await self._process_documents(documents, "第二阶段")
+            merged_docs = existing_docs + processed_docs
+            return {
+                "llama_docs": merged_docs,
+                "messages": [AIMessage(content=f"第二阶段处理 {len(processed_docs)} 个文档片段")],
+                **self._with_flag(state, "process_second_documents", True)
+            }
+        except Exception as e:
+            logger.error(f"第二阶段文档处理失败: {e}")
+            return {
+                "llama_docs": existing_docs,
+                **self._with_flag(state, "process_second_documents", "error")
             }
 
     async def _vectorize_documents_node(self, state: MultiAgentState) -> Dict[str, Any]:
@@ -992,9 +1036,10 @@ class MultiAgentGraph:
             START ├──> init_vector_store (异步，独立执行)
                   └──> plan_query → execute_first (探索, url_pool=[])
                         → collect_first (第一次去重)
+                        → process_first_documents (第一次文档处理)
                         → execute_second (精炼, url_pool=<从第一阶段>)
                         → collect_second (第二次去重)
-                        → process_documents → [屏障：等待向量库] → vectorize_documents
+                        → process_second_documents → [屏障：等待向量库] → vectorize_documents
                         → rag_retrieve → build_question_pool → generate_answer → eval_answer → END
 
         关键设计：
@@ -1009,9 +1054,10 @@ class MultiAgentGraph:
         builder.add_node("plan_query", self._plan_query_node)
         builder.add_node("execute_first", self._execute_first_node)
         builder.add_node("collect_first", self._collect_first_node)
+        builder.add_node("process_first_documents", self._process_first_documents_node)
         builder.add_node("execute_second", self._execute_second_node)
         builder.add_node("collect_second", self._collect_second_node)
-        builder.add_node("process_documents", self._process_documents_node)
+        builder.add_node("process_second_documents", self._process_second_documents_node)
         builder.add_node("vectorize_documents", self._vectorize_documents_node)
         builder.add_node("rag_retrieve", self._rag_retrieve_node)
         builder.add_node("build_question_pool", self._build_question_pool_node)
@@ -1027,14 +1073,15 @@ class MultiAgentGraph:
         # 两阶段执行流程
         builder.add_edge("plan_query", "execute_first")
         builder.add_edge("execute_first", "collect_first")
-        builder.add_edge("collect_first", "execute_second")
+        builder.add_edge("collect_first", "process_first_documents")
+        builder.add_edge("process_first_documents", "execute_second")
         builder.add_edge("execute_second", "collect_second")
-        builder.add_edge("collect_second", "process_documents")
+        builder.add_edge("collect_second", "process_second_documents")
 
-        # 同步屏障：init_vector_store 和 process_documents 都完成后才能进入 vectorize_documents
+        # 同步屏障：init_vector_store 和 process_second_documents 都完成后才能进入 vectorize_documents
         # LangGraph 会自动等待两个前置节点都完成
         builder.add_edge("init_vector_store", "vectorize_documents")
-        builder.add_edge("process_documents", "vectorize_documents")
+        builder.add_edge("process_second_documents", "vectorize_documents")
 
         # 后续流程保持不变
         builder.add_edge("vectorize_documents", "rag_retrieve")
@@ -1101,10 +1148,13 @@ class MultiAgentGraph:
             "thread_id": thread_id,
             "user_id": user_id,
             "sub_questions": [],
-            "executor_results": [],
+            "first_executor_results": [],
+            "second_executor_results": [],
             "url_pool": [],
-            "all_documents": [],
-            "processed_file_paths": [],
+            "first_all_documents": [],
+            "second_all_documents": [],
+            "first_processed_file_paths": [],
+            "second_processed_file_paths": [],
             "llama_docs": [],
             "retrieved_nodes": [],
             "question_pool": None,
@@ -1140,7 +1190,8 @@ class MultiAgentGraph:
                 'sub_questions': result.get('sub_questions', []),
                 'rewritten_questions_count': len(result.get('question_pool', [])) if result.get('question_pool') else 0,
                 'total_questions': len(result.get('question_pool', [])) if result.get('question_pool') else 0,
-                'documents_processed': len(result.get('all_documents', [])),
+                'documents_processed': len(result.get('first_all_documents', []))
+                + len(result.get('second_all_documents', [])),
                 'url_pool_size': len(result.get('url_pool', [])),
                 'answer': result.get('final_answer', ''),
                 'metadata': {
