@@ -271,18 +271,18 @@ class VectorStoreManager:
         # 如果索引未初始化，先尝试加载或构建向量库
         if self.index is None:
             logger.info("索引未初始化，尝试加载或构建向量库")
-            self._load_or_build_index()
+            self.load_or_build_index()
         
         # 添加文档到索引
         self.index.insert_nodes(nodes)
         
         # 持久化
-        self.index.storage_context.persist(persist_dir=self.persist_dir)
-        logger.info(f"成功添加 {len( nodes)} 个node并持久化")
+        # self.index.storage_context.persist(persist_dir=self.persist_dir)
+        # logger.info(f"成功添加 {len( nodes)} 个node并持久化")
         
         return self.index
     
-    def _load_or_build_index(self) -> VectorStoreIndex:
+    def load_or_build_index(self) -> VectorStoreIndex:
         """智能加载或构建向量索引
         
         判断本地是否已存在向量库：

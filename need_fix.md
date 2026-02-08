@@ -6,7 +6,7 @@
 
 ## 1. 明确错误风险（运行时错误/不一致）
 
-1) 向量库并发初始化与使用竞态
+1) 向量库并发初始化与使用竞态（不用管，不会对multiagent进行并发使用）
 - 位置: `agents/multi_agent_graph.py` `init_vector_store` 与 `rag_retrieve` 并行路径
 - 现象: `START` 同时进入 `init_vector_store` 与 `plan_query`，后续 `rag_retrieve` 会访问 `self.vector_store_index`。
 - 风险: `vector_store_index` 仍为 `None` 时调用 `as_retriever` 会抛异常。
@@ -15,7 +15,7 @@
 
 2) 两阶段文档去重后元数据未对齐
 - 位置: `_collect_first_node` / `_collect_second_node`
-- 现象: 去重后直接基于 `executor_results` 构建 `all_documents`，但去重已物理删除重复/空文件。
+- 现象: 去重后直接基于 `executor_results` 构建 `all_documents`，但去重已物理删除重复/空文件。（应该是基于去重结果进行文档切割为node）
 - 风险: `DocumentProcessor.get_nodes` 会根据 `local_path` 读取文件；若已删除，将触发 `FileNotFoundError`。
 - 证据: `core/file_deduplicator.py` 在去重时 `remove_duplicates=True` 会删除文件。
 
@@ -100,4 +100,4 @@
 - `core/rag/document_processor.py`
 - `agents/executor_pool.py`
 - `main.py`
-- `api/routes.py`
+- `api/routes.py`/
