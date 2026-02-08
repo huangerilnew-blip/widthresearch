@@ -17,6 +17,9 @@ from core.log_config import setup_logger
 logger = setup_logger(__name__)
 
 # 尝试导入 sklearn，如果不可用则使用 MD5 回退方案
+TfidfVectorizer = None
+cosine_similarity = None
+np = None
 try:
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import cosine_similarity
@@ -65,6 +68,42 @@ class FileDeduplicator:
         except Exception as e:
             logger.warning(f"读取文件失败 {file_path}: {e}")
             return ""
+
+    def _filter_valid_paths(self, file_paths: List[str]) -> Tuple[List[str], List[str]]:
+        """过滤有效文件路径
+
+        Args:
+            file_paths: 文件路径列表
+
+        Returns:
+            Tuple[List[str], List[str]]: (有效路径, 无效路径)
+        """
+        valid_paths: List[str] = []
+        invalid_paths: List[str] = []
+
+        for file_path in file_paths:
+            if not file_path:
+                continue
+
+            ext = Path(file_path).suffix.lower()
+            if ext not in self.allowed_extensions:
+                logger.debug(f"跳过不支持的文件类型: {file_path}")
+                invalid_paths.append(file_path)
+                continue
+
+            if not os.path.exists(file_path):
+                logger.warning(f"文件不存在，跳过: {file_path}")
+                invalid_paths.append(file_path)
+                continue
+
+            if os.path.getsize(file_path) == 0:
+                logger.debug(f"跳过空文件: {file_path}")
+                invalid_paths.append(file_path)
+                continue
+
+            valid_paths.append(file_path)
+
+        return valid_paths, invalid_paths
     
     def _calculate_md5(self, content: str) -> str:
         """计算内容的 MD5 哈希值
@@ -107,7 +146,7 @@ class FileDeduplicator:
                 duplicates.append(file_path)
                 logger.debug(f"检测到重复文件（MD5）: {file_path}")
         
-        logger.info(f"MD5 去重完成: 保留 {len(unique_files)} 个, 删除 {len(duplicates)} 个")
+        logger.info(f"MD5 去重完成: 保留 {len(unique_files)} 个, 未输出 {len(duplicates)} 个")
         return unique_files
     
     def _tfidf_deduplicate(self, file_paths: List[str]) -> List[str]:
@@ -167,6 +206,9 @@ class FileDeduplicator:
         Returns:
             去重后的文件路径列表
         """
+        if not SKLEARN_AVAILABLE or TfidfVectorizer is None or cosine_similarity is None:
+            return self._md5_deduplicate(file_paths)
+
         # 读取文件内容
         contents = []
         valid_paths = []
@@ -222,13 +264,80 @@ class FileDeduplicator:
             unique_files = [valid_paths[i] for i in sorted(to_keep)]
             
             removed_count = len(valid_paths) - len(unique_files)
-            logger.info(f"TF-IDF 去重完成: 保留 {len(unique_files)} 个, 删除 {removed_count} 个")
+            logger.info(f"TF-IDF 去重完成: 保留 {len(unique_files)} 个, 未输出 {removed_count} 个")
             
             return unique_files
             
         except Exception as e:
             logger.error(f"TF-IDF 去重失败，回退到 MD5 方案: {e}")
             return self._md5_deduplicate(valid_paths)
+
+    def deduplicate_file_list(self, file_paths: List[str]) -> Tuple[List[str], List[str]]:
+        """对文件路径列表进行去重（不做物理删除）
+
+        Args:
+            file_paths: 文件路径列表
+
+        Returns:
+            Tuple[List[str], List[str]]: (保留的文件列表, 未输出的文件列表)
+        """
+        if not file_paths:
+            return [], []
+
+        valid_paths, invalid_paths = self._filter_valid_paths(file_paths)
+
+        if not valid_paths:
+            return [], invalid_paths
+
+        unique_files = self._tfidf_deduplicate(valid_paths)
+        unique_set = set(unique_files)
+        duplicate_files = [path for path in valid_paths if path not in unique_set]
+        duplicate_files.extend(invalid_paths)
+
+        logger.info(
+            f"列表去重完成: 输入 {len(file_paths)} 个, 输出 {len(unique_files)} 个, "
+            f"未输出 {len(duplicate_files)} 个"
+        )
+
+        return unique_files, duplicate_files
+
+    def deduplicate_against_reference(
+        self,
+        reference_paths: List[str],
+        candidate_paths: List[str]
+    ) -> Tuple[List[str], List[str]]:
+        """基于参考集合对候选集合去重（不做物理删除）
+
+        Args:
+            reference_paths: 参考文件路径列表（优先保留）
+            candidate_paths: 候选文件路径列表
+
+        Returns:
+            Tuple[List[str], List[str]]: (保留的候选路径, 未输出的候选路径)
+        """
+        if not candidate_paths:
+            return [], []
+
+        valid_reference, _ = self._filter_valid_paths(reference_paths)
+        valid_candidates, invalid_candidates = self._filter_valid_paths(candidate_paths)
+
+        if not valid_candidates:
+            return [], invalid_candidates
+
+        combined_paths = valid_reference + valid_candidates
+        unique_files = self._tfidf_deduplicate(combined_paths)
+        unique_set = set(unique_files)
+
+        kept_candidates = [path for path in valid_candidates if path in unique_set]
+        removed_candidates = [path for path in valid_candidates if path not in unique_set]
+        removed_candidates.extend(invalid_candidates)
+
+        logger.info(
+            f"跨集合去重完成: 候选 {len(candidate_paths)} 个, 输出 {len(kept_candidates)} 个, "
+            f"未输出 {len(removed_candidates)} 个"
+        )
+
+        return kept_candidates, removed_candidates
     
     def deduplicate(
         self,

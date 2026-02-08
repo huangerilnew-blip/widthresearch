@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import json
 import logging
-from typing import Dict, Any, List, Optional, TypedDict, Annotated, Union
+from typing import Dict, Any, List, Optional, TypedDict, Annotated, Union, Set
 from psycopg_pool import AsyncConnectionPool
 from concurrent_log_handler import ConcurrentRotatingFileHandler
 
@@ -373,6 +373,26 @@ class MultiAgentGraph:
                 **self._with_flag(state, "execute_second", "error")
             }
 
+    def _extract_document_paths(self, documents: List[Dict]) -> List[str]:
+        paths: List[str] = []
+        for doc in documents:
+            if not isinstance(doc, dict):
+                continue
+            path = doc.get("local_path") or doc.get("file_path") or doc.get("path")
+            if path:
+                paths.append(path)
+        return paths
+
+    def _filter_documents_by_paths(self, documents: List[Dict], allowed_paths: Set[str]) -> List[Dict]:
+        filtered: List[Dict] = []
+        for doc in documents:
+            if not isinstance(doc, dict):
+                continue
+            path = doc.get("local_path") or doc.get("file_path") or doc.get("path")
+            if path in allowed_paths:
+                filtered.append(doc)
+        return filtered
+
     async def _collect_first_node(self, state: MultiAgentState) -> Dict[str, Any]:
         """节点 4a: 第一次文档收集与去重
 
@@ -383,17 +403,29 @@ class MultiAgentGraph:
         executor_results = state.get("first_executor_results", [])
 
         try:
-            # 执行第一次文件去重
-            unique_files, duplicate_files = self.file_deduplicator.deduplicate(
-                directory=Config.DOC_SAVE_PATH,
-                remove_duplicates=True  # 物理删除重复文件
-            )
+            # 从 executor_results 中提取 downloaded_papers
+            all_documents = []
+            for result in executor_results:
+                if isinstance(result, dict):
+                    downloaded_papers = result.get('downloaded_papers', [])
+                    all_documents.extend(downloaded_papers)
 
-            logger.info(f"第一次去重完成: 保留 {len(unique_files)} 个, 删除 {len(duplicate_files)} 个")
+            document_paths = self._extract_document_paths(all_documents)
+            unique_files, duplicate_files = self.file_deduplicator.deduplicate_file_list(document_paths)
+            unique_set = set(unique_files)
+            unique_documents = self._filter_documents_by_paths(all_documents, unique_set)
+
+            logger.info(
+                f"第一次去重完成: 输入 {len(document_paths)} 个, 输出 {len(unique_files)} 个, "
+                f"未输出 {len(duplicate_files)} 个"
+            )
 
             # 构建文件元数据列表
             processed_file_paths = []
             for file_path in unique_files:
+                if not os.path.exists(file_path):
+                    logger.warning(f"文件不存在，跳过元数据构建: {file_path}")
+                    continue
                 file_info = {
                     "path": file_path,
                     "filename": os.path.basename(file_path),
@@ -402,17 +434,10 @@ class MultiAgentGraph:
                 }
                 processed_file_paths.append(file_info)
 
-            # 从 executor_results 中提取 downloaded_papers
-            all_documents = []
-            for result in executor_results:
-                if isinstance(result, dict):
-                    downloaded_papers = result.get('downloaded_papers', [])
-                    all_documents.extend(downloaded_papers)
-
             logger.info(f"从第一阶段 executor_results 提取到 {len(all_documents)} 个文档元数据")
 
             return {
-                "first_all_documents": all_documents,
+                "first_all_documents": unique_documents,
                 "first_processed_file_paths": processed_file_paths,
                 "messages": [AIMessage(content=f"第一次收集到 {len(unique_files)} 个去重后的文档")],
                 **self._with_flag(state, "collect_first", True)
@@ -440,17 +465,48 @@ class MultiAgentGraph:
         previous_file_paths = state.get("first_processed_file_paths", [])
 
         try:
-            # 执行第二次文件去重
-            unique_files, duplicate_files = self.file_deduplicator.deduplicate(
-                directory=Config.DOC_SAVE_PATH,
-                remove_duplicates=True  # 物理删除重复文件
-            )
+            # 从 executor_results 中提取 downloaded_papers
+            all_documents = []
+            for result in executor_results:
+                if isinstance(result, dict):
+                    downloaded_papers = result.get('downloaded_papers', [])
+                    all_documents.extend(downloaded_papers)
 
-            logger.info(f"第二次去重完成: 保留 {len(unique_files)} 个, 删除 {len(duplicate_files)} 个")
+            document_paths = self._extract_document_paths(all_documents)
+            unique_files, duplicate_files = self.file_deduplicator.deduplicate_file_list(document_paths)
+
+            reference_paths: List[str] = []
+            for item in previous_file_paths:
+                if not isinstance(item, dict):
+                    continue
+                path = item.get("path")
+                if path:
+                    reference_paths.append(path)
+            if reference_paths:
+                stage_unique_files, cross_stage_duplicates = self.file_deduplicator.deduplicate_against_reference(
+                    reference_paths,
+                    unique_files
+                )
+            else:
+                stage_unique_files = unique_files
+                cross_stage_duplicates = []
+
+            unique_set = set(stage_unique_files)
+            unique_documents = self._filter_documents_by_paths(all_documents, unique_set)
+
+            logger.info(
+                f"第二次去重完成: 输入 {len(document_paths)} 个, 输出 {len(unique_files)} 个, "
+                f"未输出 {len(duplicate_files)} 个"
+            )
+            if cross_stage_duplicates:
+                logger.info(f"跨阶段去重未输出 {len(cross_stage_duplicates)} 个文档")
 
             # 构建文件元数据列表
             processed_file_paths = []
-            for file_path in unique_files:
+            for file_path in stage_unique_files:
+                if not os.path.exists(file_path):
+                    logger.warning(f"文件不存在，跳过元数据构建: {file_path}")
+                    continue
                 file_info = {
                     "path": file_path,
                     "filename": os.path.basename(file_path),
@@ -459,20 +515,16 @@ class MultiAgentGraph:
                 }
                 processed_file_paths.append(file_info)
 
-            # 从 executor_results 中提取 downloaded_papers
-            all_documents = []
-            for result in executor_results:
-                if isinstance(result, dict):
-                    downloaded_papers = result.get('downloaded_papers', [])
-                    all_documents.extend(downloaded_papers)
-
             logger.info(f"从第二阶段 executor_results 提取到 {len(all_documents)} 个文档元数据")
-            logger.info(f"两阶段总计：{len(previous_file_paths)} + {len(processed_file_paths)} = {len(unique_files)} 个去重后的文档")
+            logger.info(
+                f"两阶段总计：{len(previous_file_paths)} + {len(processed_file_paths)} = "
+                f"{len(stage_unique_files)} 个去重后的文档"
+            )
 
             return {
-                "second_all_documents": all_documents,
+                "second_all_documents": unique_documents,
                 "second_processed_file_paths": processed_file_paths,
-                "messages": [AIMessage(content=f"第二次收集到 {len(unique_files)} 个去重后的文档")],
+                "messages": [AIMessage(content=f"第二次收集到 {len(stage_unique_files)} 个去重后的文档")],
                 **self._with_flag(state, "collect_second", True)
             }
 
