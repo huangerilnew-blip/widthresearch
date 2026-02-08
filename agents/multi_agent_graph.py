@@ -58,6 +58,9 @@ NODE_FLAG_KEYS = [
     "terminal_error"
 ]
 
+# process_first_documents / process_second_documents 的 flags
+# 用于 vectorize_documents 判断阶段是否已完成
+
 
 def merge_flags(
     left: Optional[Dict[str, Union[bool, str]]],
@@ -98,7 +101,8 @@ class MultiAgentState(TypedDict):
     second_all_documents: List[Dict]  # 第二阶段收集的文档
     first_processed_file_paths: List[Dict]  # 第一阶段去重后的文件路径元数据
     second_processed_file_paths: List[Dict]  # 第二阶段去重后的文件路径元数据
-    llama_docs: List  # 处理后的文档片段
+    first_llama_docs: List  # 第一阶段处理后的文档片段
+    second_llama_docs: List  # 第二阶段处理后的文档片段
 
     # RAG 阶段
     retrieved_nodes: List  # RAG 检索结果
@@ -116,6 +120,8 @@ class MultiAgentState(TypedDict):
     epoch: int  # 生成答案迭代次数
     last_answer: str  # 上一次生成的答案
     last_evaluation: Optional[Dict[str, Any]]  # 上一次评估结果
+    vectorized_first_docs: bool  # 第一阶段文档是否已向量化
+    vectorized_second_docs: bool  # 第二阶段文档是否已向量化
 
 
 # ============================================================================
@@ -556,11 +562,11 @@ class MultiAgentGraph:
         logger.info("[节点 5a] 第一阶段文档处理（去重后）")
 
         documents = state.get("first_all_documents", [])
-        existing_docs = state.get("llama_docs", [])
+        existing_docs = state.get("first_llama_docs", [])
 
         if not documents:
             return {
-                "llama_docs": existing_docs,
+                "first_llama_docs": existing_docs,
                 "messages": [AIMessage(content="第一阶段没有文档需要处理")],
                 **self._with_flag(state, "process_first_documents", False)
             }
@@ -569,14 +575,14 @@ class MultiAgentGraph:
             processed_docs = await self._process_documents(documents, "第一阶段")
             merged_docs = existing_docs + processed_docs
             return {
-                "llama_docs": merged_docs,
+                "first_llama_docs": merged_docs,
                 "messages": [AIMessage(content=f"第一阶段处理 {len(processed_docs)} 个文档片段")],
                 **self._with_flag(state, "process_first_documents", True)
             }
         except Exception as e:
             logger.error(f"第一阶段文档处理失败: {e}")
             return {
-                "llama_docs": existing_docs,
+                "first_llama_docs": existing_docs,
                 **self._with_flag(state, "process_first_documents", "error")
             }
 
@@ -588,11 +594,11 @@ class MultiAgentGraph:
         logger.info("[节点 5b] 第二阶段文档处理（去重后）")
 
         documents = state.get("second_all_documents", [])
-        existing_docs = state.get("llama_docs", [])
+        existing_docs = state.get("second_llama_docs", [])
 
         if not documents:
             return {
-                "llama_docs": existing_docs,
+                "second_llama_docs": existing_docs,
                 "messages": [AIMessage(content="第二阶段没有文档需要处理")],
                 **self._with_flag(state, "process_second_documents", False)
             }
@@ -601,14 +607,14 @@ class MultiAgentGraph:
             processed_docs = await self._process_documents(documents, "第二阶段")
             merged_docs = existing_docs + processed_docs
             return {
-                "llama_docs": merged_docs,
+                "second_llama_docs": merged_docs,
                 "messages": [AIMessage(content=f"第二阶段处理 {len(processed_docs)} 个文档片段")],
                 **self._with_flag(state, "process_second_documents", True)
             }
         except Exception as e:
             logger.error(f"第二阶段文档处理失败: {e}")
             return {
-                "llama_docs": existing_docs,
+                "second_llama_docs": existing_docs,
                 **self._with_flag(state, "process_second_documents", "error")
             }
 
@@ -619,21 +625,59 @@ class MultiAgentGraph:
         """
         logger.info("[节点 6] 向量化文档并入库")
 
-        llama_docs = state.get("llama_docs", [])
-
-        if not llama_docs:
-            logger.info("没有文档需要向量化")
+        if not state.get("inited_vector_index", False):
+            logger.info("向量库尚未初始化，跳过向量化")
             return {
-                "messages": [AIMessage(content="没有文档需要向量化")],
+                "messages": [AIMessage(content="向量库尚未初始化，跳过向量化")],
                 **self._with_flag(state, "vectorize_documents", False)
             }
 
+        flags = state.get("flags", {})
+        first_llama_docs = state.get("first_llama_docs", [])
+        second_llama_docs = state.get("second_llama_docs", [])
+        vectorized_first = state.get("vectorized_first_docs", False)
+        vectorized_second = state.get("vectorized_second_docs", False)
+
+        messages: List[AIMessage] = []
+        updated_state: Dict[str, Any] = {}
+        vectorized_any = False
+
         try:
-            self.vector_store_manager.add_nodes(llama_docs)
-            logger.info(f"成功添加 {len(llama_docs)} 个文档到向量库")
+            if flags.get("process_first_documents") is True and not vectorized_first:
+                if first_llama_docs:
+                    self.vector_store_index = self.vector_store_manager.add_nodes(first_llama_docs)
+                    logger.info(f"成功添加 {len(first_llama_docs)} 个第一阶段文档到向量库")
+                    messages.append(AIMessage(content=f"成功向量化 {len(first_llama_docs)} 个第一阶段文档"))
+                    updated_state["vectorized_first_docs"] = True
+                    vectorized_any = True
+                else:
+                    logger.info("第一阶段已完成但无可向量化文档")
+                    messages.append(AIMessage(content="第一阶段无可向量化文档"))
+                    updated_state["vectorized_first_docs"] = True
+
+            if flags.get("process_second_documents") is True and not vectorized_second:
+                if second_llama_docs:
+                    self.vector_store_index = self.vector_store_manager.add_nodes(second_llama_docs)
+                    logger.info(f"成功添加 {len(second_llama_docs)} 个第二阶段文档到向量库")
+                    messages.append(AIMessage(content=f"成功向量化 {len(second_llama_docs)} 个第二阶段文档"))
+                    updated_state["vectorized_second_docs"] = True
+                    vectorized_any = True
+                else:
+                    logger.info("第二阶段已完成但无可向量化文档")
+                    messages.append(AIMessage(content="第二阶段无可向量化文档"))
+                    updated_state["vectorized_second_docs"] = True
+
+            if not vectorized_any:
+                messages.append(AIMessage(content="暂无可向量化文档"))
+                return {
+                    "messages": messages,
+                    **updated_state,
+                    **self._with_flag(state, "vectorize_documents", False)
+                }
 
             return {
-                "messages": [AIMessage(content=f"成功向量化 {len(llama_docs)} 个文档")],
+                "messages": messages,
+                **updated_state,
                 **self._with_flag(state, "vectorize_documents", True)
             }
 
@@ -651,6 +695,14 @@ class MultiAgentGraph:
         sub_questions = state.get("sub_questions", [])
         thread_id = state.get("thread_id", "default")
         retrieved_epoch = state.get("retrieved_epoch", 0)
+        if not (state.get("vectorized_first_docs") or state.get("vectorized_second_docs")):
+            logger.info("向量化尚未完成，跳过检索")
+            return {
+                "retrieved_nodes": [],
+                "retrieved_epoch": retrieved_epoch,
+                "messages": [AIMessage(content="向量化尚未完成，等待文档入库")],
+                **self._with_flag(state, "rag_retrieve", False)
+            }
 
         try:
             # 创建检索器
@@ -1088,16 +1140,17 @@ class MultiAgentGraph:
             START ├──> init_vector_store (异步，独立执行)
                   └──> plan_query → execute_first (探索, url_pool=[])
                         → collect_first (第一次去重)
-                        → process_first_documents (第一次文档处理)
-                        → execute_second (精炼, url_pool=<从第一阶段>)
-                        → collect_second (第二次去重)
-                        → process_second_documents → [屏障：等待向量库] → vectorize_documents
-                        → rag_retrieve → build_question_pool → generate_answer → eval_answer → END
+                        ├──> process_first_documents (第一次文档处理)
+                        └──> execute_second (精炼, url_pool=<从第一阶段>)
+                              → collect_second (第二次去重)
+                              → process_second_documents
+                        → vectorize_documents (动态入库) → rag_retrieve → build_question_pool
+                        → generate_answer → eval_answer → END
 
         关键设计：
         - 两阶段执行：探索（空url_pool） + 精炼（使用第一阶段url_pool）
         - 每阶段后立即去重，避免重复下载
-        - 同步屏障位于 vectorize_documents 前（真正需要向量库的节点）
+        - vectorize_documents 在 init_vector_store 后启动，按阶段完成状态增量入库
         """
         builder = StateGraph(MultiAgentState)
 
@@ -1126,13 +1179,13 @@ class MultiAgentGraph:
         builder.add_edge("plan_query", "execute_first")
         builder.add_edge("execute_first", "collect_first")
         builder.add_edge("collect_first", "process_first_documents")
-        builder.add_edge("process_first_documents", "execute_second")
+        builder.add_edge("collect_first", "execute_second")
         builder.add_edge("execute_second", "collect_second")
         builder.add_edge("collect_second", "process_second_documents")
 
-        # 同步屏障：init_vector_store 和 process_second_documents 都完成后才能进入 vectorize_documents
-        # LangGraph 会自动等待两个前置节点都完成
+        # 动态入库：init_vector_store 完成后启动 vectorize_documents
         builder.add_edge("init_vector_store", "vectorize_documents")
+        builder.add_edge("process_first_documents", "vectorize_documents")
         builder.add_edge("process_second_documents", "vectorize_documents")
 
         # 后续流程保持不变
@@ -1207,7 +1260,8 @@ class MultiAgentGraph:
             "second_all_documents": [],
             "first_processed_file_paths": [],
             "second_processed_file_paths": [],
-            "llama_docs": [],
+            "first_llama_docs": [],
+            "second_llama_docs": [],
             "retrieved_nodes": [],
             "question_pool": None,
             "final_answer": "",
@@ -1218,7 +1272,9 @@ class MultiAgentGraph:
             "last_answer": "",
             "last_evaluation": None,
             "retrieved_epoch": 0,
-            "set_ques_pool_epoch": 0
+            "set_ques_pool_epoch": 0,
+            "vectorized_first_docs": False,
+            "vectorized_second_docs": False
         }
 
         try:
