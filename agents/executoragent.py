@@ -17,7 +17,7 @@ from concurrent_log_handler import ConcurrentRotatingFileHandler
 from core.mcp.tools import get_tools
 from dotenv import load_dotenv
 from core.log_config import setup_logger
-
+import traceback
 load_dotenv()
 
 # 设置日志
@@ -32,7 +32,6 @@ class ExecutorState(TypedDict):
     search_results: List[Dict]  # 所有搜索结果（必需工具 + 可选工具）
     deduplicated_results: List[Dict]  # 去重后的结果
     downloaded_papers: List[Dict]  # 已下载的论文
-    executor_result: Dict  # 最终结果摘要
 
 class ExecutorAgent:
     """
@@ -389,84 +388,84 @@ class ExecutorAgent:
                     counts["exa_context_search"] += 1
         return [{tool: counts[tool]} for tool in required_tools]
     
-    def _crop_observation(self, tool_messages: List[ToolMessage]) -> List[ToolMessage]:
-        """
-        裁剪工具执行结果为观察信息（Observation）
-        裁剪 ToolMessage 内容，只保留关键信息用于 LLM 决策
-        目的：减少 Token 消耗，加快 LLM 判断速度
+    # def _crop_observation(self, tool_messages: List[ToolMessage]) -> List[ToolMessage]:
+    #     """
+    #     裁剪工具执行结果为观察信息（Observation）
+    #     裁剪 ToolMessage 内容，只保留关键信息用于 LLM 决策
+    #     目的：减少 Token 消耗，加快 LLM 判断速度
         
-        Args:
-            tool_messages: 原始的 ToolMessage 列表
+    #     Args:
+    #         tool_messages: 原始的 ToolMessage 列表
 
-        Returns:
-            格式化后的 ToolMessage 列表，内容精简但包含关键信息
-        """
-        if not tool_messages:
-            logger.error(f"ExecutorAgent的optional_search_results状态为空，无法进行格式化处理")
-            return []
+    #     Returns:
+    #         格式化后的 ToolMessage 列表，内容精简但包含关键信息
+    #     """
+    #     if not tool_messages:
+    #         logger.error(f"ExecutorAgent的optional_search_results状态为空，无法进行格式化处理")
+    #         return []
         
-        formatted_messages = []
+    #     formatted_messages = []
         
-        for tool_msg in tool_messages:
-            content = tool_msg.content
+    #     for tool_msg in tool_messages:
+    #         content = tool_msg.content
             
-            try:
-                # 解析 JSON 内容
-                if isinstance(content, str):
-                    papers = json.loads(content)
-                elif isinstance(content, list):
-                    papers = content
-                else:
-                    formatted_messages.append(tool_msg)
-                    continue
+    #         try:
+    #             # 解析 JSON 内容
+    #             if isinstance(content, str):
+    #                 papers = json.loads(content)
+    #             elif isinstance(content, list):
+    #                 papers = content
+    #             else:
+    #                 formatted_messages.append(tool_msg)
+    #                 continue
                 
-                # 提取关键信息摘要
-                observations = []
-                for paper in papers:
-                    source = paper.get("source", "unknown")
-                    title = paper.get("title", "无标题")
+    #             # 提取关键信息摘要
+    #             observations = []
+    #             for paper in papers:
+    #                 source = paper.get("source", "unknown")
+    #                 title = paper.get("title", "无标题")
                     
-                    if source == "sec_edgar":
-                        # SEC EDGAR: 显示公司名和简短预览
-                        company_name = paper.get("extra", {}).get("company_name", title)
-                        abstract = paper.get("abstract", "")
-                        preview = abstract[:150] + "..." if len(abstract) > 150 else abstract
-                        observations.append(
-                            f"✓ {company_name}\n"
-                            f"  来源: SEC EDGAR\n"
-                            f"  预览: {preview}"
-                        )
-                    elif source == "akshare":
-                        # AkShare: 显示公司名和简短预览
-                        abstract = paper.get("abstract", "")
-                        preview = abstract[:150] + "..." if len(abstract) > 150 else abstract
-                        observations.append(
-                            f"✓ {title}\n"
-                            f"  来源: AkShare\n"
-                            f"  预览: {preview}"
-                        )
-                    else:
-                        # 其他来源：只显示标题和来源
-                        observations.append(f"✓ {title} (来源: {source})")
+    #                 if source == "sec_edgar":
+    #                     # SEC EDGAR: 显示公司名和简短预览
+    #                     company_name = paper.get("extra", {}).get("company_name", title)
+    #                     abstract = paper.get("abstract", "")
+    #                     preview = abstract[:150] + "..." if len(abstract) > 150 else abstract
+    #                     observations.append(
+    #                         f"✓ {company_name}\n"
+    #                         f"  来源: SEC EDGAR\n"
+    #                         f"  预览: {preview}"
+    #                     )
+    #                 elif source == "akshare":
+    #                     # AkShare: 显示公司名和简短预览
+    #                     abstract = paper.get("abstract", "")
+    #                     preview = abstract[:150] + "..." if len(abstract) > 150 else abstract
+    #                     observations.append(
+    #                         f"✓ {title}\n"
+    #                         f"  来源: AkShare\n"
+    #                         f"  预览: {preview}"
+    #                     )
+    #                 else:
+    #                     # 其他来源：只显示标题和来源
+    #                     observations.append(f"✓ {title} (来源: {source})")
                 
-                # 创建精简的 ToolMessage
-                if observations:
-                    formatted_content = "\n\n".join(observations)
-                    formatted_msg = ToolMessage(
-                        content=formatted_content,
-                        tool_call_id=tool_msg.tool_call_id,
-                        name=tool_msg.name
-                    )
-                    formatted_messages.append(formatted_msg)
-                else:
-                    formatted_messages.append(tool_msg)
+    #             # 创建精简的 ToolMessage
+    #             if observations:
+    #                 formatted_content = "\n\n".join(observations)
+    #                 formatted_msg = ToolMessage(
+    #                     content=formatted_content,
+    #                     tool_call_id=tool_msg.tool_call_id,
+    #                     name=tool_msg.name
+    #                 )
+    #                 formatted_messages.append(formatted_msg)
+    #             else:
+    #                 formatted_messages.append(tool_msg)
             
-            except (json.JSONDecodeError, TypeError) as e:
-                logger.warning(f"解析 ToolMessage 内容失败: {e}")
-                formatted_messages.append(tool_msg)
-                continue
+    #         except (json.JSONDecodeError, TypeError) as e:
+    #             logger.warning(f"解析 ToolMessage 内容失败: {e}")
+    #             formatted_messages.append(tool_msg)
+    #             continue
         
-        return formatted_messages
+    #     return formatted_messages
     async def _llm_chat_node(self, state: ExecutorState) -> Dict:
         """
         LLM 决策节点：按照 ReAct 模式让 LLM 进行推理和决策
@@ -986,7 +985,7 @@ class ExecutorAgent:
         logger.info("完成 executor_graph 的初始化构造")
         return graph
     
-    async def invoke(self, query: str, thread_id: str,user_id:str, sub_url_pool:list[str],user_query: str ) -> Dict:
+    async def ainvoke(self, query: str, thread_id: str,user_id:str, sub_url_pool:list[str],user_query: str ) -> Dict:
         """执行单个子问题的完整处理流程"""
         # 确保异步资源已初始化
         await self._ensure_initialized()
@@ -1000,7 +999,6 @@ class ExecutorAgent:
             "search_results": [],
             "deduplicated_results": [],
             "downloaded_papers": [],
-            "executor_result": {},
             "sub_url_pool": sub_url_pool
         }
         
@@ -1015,22 +1013,28 @@ class ExecutorAgent:
             compressed_state["user_query"] = user_query
             compressed_state["sub_query"] = query
             compressed_state["optional_search_results"] = []
-            compressed_state["search_results"] = self._count_required_tool_results(
+            compressed_state["search_summary"] = self._count_required_tool_results(
                 result.get("search_results", []),
                 required_tools
             )
-            compressed_state["deduplicated_results"] = self._count_required_tool_results(
+            compressed_state["deduplicated_summary"] = self._count_required_tool_results(
                 result.get("deduplicated_results", []),
                 required_tools
             )
-            compressed_state["downloaded_papers"] = self._count_required_tool_results(
+            compressed_state["downloaded_summary"] = self._count_required_tool_results(
                 result.get("downloaded_papers", []),
                 required_tools
             )
+            compressed_state["sub_url_pool"] = result.get("sub_url_pool", [])
+            
+            compressed_state["downloaded_papers"]=result.get("downloaded_papers", [])
+            if not compressed_state["downloaded_papers"]:
+                logger.warning(f"executor 完成后 downloaded_papers 为空")
+            if not compressed_state["sub_url_pool"]:
+                logger.warning(f"executor 完成后 sub_url_pool 为空")
             return compressed_state
         except Exception as e:
             logger.error(f"executor 处理子问题 '{query}' 时出错: {e}")
-            import traceback
             traceback.print_exc()
             raise e
     
