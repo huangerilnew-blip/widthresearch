@@ -135,8 +135,8 @@ class DocumentProcessor:
             if not local_path:
                 raise ValueError(f"文档路径为空: {doc_meta.get('title', 'unknown')}")
             if not os.path.exists(local_path):
-                raise FileNotFoundError(f"文档文件不存在: {local_path}")
-
+                logger.error(f"文档路径不存在: {local_path}")
+                continue
             # 判断文件类型
             file_ext = os.path.splitext(local_path)[1].lower()
             source = doc_meta.get("source") or "unknown"
@@ -152,20 +152,21 @@ class DocumentProcessor:
                 # PDF 转 Markdown
                 markdown_text = await self._pdf_to_markdown(local_path)
                 if not markdown_text:
-                    raise ValueError(f"PDF 文档内容为空: {local_path}")
-
+                    logger.error(f"文件存在，但是PDF 转 Markdown 失败: {local_path}")
+                    continue
                 temp_doc = Document(
                     text=markdown_text,
                     metadata=base_metadata,
                 )
                 docs_for_pipeline.append(temp_doc)
                 logger.info(f"PDF 文档 {local_path} 转换为 Markdown 并加入 pipeline")
-
+        
             elif file_ext in ['.md', '.markdown']:
                 # 使用 MarkdownReader 加载 Markdown 文件
                 md_docs = self.markdown_reader.load_data(file=Path(local_path))
                 if not md_docs:
-                    raise ValueError(f"Markdown 文档解析为空: {local_path}")
+                    logger.error(f"文档存在，但Markdown 文档加载失败: {local_path}")
+                    continue
 
                 for d in md_docs:
                     d.metadata = base_metadata
@@ -173,10 +174,12 @@ class DocumentProcessor:
 
                 logger.info(f"Markdown 文档 {local_path} 加载为 {len(md_docs)} 个 Document 并加入 pipeline")
             else:
-                raise ValueError(f"不支持的文件类型: {file_ext}，文档: {local_path}")
+                logger.warning(f"不支持的文件类型{file_ext}，跳过: {local_path}")
+                continue
 
         if not docs_for_pipeline:
-            raise ValueError("没有可处理的文档")
+            logger.error("使用lama_index的MarkdownReader和PDFParser处理文档失败，未生成任何Document对象")
+            raise ValueError("document-process中没有可处理的文档")
         
         # 2. 通过 IngestionPipeline 执行：MarkdownElementNodeParser -> SentenceSplitter -> QuestionsAnsweredExtractor
         try:
