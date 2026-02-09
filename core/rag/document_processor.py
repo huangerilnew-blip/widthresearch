@@ -110,8 +110,8 @@ class DocumentProcessor:
         """处理文档：转换、切割、问题改写
         
         Args:
-            documents: 文档元数据列表
-            doc_path: 文档存储路径
+            documents: 文档元数据列表（支持字段: extra.saved_path/local_path/file_path/path,
+                source/title/url）
             
         Returns:
             处理后的 Node 列表（包含改写问题的元数据）
@@ -123,7 +123,15 @@ class DocumentProcessor:
         # 1. 先将所有原始文件转为 LlamaIndex Document（Markdown 文本）
         for doc_meta in documents:
             # 获取文档路径
-            local_path = doc_meta.get("local_path", "")
+            extra = doc_meta.get("extra")
+            saved_path = extra.get("saved_path") if isinstance(extra, dict) else ""
+            local_path = (
+                saved_path
+                or doc_meta.get("local_path")
+                or doc_meta.get("file_path")
+                or doc_meta.get("path")
+                or ""
+            )
             if not local_path:
                 raise ValueError(f"文档路径为空: {doc_meta.get('title', 'unknown')}")
             if not os.path.exists(local_path):
@@ -131,10 +139,13 @@ class DocumentProcessor:
 
             # 判断文件类型
             file_ext = os.path.splitext(local_path)[1].lower()
+            source = doc_meta.get("source") or "unknown"
+            title = doc_meta.get("title") or Path(local_path).stem
+            url = doc_meta.get("url") or f"file://{local_path}"
             base_metadata = {
-                'source': doc_meta.get('source', 'unknown'),
-                'doc_title': doc_meta.get('title', ''),
-                'local_path': local_path,
+                "source": source,
+                "title": title,
+                "url": url,
             }
 
             if file_ext == '.pdf':
@@ -157,8 +168,7 @@ class DocumentProcessor:
                     raise ValueError(f"Markdown 文档解析为空: {local_path}")
 
                 for d in md_docs:
-                    # 合并元数据（保留原始 + 基础元数据）
-                    d.metadata = {**getattr(d, "metadata", {}) or {}, **base_metadata}
+                    d.metadata = base_metadata
                     docs_for_pipeline.append(d)
 
                 logger.info(f"Markdown 文档 {local_path} 加载为 {len(md_docs)} 个 Document 并加入 pipeline")
