@@ -79,7 +79,7 @@ class TavilySearch:
             save_dir: 保存目录，默认为 Config.DOC_SAVE_PATH
 
         Returns:
-            List[Paper]: 成功保存的 Paper 列表（paper.extra["save_path"] 已填充）
+            List[Paper]: 成功保存的 Paper 列表（paper.extra["saved_path"] 已填充）
         """
         if isinstance(papers, Paper):
             papers = [papers]
@@ -112,7 +112,7 @@ class TavilySearch:
                     print(f"文件已存在，跳过下载: {paper.title} -> {file_path}")
                     if paper.extra is None:
                         paper.extra = {}
-                    paper.extra["save_path"] = file_path
+                    paper.extra["saved_path"] = file_path
                     saved_papers.append(paper)
                     continue
                 # abstract 中保存的是 raw_content
@@ -121,8 +121,8 @@ class TavilySearch:
                 with open(file_path, 'w', encoding='utf-8') as f:
                     f.write(markdown_content)
 
-                # 更新 Paper 对象的 save_path
-                paper.extra['save_path'] = file_path
+                # 更新 Paper 对象的 saved_path
+                paper.extra['saved_path'] = file_path
                 saved_papers.append(paper)
 
             except Exception as e:
@@ -170,7 +170,7 @@ class TavilySearch:
             references=[],
             extra={
                 'score': tavily_result.get('score'),  # 只保留 score
-                'save_path': None  # 将在 download 时填充
+                'saved_path': None  # 将在 download 时填充
             }
         )
 
@@ -217,23 +217,23 @@ if __name__ == "__main__":
 
             for paper in saved_papers:
                 print(f"- 标题: {paper.title}")
-                print(f"  保存路径: {paper.extra.get('save_path')}")
+                print(f"  保存路径: {paper.extra.get('saved_path')}")
                 print()
 
             # 测试 3: 验证文件内容
             print("\n测试 3: 验证文件内容")
             print("-" * 50)
             for paper in saved_papers:
-                save_path = paper.extra.get('save_path')
-                if save_path and os.path.exists(save_path):
-                    with open(save_path, 'r', encoding='utf-8') as f:
+                saved_path = paper.extra.get('saved_path')
+                if saved_path and os.path.exists(saved_path):
+                    with open(saved_path, 'r', encoding='utf-8') as f:
                         content = f.read()
-                    print(f"文件: {os.path.basename(save_path)}")
+                    print(f"文件: {os.path.basename(saved_path)}")
                     print(f"大小: {len(content)} 字符")
                     print(f"前200字符预览: {content[:200]}...")
                     print()
                 else:
-                    print(f"文件不存在: {save_path}")
+                    print(f"文件不存在: {saved_path}")
         else:
             print("未找到符合条件的搜索结果")
 

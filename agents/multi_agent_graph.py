@@ -120,8 +120,6 @@ class MultiAgentState(TypedDict):
     epoch: int  # 生成答案迭代次数
     last_answer: str  # 上一次生成的答案
     last_evaluation: Optional[Dict[str, Any]]  # 上一次评估结果
-    vectorized_first_docs: bool  # 第一阶段文档是否已向量化
-    vectorized_second_docs: bool  # 第二阶段文档是否已向量化
 
 
 # ============================================================================
@@ -392,24 +390,45 @@ class MultiAgentGraph:
                 **self._with_flag(state, "execute_second", "error")
             }
 
+    def _dedupe_preserve_order(self, items: List[str]) -> List[str]:
+        """对列表进行去重但保持原有顺序"""
+        seen = set()
+        deduped = []
+        for item in items:
+            if item in seen:
+                continue
+            seen.add(item)
+            deduped.append(item)
+        return deduped
+
+    def _get_document_path(self, doc: Dict) -> str:
+        """从文档元数据中提取文件路径"""
+        if not isinstance(doc, dict):
+            return ""
+        extra = doc.get("extra")
+        if isinstance(extra, dict):
+            saved_path = extra.get("saved_path")
+            if saved_path:
+                return saved_path
+        return doc.get("local_path") or doc.get("file_path") or doc.get("path") or ""
+
     def _extract_document_paths(self, documents: List[Dict]) -> List[str]:
         paths: List[str] = []
         for doc in documents:
-            if not isinstance(doc, dict):
-                continue
-            path = doc.get("local_path") or doc.get("file_path") or doc.get("path")
+            path = self._get_document_path(doc)
             if path:
                 paths.append(path)
-        return paths
+        return self._dedupe_preserve_order(paths) #不适用list（set（））防止顺序被打乱
 
     def _filter_documents_by_paths(self, documents: List[Dict], allowed_paths: Set[str]) -> List[Dict]:
         filtered: List[Dict] = []
+        seen_paths = set()
         for doc in documents:
-            if not isinstance(doc, dict):
+            path = self._get_document_path(doc)
+            if not path or path not in allowed_paths or path in seen_paths:
                 continue
-            path = doc.get("local_path") or doc.get("file_path") or doc.get("path")
-            if path in allowed_paths:
-                filtered.append(doc)
+            seen_paths.add(path) #防止多个paper其path相同，可能导致重复的paper被保留
+            filtered.append(doc)
         return filtered
 
     async def _collect_first_node(self, state: MultiAgentState) -> Dict[str, Any]:
@@ -433,7 +452,6 @@ class MultiAgentGraph:
             unique_files, duplicate_files = self.file_deduplicator.deduplicate_file_list(document_paths)
             unique_set = set(unique_files)
             unique_documents = self._filter_documents_by_paths(all_documents, unique_set)
-
             logger.info(
                 f"第一次去重完成: 输入 {len(document_paths)} 个, 输出 {len(unique_files)} 个, "
                 f"未输出 {len(duplicate_files)} 个"
@@ -575,12 +593,18 @@ class MultiAgentGraph:
         documents = state.get("first_all_documents", [])
         existing_docs = state.get("first_llama_docs", [])
 
-        if not documents:
+        if not documents and not existing_docs:
+            logger.error("第一阶段没有文档需要切割处理")
             return {
                 "first_llama_docs": existing_docs,
                 **self._with_flag(state, "process_first_documents", False)
             }
-
+        if not documents and existing_docs:
+            logger.info("第一阶段已完成但无新文档需要切割处理")
+            return {
+                "first_llama_docs": existing_docs,
+                **self._with_flag(state, "process_first_documents", True)
+            }
         try:
             processed_docs = await self._process_documents(documents, "第一阶段")
             merged_docs = existing_docs + processed_docs
@@ -605,12 +629,17 @@ class MultiAgentGraph:
         documents = state.get("second_all_documents", [])
         existing_docs = state.get("second_llama_docs", [])
 
-        if not documents:
+        if not documents and not existing_docs:
             return {
                 "second_llama_docs": existing_docs,
                 **self._with_flag(state, "process_second_documents", False)
             }
-
+        if not documents and existing_docs:
+            logger.info("第二阶段已完成但无新文档需要切割处理")
+            return {
+                "second_llama_docs": existing_docs,
+                **self._with_flag(state, "process_second_documents", True)
+            }
         try:
             processed_docs = await self._process_documents(documents, "第二阶段")
             merged_docs = existing_docs + processed_docs
@@ -638,44 +667,23 @@ class MultiAgentGraph:
                 **self._with_flag(state, "vectorize_documents", False)
             }
 
-        flags = state.get("flags", {})
         first_llama_docs = state.get("first_llama_docs", [])
         second_llama_docs = state.get("second_llama_docs", [])
-        vectorized_first = state.get("vectorized_first_docs", False)
-        vectorized_second = state.get("vectorized_second_docs", False)
-
-        updated_state: Dict[str, Any] = {}
-        vectorized_any = False
 
         try:
-            if flags.get("process_first_documents") is True and not vectorized_first:
-                if first_llama_docs:
-                    self.vector_store_index = self.vector_store_manager.add_nodes(first_llama_docs)
-                    logger.info(f"成功添加 {len(first_llama_docs)} 个第一阶段文档到向量库")
-                    updated_state["vectorized_first_docs"] = True
-                    vectorized_any = True
-                else:
-                    logger.info("第一阶段已完成但无可向量化文档")
-                    updated_state["vectorized_first_docs"] = True
+            if first_llama_docs:
+                self.vector_store_index.insert_nodes(first_llama_docs)
+                logger.info(f"成功添加 {len(first_llama_docs)} 个第一阶段文档到向量库")
+            
+            if second_llama_docs:
+                self.vector_store_index = self.vector_store_manager.add_nodes(second_llama_docs)
+                logger.info(f"成功添加 {len(second_llama_docs)} 个第二阶段文档到向量库")
 
-            if flags.get("process_second_documents") is True and not vectorized_second:
-                if second_llama_docs:
-                    self.vector_store_index = self.vector_store_manager.add_nodes(second_llama_docs)
-                    logger.info(f"成功添加 {len(second_llama_docs)} 个第二阶段文档到向量库")
-                    updated_state["vectorized_second_docs"] = True
-                    vectorized_any = True
-                else:
-                    logger.info("第二阶段已完成但无可向量化文档")
-                    updated_state["vectorized_second_docs"] = True
-
-            if not vectorized_any:
-                return {
-                    **updated_state,
-                    **self._with_flag(state, "vectorize_documents", False)
-                }
-
+            if not first_llama_docs and not second_llama_docs:
+                logger.info("阶段一和阶段二都没有新的BaseNodes需要向量化")
+            if not second_llama_docs :
+                logger.info("阶段二没有新的BaseNodes需要向量化，仅阶段一有文档被向量化")
             return {
-                **updated_state,
                 **self._with_flag(state, "vectorize_documents", True)
             }
 
@@ -693,12 +701,13 @@ class MultiAgentGraph:
         sub_questions = state.get("sub_questions", [])
         thread_id = state.get("thread_id", "default")
         retrieved_epoch = state.get("retrieved_epoch", 0)
-        if not (state.get("vectorized_first_docs") or state.get("vectorized_second_docs")):
-            logger.info("向量化尚未完成，跳过检索")
+
+        if self.vector_store_index is None:
+            logger.info("向量化尚未完成或索引为空，跳过检索")
             return {
                 "retrieved_nodes": [],
                 "retrieved_epoch": retrieved_epoch,
-                "messages": [AIMessage(content="向量化尚未完成，等待文档入库")],
+                "messages": [SystemMessage(content="初始向量化尚未完成，严重错误- 跳过检索")],
                 **self._with_flag(state, "rag_retrieve", False)
             }
 
@@ -729,13 +738,31 @@ class MultiAgentGraph:
                 return {
                     "retrieved_nodes": [],
                     "retrieved_epoch": updated_epoch,
-                    "messages": [AIMessage(content="检索结果为空，准备重试")],
-                    **self._with_flag(state, "rag_retrieve", True)
+                    "messages": [SystemMessage(content="检索结果为空，准备重试")],
+                    **self._with_flag(state, "rag_retrieve", False)
                 }
-
+            contents=[]
+            question_pool=[]
+            num=0
+            for score,node in retrieved_nodes:
+                metadata = node.metadata
+                content = node.get_content()
+                source = metadata.get('url', metadata.get('source', '联网检索获得'))
+                questions=metadata.get("questions_this_excerpt_can_answer",[])
+                if not questions:
+                    logger.warning(f"检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题") 
+                else:
+                    question_pool.extend(questions)
+                    logger.info(f"已将检索已将basenode添加到question_pool到,问题个数: {len(questions)}")   
+                num+=1
+                logger.info(f"检索到节点，来源: {source}, 相似度得分: {score}")
+                contents.append({"content": content, "source": source})
+            questions_pool=list(set(question_pool))
+            logger.info(f"从全部检索结果中提取并去重后，问题池中共有 {len(questions_pool)} 个问题")
             return {
                 "retrieved_nodes": retrieved_nodes,
-                "messages": [AIMessage(content=f"检索到 {len(retrieved_nodes)} 个相关节点")],
+                "messages": [SystemMessage(content=contents,metadata={"num_retreved": f"累计检索到 {num} 个相关节点"}),
+                             SystemMessage(content=f"问题池:{question_pool}")],
                 **self._with_flag(state, "rag_retrieve", True)
             }
 
@@ -1274,9 +1301,7 @@ class MultiAgentGraph:
             "last_answer": "",
             "last_evaluation": None,
             "retrieved_epoch": 0,
-            "set_ques_pool_epoch": 0,
-            "vectorized_first_docs": False,
-            "vectorized_second_docs": False
+            "set_ques_pool_epoch": 0
         }
 
         try:

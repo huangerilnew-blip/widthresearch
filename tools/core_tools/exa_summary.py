@@ -293,28 +293,28 @@ class ExaSearcherSummary:
     def download(
         self,
         papers: List[Paper],
-        save_path: str = None
+        saved_path: str = None
     ) -> List[Paper]:
         """
         将Paper列表保存为Markdown文件
 
         Args:
             papers: Paper对象列表
-            save_path: 保存路径，默认使用Config.DOC_SAVE_PATH
+            saved_path: 保存路径，默认使用Config.DOC_SAVE_PATH
 
         Returns:
             List[Paper]: 成功下载的 Paper 对象列表
         """
         if isinstance(papers, Paper):
             papers = [papers]
-        if save_path is None:
-            save_path = Config.DOC_SAVE_PATH
+        if saved_path is None:
+            saved_path = Config.DOC_SAVE_PATH
 
         # 确保保存目录存在
-        if not os.path.exists(save_path):
-            os.makedirs(save_path, exist_ok=True)
+        if not os.path.exists(saved_path):
+            os.makedirs(saved_path, exist_ok=True)
 
-        print(f"\n开始下载 {len(papers)} 个Paper到 {save_path}")
+        print(f"\n开始下载 {len(papers)} 个Paper到 {saved_path}")
 
         downloaded = []
         for i, paper in enumerate(papers, 1):
@@ -341,7 +341,7 @@ class ExaSearcherSummary:
                     title = f"无标题_{timestamp}"
 
                 filename = f"exa_{self._sanitize_filename(title)}.md"
-                file_path = os.path.join(save_path, filename)
+                file_path = os.path.join(saved_path, filename)
                 if os.path.exists(file_path):
                     print(f"文件已存在，跳过下载: {paper.title} -> {file_path}")
                     if paper.extra is None:
@@ -353,10 +353,10 @@ class ExaSearcherSummary:
                 with open(file_path, 'w', encoding='utf-8') as f:
                     f.write(markdown_content)
 
-                # 设置 extra["save_path"]
+                # 设置 extra["saved_path"]
                 if paper.extra is None:
                     paper.extra = {}
-                paper.extra["save_path"] = file_path
+                paper.extra["saved_path"] = file_path
 
                 downloaded.append(paper)
                 print(f"[{i}/{len(papers)}] 已保存: {file_path}")

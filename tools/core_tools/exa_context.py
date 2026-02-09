@@ -293,32 +293,32 @@ class ExaSearcherContext:
     def download(
         self,
         papers: List[Paper],
-        save_path: str = None
+        saved_path: str = None
     ) -> List[Paper]:
         """
         将Paper列表保存为Markdown文件
 
         Args:
             papers: Paper对象列表
-            save_path: 保存路径，默认使用Config.DOC_SAVE_PATH
+            saved_path: 保存路径，默认使用Config.DOC_SAVE_PATH
 
         Returns:
             List[Paper]: 成功下载的 Paper 对象列表
         """
         if isinstance(papers, Paper):
             papers = [papers]
-        if save_path is None:
-            save_path = Config.DOC_SAVE_PATH
+        if saved_path is None:
+            saved_path = Config.DOC_SAVE_PATH
 
         # 确保保存目录存在
-        if not os.path.exists(save_path):
+        if not os.path.exists(saved_path):
             try:
-                os.makedirs(save_path)
+                os.makedirs(saved_path)
             except Exception as e:
                 print(f"创建保存目录失败: {e}")
                 raise e
 
-        print(f"\n开始下载 {len(papers)} 个Paper到 {save_path}")
+        print(f"\n开始下载 {len(papers)} 个Paper到 {saved_path}")
 
         downloaded = []
         for i, paper in enumerate(papers, 1):
@@ -345,22 +345,22 @@ class ExaSearcherContext:
 
                 short_title = title[:10]
                 filename = f"exa_{self._sanitize_filename(short_title)}.md"
-                file_path = os.path.join(save_path, filename)
+                file_path = os.path.join(saved_path, filename)
                 if os.path.exists(file_path):
                     print(f"文件已存在，跳过保存: {paper.title} -> {file_path}")
                     if paper.extra is None:
                         paper.extra = {}
-                    paper.extra["save_path"] = file_path
+                    paper.extra["saved_path"] = file_path
                     continue
                 # 保存文件
                 markdown_content = self._generate_markdown(result_dict)
                 with open(file_path, 'w', encoding='utf-8') as f:
                     f.write(markdown_content)
 
-                # 设置 extra["save_path"]
+                # 设置 extra["saved_path"]
                 if paper.extra is None:
                     paper.extra = {}
-                paper.extra["save_path"] = file_path
+                paper.extra["saved_path"] = file_path
 
                 downloaded.append(paper)
                 print(f"[{i}/{len(papers)}] 已保存: {file_path}")
@@ -406,8 +406,8 @@ async def main():
             print(f"\n[{i}] 标题: {paper.title}")
             print(f"    URL: {paper.url}")
             print(f"    Context长度: {len(paper.abstract)} 字符")
-            if paper.extra and "save_path" in paper.extra:
-                print(f"    保存路径: {paper.extra['save_path']}")
+            if paper.extra and "saved_path" in paper.extra:
+                print(f"    保存路径: {paper.extra['saved_path']}")
         # 第二步：下载
         papers = searcher.download(papers)
 

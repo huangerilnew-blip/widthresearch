@@ -218,3 +218,106 @@
 2026-02-07 14:01:10 - __main__ - DEBUG - [file_deduplicator.py:317] - ================================================================================
 2026-02-07 14:01:10 - __main__ - INFO - [file_deduplicator.py:318] - 测试通过！
 2026-02-07 14:01:10 - __main__ - DEBUG - [file_deduplicator.py:319] - ================================================================================
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:54] - 初始化 ExecutorAgentPool: pool_size=2, model=dummy
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:95] - 开始并发执行 5 个子问题 (user_id=user, url_pool_size=0)
+2026-02-09 15:23:51 - agents.executor_pool - DEBUG - [executor_pool.py:111] - 分配子问题 1 到 Agent 0
+2026-02-09 15:23:51 - agents.executor_pool - DEBUG - [executor_pool.py:111] - 分配子问题 2 到 Agent 1
+2026-02-09 15:23:51 - agents.executor_pool - DEBUG - [executor_pool.py:111] - 分配子问题 3 到 Agent 0
+2026-02-09 15:23:51 - agents.executor_pool - DEBUG - [executor_pool.py:111] - 分配子问题 4 到 Agent 1
+2026-02-09 15:23:51 - agents.executor_pool - DEBUG - [executor_pool.py:111] - 分配子问题 5 到 Agent 0
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:168] - executor_pool开始处理子问题 'q0' (user_id=user, thread_id=thread_executor_0)
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:168] - executor_pool开始处理子问题 'q1' (user_id=user, thread_id=thread_executor_1)
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:170] - executor 完成子问题 'q0' 的处理
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:176] - executor_pool中 完成q0后 sub_url_pool 包含 1 个 URL
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:180] - executor_pool中 完成q0后 downloaded_papers 包含 1 个结果
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:170] - executor 完成子问题 'q1' 的处理
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:176] - executor_pool中 完成q1后 sub_url_pool 包含 1 个 URL
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:180] - executor_pool中 完成q1后 downloaded_papers 包含 1 个结果
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:168] - executor_pool开始处理子问题 'q2' (user_id=user, thread_id=thread_executor_2)
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:168] - executor_pool开始处理子问题 'q3' (user_id=user, thread_id=thread_executor_3)
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:170] - executor 完成子问题 'q2' 的处理
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:176] - executor_pool中 完成q2后 sub_url_pool 包含 1 个 URL
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:180] - executor_pool中 完成q2后 downloaded_papers 包含 1 个结果
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:170] - executor 完成子问题 'q3' 的处理
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:176] - executor_pool中 完成q3后 sub_url_pool 包含 1 个 URL
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:180] - executor_pool中 完成q3后 downloaded_papers 包含 1 个结果
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:168] - executor_pool开始处理子问题 'q4' (user_id=user, thread_id=thread_executor_4)
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:170] - executor 完成子问题 'q4' 的处理
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:176] - executor_pool中 完成q4后 sub_url_pool 包含 1 个 URL
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:180] - executor_pool中 完成q4后 downloaded_papers 包含 1 个结果
+2026-02-09 15:23:51 - agents.executor_pool - DEBUG - [executor_pool.py:130] - 子问题 1 执行成功
+2026-02-09 15:23:51 - agents.executor_pool - DEBUG - [executor_pool.py:130] - 子问题 2 执行成功
+2026-02-09 15:23:51 - agents.executor_pool - DEBUG - [executor_pool.py:130] - 子问题 3 执行成功
+2026-02-09 15:23:51 - agents.executor_pool - DEBUG - [executor_pool.py:130] - 子问题 4 执行成功
+2026-02-09 15:23:51 - agents.executor_pool - DEBUG - [executor_pool.py:130] - 子问题 5 执行成功
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:135] - 并发执行完成: 成功 5/5, 失败 0
+2026-02-09 15:23:51 - agents.executor_pool - INFO - [executor_pool.py:136] - URL 池更新: 0 -> 5 个 URL
+2026-02-09 15:33:11 - agents.executor_pool - INFO - [executor_pool.py:94] - 开始并发执行 5 个子问题 (user_id=user, url_pool_size=0)
+2026-02-09 15:33:11 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 1 到 Agent 0
+2026-02-09 15:33:11 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 2 到 Agent 1
+2026-02-09 15:33:11 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 3 到 Agent 0
+2026-02-09 15:33:11 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 4 到 Agent 1
+2026-02-09 15:33:11 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 5 到 Agent 0
+2026-02-09 15:33:11 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'q0' (user_id=user, thread_id=thread_executor_0)
+2026-02-09 15:33:11 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'q1' (user_id=user, thread_id=thread_executor_1)
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'q0' 的处理
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成q0后 sub_url_pool 包含 1 个 URL
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成q0后 downloaded_papers 包含 1 个结果
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'q1' 的处理
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成q1后 sub_url_pool 包含 1 个 URL
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成q1后 downloaded_papers 包含 1 个结果
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'q2' (user_id=user, thread_id=thread_executor_2)
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'q3' (user_id=user, thread_id=thread_executor_3)
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'q2' 的处理
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成q2后 sub_url_pool 包含 1 个 URL
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成q2后 downloaded_papers 包含 1 个结果
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'q3' 的处理
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成q3后 sub_url_pool 包含 1 个 URL
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成q3后 downloaded_papers 包含 1 个结果
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'q4' (user_id=user, thread_id=thread_executor_4)
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'q4' 的处理
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成q4后 sub_url_pool 包含 1 个 URL
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成q4后 downloaded_papers 包含 1 个结果
+2026-02-09 15:33:12 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 1 执行成功
+2026-02-09 15:33:12 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 2 执行成功
+2026-02-09 15:33:12 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 3 执行成功
+2026-02-09 15:33:12 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 4 执行成功
+2026-02-09 15:33:12 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 5 执行成功
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:134] - 并发执行完成: 成功 5/5, 失败 0
+2026-02-09 15:33:12 - agents.executor_pool - INFO - [executor_pool.py:135] - URL 池更新: 0 -> 5 个 URL
+2026-02-09 15:38:57,062 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-09 15:38:57,193 - core.llms - INFO - 成功初始化 qwen LLM
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:54] - 初始化 ExecutorAgentPool: pool_size=2, model=dummy
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:94] - 开始并发执行 5 个子问题 (user_id=user, url_pool_size=0)
+2026-02-09 15:38:57 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 1 到 Agent 0
+2026-02-09 15:38:57 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 2 到 Agent 1
+2026-02-09 15:38:57 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 3 到 Agent 0
+2026-02-09 15:38:57 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 4 到 Agent 1
+2026-02-09 15:38:57 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 5 到 Agent 0
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'q0' (user_id=user, thread_id=thread_executor_0)
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'q1' (user_id=user, thread_id=thread_executor_1)
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'q0' 的处理
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成q0后 sub_url_pool 包含 1 个 URL
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成q0后 downloaded_papers 包含 1 个结果
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'q1' 的处理
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成q1后 sub_url_pool 包含 1 个 URL
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成q1后 downloaded_papers 包含 1 个结果
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'q2' (user_id=user, thread_id=thread_executor_2)
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'q3' (user_id=user, thread_id=thread_executor_3)
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'q2' 的处理
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成q2后 sub_url_pool 包含 1 个 URL
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成q2后 downloaded_papers 包含 1 个结果
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'q3' 的处理
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成q3后 sub_url_pool 包含 1 个 URL
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成q3后 downloaded_papers 包含 1 个结果
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'q4' (user_id=user, thread_id=thread_executor_4)
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'q4' 的处理
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成q4后 sub_url_pool 包含 1 个 URL
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成q4后 downloaded_papers 包含 1 个结果
+2026-02-09 15:38:57 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 1 执行成功
+2026-02-09 15:38:57 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 2 执行成功
+2026-02-09 15:38:57 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 3 执行成功
+2026-02-09 15:38:57 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 4 执行成功
+2026-02-09 15:38:57 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 5 执行成功
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:134] - 并发执行完成: 成功 5/5, 失败 0
+2026-02-09 15:38:57 - agents.executor_pool - INFO - [executor_pool.py:135] - URL 池更新: 0 -> 5 个 URL
