@@ -276,7 +276,7 @@ class MultiAgentGraph:
                     "sub_questions": tasks,
                     **self._with_flag(state, "plan_query", True)
                 }
-            else:
+            elif isinstance(tasks, list) and len(tasks) <3:
                 logger.warning(f"子问题数量不足: {len(tasks)}")
                 return {
                     "sub_questions": tasks if tasks else [original_query],
@@ -296,27 +296,39 @@ class MultiAgentGraph:
         使用空 url_pool，让 ExecutorAgent 自由探索
         """
         logger.info("[节点 3a] 第一阶段执行 - 探索阶段（url_pool=[]）")
-
+        
         sub_questions = state.get("sub_questions", [])
+        if len(sub_questions) > 3:
+            sub_questions = sub_questions[:3]
+        if len(sub_questions) <=3:
+            sub_questions = sub_questions[:2]
+        if not sub_questions:
+            logger.warning("没有子问题需要执行第一阶段")
+            return {
+                "first_executor_results": [],
+                "url_pool": [],
+                **self._with_flag(state, "execute_first", False)
+            }
         thread_id = state.get("thread_id", "default")
         user_id = state.get("user_id", "default_user")
         user_query = state.get("original_query", "")
 
         try:
             # 第一阶段：url_pool=[] (探索)
+            logger.info(f"第一阶段执行: {len(sub_questions)} 个子问题，初始 URL 池为空")
             executor_results, updated_url_pool = await self.executor_pool.execute_questions(
-                sub_questions,
-                thread_id,
-                user_id,
-                [],  # 空 url_pool
-                user_query
+                qustions=sub_questions,
+                user_query=user_query,
+                base_thread_id=thread_id,
+                user_id=user_id,
+                url_pool=[],  # 空 url_pool
             )
 
-            logger.info(f"第一阶段执行完成，获得 {len(executor_results)} 个结果")
+            logger.info(f"第一阶段执行完成，完成{len(executor_results)} 个子问题的检索")
             logger.info(f"第一阶段收集到 {len(updated_url_pool)} 个 URL")
 
             return {
-                "first_executor_results": executor_results,
+                "first_executor_results": executor_results, #结构是[{"sub_url_pool": ..., "downloaded_papers": ...}...]
                 "url_pool": updated_url_pool,
                 **self._with_flag(state, "execute_first", True)
             }
@@ -337,19 +349,31 @@ class MultiAgentGraph:
         logger.info("[节点 3b] 第二阶段执行 - 精炼阶段（使用第一阶段的 url_pool）")
 
         sub_questions = state.get("sub_questions", [])
+        if len(sub_questions) > 3:
+            sub_questions = sub_questions[3:]
+        if len(sub_questions) <=3:
+            sub_questions = sub_questions[2:]
+        if not sub_questions:
+            logger.warning("没有子问题需要执行第二阶段")
+            return {
+                "second_executor_results": [],
+                **self._with_flag(state, "execute_second", False)
+            }
         thread_id = state.get("thread_id", "default")
         user_id = state.get("user_id", "default_user")
         user_query = state.get("original_query", "")
         url_pool = state.get("url_pool", [])  # 来自第一阶段
-
+        if not url_pool:
+            logger.warning("第一阶段没有收集到任何 URL，第二阶段将无法执行url检索去重")
         try:
             # 第二阶段：使用第一阶段收集的 url_pool
+            logger.info(f"第二阶段执行: {len(sub_questions)} 个子问题，使用第一阶段收集的 {len(url_pool)} 个 URL")
             executor_results, updated_url_pool = await self.executor_pool.execute_questions(
-                sub_questions,
-                thread_id,
-                user_id,
-                url_pool,  # 使用第一阶段的 url_pool
-                user_query
+                qustions=sub_questions,
+                base_thread_id=thread_id,
+                user_id=user_id,
+                url_pool=url_pool,  # 使用第一阶段的 url_pool
+                user_query=user_query
             )
 
             logger.info(f"第二阶段执行完成，获得 {len(executor_results)} 个结果")
