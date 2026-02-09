@@ -47,6 +47,7 @@ class ExecutorAgentPool:
         self.pool_size = pool_size
         self.model = model
         self.agents: List[ExecutorAgent] = []
+        self.agent_locks: List[asyncio.Lock] = []
         
         self._initialize_agents()
         
@@ -57,6 +58,7 @@ class ExecutorAgentPool:
         for i in range(self.pool_size):
             agent = ExecutorAgent(self.pool, self.model)
             self.agents.append(agent)
+            self.agent_locks.append(asyncio.Lock())
             logger.debug(f"创建 ExecutorAgent {i+1}/{self.pool_size}")
         
         logger.info(f"成功创建 {len(self.agents)} 个 ExecutorAgent 实例")
@@ -64,10 +66,11 @@ class ExecutorAgentPool:
     async def execute_questions(
         self,
         questions: List[str],
+        user_query: str ,
         base_thread_id: str,
-        user_id: str = "default_user",
-        url_pool: List[str] = None,
-        user_query: str = ""
+        user_id: str ,
+        url_pool: List[str],
+        
     ) -> tuple[List[Dict], List[str]]:
         """并发执行多个子问题
 
@@ -82,12 +85,12 @@ class ExecutorAgentPool:
             tuple[List[Dict], List[str]]: (所有 ExecutorAgent 的结果列表, 更新后的 URL 池)
         """
         if not questions:
-            logger.warning("没有子问题需要执行")
+            logger.warning("没有子问题需要执行，planer 可能没有正确分解问题，或者所有子问题都被过滤掉了")
             return [], url_pool or []
 
         if url_pool is None:
             url_pool = []
-
+            logger.warning("未提供 URL 池，使用空列表作为初始 URL 池,如果是第一次executor，这是正常的；如果是第二次executor，原则上来讲不应该为空")
         logger.info(f"开始并发执行 {len(questions)} 个子问题 (user_id={user_id}, url_pool_size={len(url_pool)})")
 
         # 创建任务列表
@@ -95,11 +98,12 @@ class ExecutorAgentPool:
         for i, question in enumerate(questions):
             # 使用轮询方式分配 Agent
             agent = self.agents[i % self.pool_size]
+            agent_lock = self.agent_locks[i % self.pool_size]
             thread_id = f"{base_thread_id}_executor_{i}"
 
             # 创建异步任务（传递新参数）
             task = self._invoke_agent_with_message(
-                agent, question, thread_id, user_id, url_pool, user_query
+                agent, agent_lock, question, thread_id, user_id, url_pool, user_query
             )
             tasks.append(task)
 
@@ -109,7 +113,7 @@ class ExecutorAgentPool:
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
         # 处理结果
-        valid_results = []
+        valid_results = [] # 结构是[{"sub_url_pool": ..., "downloaded_papers": ...}...]
         all_sub_url_pools = []
         failed_count = 0
 
@@ -135,6 +139,7 @@ class ExecutorAgentPool:
     async def _invoke_agent_with_message(
         self,
         agent: ExecutorAgent,
+        agent_lock: asyncio.Lock,
         question: str,
         thread_id: str,
         user_id: str,
@@ -154,39 +159,35 @@ class ExecutorAgentPool:
         Returns:
             执行结果（包含 sub_url_pool）
         """
-        # 确保异步资源已初始化
-        await agent._ensure_initialized()
+        async with agent_lock:
+            # 确保异步资源已初始化 self.agents 中的每个 Agent 都已正确初始化
+            await agent._ensure_initialized()
 
-        config = {"configurable": {"thread_id": thread_id, "user_id": user_id}}
+            try:
+                logger.info(f"executor_pool开始处理子问题 '{question}' (user_id={user_id}, thread_id={thread_id})")
+                result = await agent.ainvoke(query=question, thread_id=thread_id,user_id=user_id, sub_url_pool=list(url_pool),user_query=user_query )
+                logger.info(f"executor 完成子问题 '{question}' 的处理")
+                sub_url_pool = result.get("sub_url_pool", [])
+                downloaded_papers = result.get("downloaded_papers", [])
+                if not sub_url_pool:
+                    logger.warning(f"executor_pool中 完成{question}后sub_url_pool 为空")
+                else:
+                    logger.info(f"executor_pool中 完成{question}后 sub_url_pool 包含 {len(sub_url_pool)} 个 URL")
+                if not downloaded_papers:
+                    logger.warning(f"executor_pool中 完成{question}后 downloaded_papers 为空")
+                else:
+                    logger.info(f"executor_pool中 完成{question}后 downloaded_papers 包含 {len(downloaded_papers)} 个结果")
 
-        # 正确初始化 state：将 question 包装为 HumanMessage 放入 executor_messages
-        initial_state = {
-            "executor_messages": [HumanMessage(content=question)],
-            "user_query": user_query,
-            "sub_query": question,
-            "optional_search_results": [],
-            "search_results": [],
-            "deduplicated_results": [],
-            "downloaded_papers": [],
-            "executor_result": {},
-            "sub_url_pool": list(url_pool)  # 传递副本
-        }
-
-        try:
-            result = await agent.graph.ainvoke(initial_state, config)
-            logger.info(f"executor 完成子问题 '{question}' 的处理")
-            
-            # 返回完整结果，包括 sub_url_pool
-            return {
-                "executor_result": result.get("executor_result", {}),
-                "sub_url_pool": result.get("sub_url_pool", []),
-                "downloaded_papers": result.get("downloaded_papers", [])
-            }
-        except Exception as e:
-            logger.error(f"executor 处理子问题 '{question}' 时出错: {e}")
-            import traceback
-            traceback.print_exc()
-            raise e
+                # 返回完整结果，包括 sub_url_pool
+                return {
+                    "sub_url_pool":sub_url_pool,
+                    "downloaded_papers": downloaded_papers
+                }
+            except Exception as e:
+                logger.error(f"executor 处理子问题 '{question}' 时出错: {e}")
+                import traceback
+                traceback.print_exc()
+                raise e
     
     async def cleanup(self):
         """清理所有 Agent 资源"""
