@@ -18,10 +18,10 @@ class Config:
     SESSION_TIMEOUT = 3600
     LANGUAGE="zh" #wikipedia搜索语言设置，zh:中文,en:英文 planeragent 也会按此方式处理
     # openai:调用gpt模型,qwen:调用阿里通义千问大模型,oneapi:调用oneapi方案支持的模型,ollama:调用本地开源大模型
-    LLM_TYPE = "qwen"
-    LLM_PLANNER="qwen"
-    LLM_EXECUTOR="qwen"
-    LLM_MUTI_AGENT="qwen"
+    LLM_EMBEDDING = "bge-m3"
+    LLM_PLANNER = "qwen" #只选厂家，没选模型 ，选具体模型详见llms.py    
+    LLM_EXECUTOR = "qwen" #只选厂家没选模型,选具体模型详见llms.py
+    LLM_MUTI_AGENT = "qwen" #只选厂家没选模型,选具体模型详见llms.py
     PLANNER_EPOCH=3#planneragent循环轮数，默认为3轮
     GENER_EPOCH=3#multiagent生成最终答案的循环轮数，默认为3轮
     # API服务地址和端口

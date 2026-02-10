@@ -90,11 +90,14 @@ class PlannerState(TypedDict):
     planner_messages: Annotated[list[AnyMessage], add_messages]
     planner_result: AIMessage
     epoch: int
-
+    
 
 class PlannerAgent:
     def __init__(self, pool: AsyncConnectionPool=None, modelname: str = Config.LLM_PLANNER):
-        self.chat_llm = get_llm(modelname)[0]
+        self.chat_llm = get_llm(
+            chat_name=modelname,
+            embedding_name=Config.LLM_EMBEDDING
+        )[0]
         if pool is None:
             self.memory = None
         else:

@@ -9,7 +9,7 @@ import asyncio
 import os
 import tempfile
 import shutil
-import logging
+from log_config import setup_logger
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional
@@ -359,6 +359,47 @@ class PDFParser:
         return loop.run_until_complete(self.parse_pdf_to_markdown(pdf_path))
 
 
+class jsonreader:
+    """
+    JSON 行读取器
+    提供将 JSON 文件按行读取为 list[str] 的能力
+    """
+
+    def __init__(self):
+        self.logger = setup_logger(__name__)
+
+    def read_json_lines(self, file_path: str) -> List[str]:
+        """
+        读取 JSON 文件并返回每行内容列表
+
+        Args:
+            file_path: JSON 文件路径
+
+        Returns:
+            文件每一行组成的列表
+
+        Raises:
+            ValueError: 文件扩展名不是 .json
+            FileNotFoundError: 文件不存在
+            RuntimeError: 文件读取失败
+        """
+        if Path(file_path).suffix.lower() != ".json":
+            self.logger.error(f"仅支持 .json 文件: {file_path}")
+            return []
+
+        if not os.path.exists(file_path):
+            self.logger.error(f"文件不存在: {file_path}")
+            return []
+
+
+        try:
+            with open(file_path, "r", encoding="utf-8") as file_handle:
+                return [line.rstrip("\n") for line in file_handle.readlines()]
+        except Exception as exc:
+            self.logger.error(f"读取 JSON 文件失败: {file_path}, {exc}")
+            raise RuntimeError(f"读取 JSON 文件失败: {file_path}") from exc
+
+
 # 测试代码
 if __name__ == "__main__":
     print("=" * 60)
@@ -430,6 +471,23 @@ if __name__ == "__main__":
     print(f"   MinerU 服务器 URL: {parser.mineru_server_url}")
     print(f"   ✓ PDFParser 测试通过")
     print("   注意: 实际 PDF 解析需要安装 mineru 并启动服务")
+
+    # 测试 jsonreader
+    print("\n6. 测试 jsonreader:")
+    temp_json_file = tempfile.NamedTemporaryFile(
+        mode="w",
+        suffix=".json",
+        delete=False,
+        encoding="utf-8"
+    )
+    temp_json_file.write('{"a": 1}\n')
+    temp_json_file.write('{"b": 2}\n')
+    temp_json_file.close()
+    reader = jsonreader()
+    json_lines = reader.read_json_lines(temp_json_file.name)
+    assert json_lines == ['{"a": 1}', '{"b": 2}']
+    os.unlink(temp_json_file.name)
+    print("   ✓ jsonreader 测试通过")
     
     print("\n" + "=" * 60)
     print("所有数据模型测试通过！")

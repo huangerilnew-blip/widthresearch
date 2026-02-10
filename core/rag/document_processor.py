@@ -25,7 +25,7 @@ from llama_index.core.readers.file import MarkdownReader
 from llama_index.core.extractors import QuestionsAnsweredExtractor
 from llama_index.core.ingestion import IngestionPipeline
 from core.config import Config
-from core.models import PDFParser
+from core.models import PDFParser, JssonParser
 
 # 设置日志
 logger = logging.getLogger(__name__)
@@ -71,7 +71,7 @@ class DocumentProcessor:
         
         # 初始化 PDFParser（用于 PDF 转 Markdown）
         self.pdf_parser = PDFParser(mineru_server_url=mineru_base_url)
-        
+        self.jsson_parser = JssonParser()
         # 初始化 MarkdownReader（负责从文件系统加载 Markdown 文档）
         self.markdown_reader = MarkdownReader()
         
@@ -117,9 +117,10 @@ class DocumentProcessor:
             处理后的 Node 列表（包含改写问题的元数据）
         """
         logger.info(f"开始处理 {len(documents)} 个文档")
-        
+        json_nodes:List[BaseNode ]= []
         docs_for_pipeline: List[Document] = []
-        
+        optional_file=os.path.join(Config.DOC_SAVE_PATH, "context7_grep.json")  # 可选文件的添加
+        documents.append({"extra": {"saved_path": optional_file}})
         # 1. 先将所有原始文件转为 LlamaIndex Document（Markdown 文本）
         for doc_meta in documents:
             # 获取文档路径
@@ -133,19 +134,20 @@ class DocumentProcessor:
                 or ""
             )
             if not local_path:
-                raise ValueError(f"文档路径为空: {doc_meta.get('title', 'unknown')}")
+               logger.warning(f"文档路径为空: {doc_meta.get('title', 'unknown')}")
+               continue
             if not os.path.exists(local_path):
-                logger.error(f"文档路径不存在: {local_path}")
+                logger.warning(f"文档路径不存在: {local_path}")
                 continue
             # 判断文件类型
             file_ext = os.path.splitext(local_path)[1].lower()
-            source = doc_meta.get("source") or "unknown"
+            source = doc_meta.get("source") or "联网检索"
             title = doc_meta.get("title") or Path(local_path).stem
-            url = doc_meta.get("url") or f"file://{local_path}"
+            url = doc_meta.get("url") or source
             base_metadata = {
-                "source": source,
-                "title": title,
-                "url": url,
+                "source": source, #来源或"联网检索"
+                "title": title, #title或文件名
+                "url": url,#url或来源或"unknown"
             }
 
             if file_ext == '.pdf':
@@ -171,8 +173,30 @@ class DocumentProcessor:
                 for d in md_docs:
                     d.metadata = base_metadata
                     docs_for_pipeline.append(d)
-
                 logger.info(f"Markdown 文档 {local_path} 加载为 {len(md_docs)} 个 Document 并加入 pipeline")
+            elif file_ext == '.json':
+                # 使用 JssonParser 加载 JSON 文件
+                json_docs = self.jsson_parser.load_data(file=Path(local_path))
+                if not json_docs:
+                    logger.warning(f"文档存在，但JSON文档加载失败或内容为空: {local_path}")
+                    continue
+                for item in json_docs:
+                    meta_data = item.get("metadata")
+                    source = item.get("source") or "联网搜索"
+                    if not meta_data:
+                        logger.warning(f"可选工具保存的JSON文档中的条目缺少'metadata'字段")
+                    else:
+                        if hasattr(meta_data,library_id):
+                            library_id = meta_data.get("library_id")
+                    if library_id:
+                        base_metadata={"source": source, "library_id": library_id}
+                    base_metadata = {
+                        "source": source #来源或"联网检索"
+                        }
+                    node=BaseNode(text=item.get("text", ""), metadata=base_metadata)
+                    if not item.get("text", "").strip():
+                        logger.warning(f"JSON文档中的条目文本为空:{item}")
+                    json_nodes.append(node)
             else:
                 logger.warning(f"不支持的文件类型{file_ext}，跳过: {local_path}")
                 continue
@@ -195,6 +219,9 @@ class DocumentProcessor:
         
         # 3. 返回处理后的节点列表
         logger.info(f"文档处理完成: {len(nodes)} 个节点")
+        if json_nodes:
+            logger.info(f"另外添加了 {len(json_nodes)} 个来自 可选工具JSON 文档的节点")
+            nodes.extend(json_nodes)
         return nodes
     
     async def _pdf_to_markdown(self, pdf_path: str) -> str:

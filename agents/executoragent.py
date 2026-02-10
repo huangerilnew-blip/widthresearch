@@ -43,8 +43,11 @@ class ExecutorAgent:
     LLM 可以多次决策是否调用可选工具，形成循环，直到 LLM 认为已经收集了足够的信息。
     """
     
-    def __init__(self, pool: AsyncConnectionPool | None, modelname: ChatOpenAI = Config.LLM_EXECUTOR):
-        self.chat_llm = get_llm(modelname)[0]
+    def __init__(self, pool: AsyncConnectionPool | None, modelname: str = Config.LLM_EXECUTOR):
+        self.chat_llm = get_llm(
+            chat_name=modelname,
+            embedding_name=Config.LLM_EMBEDDING
+        )[0]
         # 搜索工具延迟加载
         self.search_tools: list[BaseTool] = None
         # 下载工具单独获取

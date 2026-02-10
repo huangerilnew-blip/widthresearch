@@ -30,17 +30,30 @@ logger.addHandler(handler)
 load_dotenv()
 # 模型配置字典
 MODEL_CONFIGS = {
-    "qwen": {
-        "base_url": os.getenv("BASE_URL"),
-        "api_key": os.getenv("API_KEY"),
-        "chat_model": os.getenv("CHAT_MODEL"),
-        "embedding_model":os.getenv("EMBEDDING_MODEL")
+    "chat": {
+        "qwen": {
+            "base_url": os.getenv("BASE_URL"),
+            "api_key": os.getenv("API_KEY"),
+            "model_name": os.getenv("CHAT_MODEL")
+        }
+    },
+    "embedding": {
+        "qwen": {
+            "base_url": os.getenv("BASE_URL"),
+            "api_key": os.getenv("API_KEY"),
+            "model_name": os.getenv("EMBEDDING_MODEL", Config.EMBEDDING_MODEL_NAME)
+        },
+        "bge": {
+            "base_url": Config.VLLM_BASE_URL,
+            "api_key": "NA",
+            "model_name": "BAAI/bge-m3"
     }
 }
-
+}
 
 # 默认配置
-DEFAULT_LLM_TYPE = "qwen"
+DEFAULT_CHAT_NAME = "qwen"
+DEFAULT_EMBEDDING_NAME = "bge"
 DEFAULT_TEMPERATURE = 0
 
 
@@ -49,12 +62,16 @@ class LLMInitializationError(Exception):
     pass
 
 
-def initialize_llm(llm_type: str = DEFAULT_LLM_TYPE) -> tuple[ChatOpenAI, OpenAIEmbeddings]:
+def initialize_llm(
+    chat_name: str = DEFAULT_CHAT_NAME,
+    embedding_name: str = DEFAULT_EMBEDDING_NAME
+) -> tuple[ChatOpenAI, OpenAIEmbeddings]:
     """
     初始化LLM实例
 
     Args:
-        llm_type (str): LLM类型，可选值为 'openai', 'oneapi', 'qwen', 'ollama'
+        chat_name (str): Chat 模型类型
+        embedding_name (str): Embedding 模型类型
 
     Returns:
         ChatOpenAI: 初始化后的LLM实例
@@ -63,33 +80,39 @@ def initialize_llm(llm_type: str = DEFAULT_LLM_TYPE) -> tuple[ChatOpenAI, OpenAI
         LLMInitializationError: 当LLM初始化失败时抛出
     """
     try:
-        # 检查llm_type是否有效
-        if llm_type not in MODEL_CONFIGS:
-            raise ValueError(f"不支持的LLM类型: {llm_type}. 可用的类型: {list(MODEL_CONFIGS.keys())}")
+        if chat_name not in MODEL_CONFIGS["chat"]:
+            raise ValueError(
+                f"不支持的Chat模型类型: {chat_name}. 可用的类型: {list(MODEL_CONFIGS['chat'].keys())}"
+            )
+        if embedding_name not in MODEL_CONFIGS["embedding"]:
+            raise ValueError(
+                f"不支持的Embedding模型类型: {embedding_name}. 可用的类型: {list(MODEL_CONFIGS['embedding'].keys())}"
+            )
 
-        config = MODEL_CONFIGS[llm_type]
+        chat_config = MODEL_CONFIGS["chat"][chat_name]
+        embedding_config = MODEL_CONFIGS["embedding"][embedding_name]
 
         # 特殊处理ollama类型
-        if llm_type == "ollama":
+        if chat_name == "ollama" or embedding_name == "ollama":
             os.environ["API_KEY"] = "NA"
         # 创建LLM实例
         llm_chat = ChatOpenAI(
-            base_url=config["base_url"],
-            api_key=config["api_key"],
-            model=config["chat_model"],
+            base_url=chat_config["base_url"],
+            api_key=chat_config["api_key"],
+            model=chat_config["model_name"],
             temperature=DEFAULT_TEMPERATURE,
             timeout=30,  # 添加超时配置（秒）
             max_retries=2  # 添加重试次数
         )
 
         llm_embedding = OpenAIEmbeddings(
-            base_url=config["base_url"],
-            api_key=config["api_key"],
-            model=config["embedding_model"],
-            deployment=config["embedding_model"]
+            base_url=embedding_config["base_url"],
+            api_key=embedding_config["api_key"],
+            model=embedding_config["model_name"],
+            deployment=embedding_config["model_name"]
         )
 
-        logger.info(f"成功初始化 {llm_type} LLM")
+        logger.info(f"成功初始化 Chat({chat_name})/Embedding({embedding_name}) LLM")
         return llm_chat, llm_embedding
 
     except ValueError as ve:
@@ -100,22 +123,26 @@ def initialize_llm(llm_type: str = DEFAULT_LLM_TYPE) -> tuple[ChatOpenAI, OpenAI
         raise LLMInitializationError(f"初始化LLM失败: {str(e)}")
 
 
-def get_llm(llm_type: str = DEFAULT_LLM_TYPE) -> ChatOpenAI:
+def get_llm(
+    chat_name: str = DEFAULT_CHAT_NAME,
+    embedding_name: str = DEFAULT_EMBEDDING_NAME
+) -> tuple[ChatOpenAI, OpenAIEmbeddings]:
     """
     获取LLM实例的封装函数，提供默认值和错误处理
 
     Args:
-        llm_type (str): LLM类型
+        chat_name (str): Chat 模型类型
+        embedding_name (str): Embedding 模型类型
 
     Returns:
-        ChatOpenAI: LLM实例
+        tuple[ChatOpenAI, OpenAIEmbeddings]: LLM实例
     """
     try:
-        return initialize_llm(llm_type)
+        return initialize_llm(chat_name, embedding_name)
     except LLMInitializationError as e:
         logger.warning(f"使用默认配置重试: {str(e)}")
-        if llm_type != DEFAULT_LLM_TYPE:
-            return initialize_llm(DEFAULT_LLM_TYPE)
+        if chat_name != DEFAULT_CHAT_NAME or embedding_name != DEFAULT_EMBEDDING_NAME:
+            return initialize_llm(DEFAULT_CHAT_NAME, DEFAULT_EMBEDDING_NAME)
         raise e # 如果默认配置也失败，则抛出异常
 
 
@@ -124,9 +151,9 @@ def get_llm(llm_type: str = DEFAULT_LLM_TYPE) -> ChatOpenAI:
 if __name__ == "__main__":
     try:
         # 测试不同类型的LLM初始化
-        llm_openai, llm_embedding = get_llm("qwen")
+        llm_openai, llm_embedding = get_llm("qwen", "qwen")
 
         # 测试无效类型
-        llm_invalid = get_llm("invalid_type")
+        llm_invalid = get_llm("invalid_type", "invalid_type")
     except LLMInitializationError as e:
         logger.error(f"程序终止: {str(e)}")
