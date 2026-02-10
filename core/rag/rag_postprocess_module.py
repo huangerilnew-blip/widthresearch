@@ -73,9 +73,9 @@ class RAGPostProcessModule:
     
     def __init__(
         self,
-        vector_store: VectorStoreIndex,
-        retriever:BaseRetriever,
-        node_postprocessor: BGERerankNodePostprocessor,
+        vector_store: VectorStoreIndex=None,
+        retriever:BaseRetriever=None,
+        node_postprocessor: BGERerankNodePostprocessor=None,
         top_k: int = Config.TOP_K
     ):
         """初始化 RAG 模块
