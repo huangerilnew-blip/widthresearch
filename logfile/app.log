@@ -1,179 +1,82 @@
-2026-02-10 21:16:38,789 - core.llms - ERROR - LLM配置错误: 不支持的Embedding模型类型: bge-m3. 可用的类型: ['qwen', 'bge']
-2026-02-10 21:16:38,789 - core.llms - WARNING - 使用默认配置重试: LLM配置错误: 不支持的Embedding模型类型: bge-m3. 可用的类型: ['qwen', 'bge']
-2026-02-10 21:16:39,214 - core.llms - INFO - 成功初始化 Chat(qwen)/Embedding(bge) LLM
-2026-02-10 21:16:39,214 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-10 21:16:40,621 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-10 21:19:06,924 - core.llms - ERROR - LLM配置错误: 不支持的Embedding模型类型: bge-m3. 可用的类型: ['qwen', 'bge']
-2026-02-10 21:19:06,924 - core.llms - WARNING - 使用默认配置重试: LLM配置错误: 不支持的Embedding模型类型: bge-m3. 可用的类型: ['qwen', 'bge']
-2026-02-10 21:19:07,332 - core.llms - INFO - 成功初始化 Chat(qwen)/Embedding(bge) LLM
-2026-02-10 21:19:07,332 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-10 21:19:08,633 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-10 21:19:13 - agents.executoragent - INFO - [executoragent.py:988] - 完成 executor_graph 的初始化构造
-2026-02-10 21:19:13 - agents.executoragent - INFO - [executoragent.py:600] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-10 21:19:13 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 wikipedia_search 搜索: 人工智能的发展历史
-2026-02-10 21:19:13 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 exa_context_search 搜索: 人工智能的发展历史
-2026-02-10 21:19:13 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 tavily_search 搜索: 人工智能的发展历史
-2026-02-10 21:19:21 - agents.executoragent - INFO - [executoragent.py:174] - wikipedia_search 返回了 2 条数据
-2026-02-10 21:19:24 - agents.executoragent - INFO - [executoragent.py:174] - tavily_search 返回了 6 条数据
-2026-02-10 21:19:24 - agents.executoragent - WARNING - [executoragent.py:176] - exa_context_search 返回了 0 条数据
-2026-02-10 21:19:24 - agents.executoragent - INFO - [executoragent.py:624] - 搜索完成，共获得 8 条结果
-2026-02-10 21:19:24 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-10 21:19:43 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=False
-2026-02-10 21:19:43 - agents.executoragent - INFO - [executoragent.py:511] - LLM 思考: 人工智能（Artificial Intelligence, AI）的发展历史可以追溯到20世纪中叶，其演进过程充满了理论突破、技术进步和应用拓展。以下是一个简要的概述：
+2026-02-10 21:57:53,378 - core.llms - ERROR - LLM配置错误: 不支持的Embedding模型类型: bge-m3. 可用的类型: ['qwen', 'bge']
+2026-02-10 21:57:53,378 - core.llms - WARNING - 使用默认配置重试: LLM配置错误: 不支持的Embedding模型类型: bge-m3. 可用的类型: ['qwen', 'bge']
+2026-02-10 21:57:53,828 - core.llms - INFO - 成功初始化 Chat(qwen)/Embedding(bge) LLM
+2026-02-10 21:57:53,829 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-10 21:57:55,297 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-10 21:58:05 - agents.executoragent - INFO - [executoragent.py:988] - 完成 executor_graph 的初始化构造
+2026-02-10 21:58:05 - agents.executoragent - INFO - [executoragent.py:600] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-10 21:58:05 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 wikipedia_search 搜索: langgraph的记忆管理 
+2026-02-10 21:58:05 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 exa_context_search 搜索: langgraph的记忆管理 
+2026-02-10 21:58:05 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 tavily_search 搜索: langgraph的记忆管理 
+2026-02-10 21:58:08 - agents.executoragent - WARNING - [executoragent.py:176] - wikipedia_search 返回了 0 条数据
+2026-02-10 21:58:14 - agents.executoragent - INFO - [executoragent.py:174] - exa_context_search 返回了 10 条数据
+2026-02-10 21:58:22 - agents.executoragent - INFO - [executoragent.py:174] - tavily_search 返回了 5 条数据
+2026-02-10 21:58:22 - agents.executoragent - INFO - [executoragent.py:624] - 搜索完成，共获得 15 条结果
+2026-02-10 21:58:22 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-10 21:58:24 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=True
+2026-02-10 21:58:24 - agents.executoragent - INFO - [executoragent.py:526] - LLM 决定调用 1 个可选工具
+2026-02-10 21:58:24 - agents.executoragent - INFO - [executoragent.py:557] - 准备执行 1 个可选工具调用
+2026-02-10 21:58:29 - agents.executoragent - INFO - [executoragent.py:567] - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-10 21:58:29 - agents.executoragent - INFO - [executoragent.py:580] -   - 工具 resolve-library-id 返回 1 条结果
+2026-02-10 21:58:29 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-10 21:58:31 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=True
+2026-02-10 21:58:31 - agents.executoragent - INFO - [executoragent.py:526] - LLM 决定调用 1 个可选工具
+2026-02-10 21:58:31 - agents.executoragent - INFO - [executoragent.py:557] - 准备执行 1 个可选工具调用
+2026-02-10 21:58:36 - agents.executoragent - INFO - [executoragent.py:567] - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-10 21:58:36 - agents.executoragent - INFO - [executoragent.py:580] -   - 工具 query-docs 返回 1 条结果
+2026-02-10 21:58:36 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-10 21:58:38 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=True
+2026-02-10 21:58:38 - agents.executoragent - INFO - [executoragent.py:526] - LLM 决定调用 1 个可选工具
+2026-02-10 21:58:38 - agents.executoragent - INFO - [executoragent.py:557] - 准备执行 1 个可选工具调用
+2026-02-10 21:58:44 - agents.executoragent - INFO - [executoragent.py:567] - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-10 21:58:44 - agents.executoragent - INFO - [executoragent.py:580] -   - 工具 query-docs 返回 1 条结果
+2026-02-10 21:58:44 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=False
+2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:511] - LLM 思考: # LangGraph 的记忆管理机制
 
-### 1. **起源与早期探索（1940s-1950s）**
-- **1943年**：沃伦·麦卡洛克（Warren McCul...
-2026-02-10 21:19:43 - agents.executoragent - INFO - [executoragent.py:530] - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-10 21:19:43 - agents.executoragent - WARNING - [executoragent.py:729] - 处理人工智能的影响----人工智能的发展历史时sub_url_pool 为空
-2026-02-10 21:19:43 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD
-2026-02-10 21:19:43 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E9%80%9A%E7%94%A8%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%8
-2026-02-10 21:19:43 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.qstheory.cn/dukan/qs/2019-02/16/c_1124114625.htm
-2026-02-10 21:19:43 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://zh.wikipedia.org/zh-hans/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
-2026-02-10 21:19:43 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.cac.gov.cn/2017-01/23/c_1120366748.htm
-2026-02-10 21:19:43 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://blog.csdn.net/jarodyv/article/details/144699658
-2026-02-10 21:19:43 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.ibm.com/cn-zh/think/topics/history-of-artificial-intelligence
-2026-02-10 21:19:43 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.coursera.org/articles/history-of-ai
-2026-02-10 21:19:43 - agents.executoragent - INFO - [executoragent.py:712] - 去重统计: 去重前=8, 去重后=8, 去重率=0.0%
-2026-02-10 21:19:43 - agents.executoragent - INFO - [executoragent.py:810] - 去重前: 8 篇
-2026-02-10 21:19:43 - agents.executoragent - INFO - [executoragent.py:811] - 去重后: 8 篇
-2026-02-10 21:19:43 - agents.executoragent - INFO - [executoragent.py:838] - 从 deduplicated_results 获取 8 篇文档
-2026-02-10 21:19:43 - agents.executoragent - INFO - [executoragent.py:876] - 总共需要下载 8 篇文档
-2026-02-10 21:19:43,667 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-10 21:19:44,970 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-10 21:19:44 - agents.executoragent - INFO - [executoragent.py:897] - 开始下载 wikipedia 的 2 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-10 21:19:44 - agents.executoragent - INFO - [executoragent.py:903] - 使用下载工具 wikipedia_download 处理 wikipedia 数据
-2026-02-10 21:19:44 - agents.executoragent - INFO - [executoragent.py:897] - 开始下载 tavily 的 6 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-10 21:19:44 - agents.executoragent - INFO - [executoragent.py:903] - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-10 21:19:46 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 wikipedia_download 返回类型: <class 'list'>
-2026-02-10 21:19:46 - agents.executoragent - INFO - [executoragent.py:912] - 下载工具 wikipedia_download 首项类型: <class 'dict'>
-2026-02-10 21:19:46 - agents.executoragent - INFO - [executoragent.py:917] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=2
-2026-02-10 21:19:46 - agents.executoragent - INFO - [executoragent.py:927] - 成功下载 2 篇 wikipedia 文档
-2026-02-10 21:19:46 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-10 21:19:46 - agents.executoragent - INFO - [executoragent.py:912] - 下载工具 tavily_download 首项类型: <class 'dict'>
-2026-02-10 21:19:46 - agents.executoragent - INFO - [executoragent.py:917] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=6
-2026-02-10 21:19:46 - agents.executoragent - INFO - [executoragent.py:927] - 成功下载 6 篇 tavily 文档
-2026-02-10 21:19:46 - agents.executoragent - INFO - [executoragent.py:955] - 下载完成，共下载 8 篇文档
-2026-02-10 21:19:46 - agents.executoragent - INFO - [executoragent.py:1010] - executor 完成子问题 '人工智能的发展历史' 的处理
-2026-02-10 21:28:29,679 - core.llms - ERROR - LLM配置错误: 不支持的Embedding模型类型: bge-m3. 可用的类型: ['qwen', 'bge']
-2026-02-10 21:28:29,680 - core.llms - WARNING - 使用默认配置重试: LLM配置错误: 不支持的Embedding模型类型: bge-m3. 可用的类型: ['qwen', 'bge']
-2026-02-10 21:28:30,176 - core.llms - INFO - 成功初始化 Chat(qwen)/Embedding(bge) LLM
-2026-02-10 21:28:30,176 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-10 21:28:31,995 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-10 21:28:34 - agents.executoragent - INFO - [executoragent.py:988] - 完成 executor_graph 的初始化构造
-2026-02-10 21:28:34 - agents.executoragent - INFO - [executoragent.py:600] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-10 21:28:34 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 wikipedia_search 搜索: 人工智能的发展历史
-2026-02-10 21:28:34 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 exa_context_search 搜索: 人工智能的发展历史
-2026-02-10 21:28:34 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 tavily_search 搜索: 人工智能的发展历史
-2026-02-10 21:28:40 - agents.executoragent - INFO - [executoragent.py:174] - wikipedia_search 返回了 3 条数据
-2026-02-10 21:28:42 - agents.executoragent - INFO - [executoragent.py:174] - exa_context_search 返回了 10 条数据
-2026-02-10 21:28:53 - agents.executoragent - INFO - [executoragent.py:174] - tavily_search 返回了 6 条数据
-2026-02-10 21:28:53 - agents.executoragent - INFO - [executoragent.py:624] - 搜索完成，共获得 19 条结果
-2026-02-10 21:28:53 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-10 21:29:18 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=False
-2026-02-10 21:29:18 - agents.executoragent - INFO - [executoragent.py:511] - LLM 思考: 人工智能（Artificial Intelligence, AI）的发展历史可以追溯到20世纪中叶，其演进过程经历了多个阶段，包括理论奠基、技术突破、应用扩展以及近年来的爆发式增长。以下是人工智能发展的主要阶段和关键里程碑：
+LangGraph 通过 **Checkpointer** 机制来实现记忆管理和状态持久化，这是其核心功能之一。下面详细介绍 LangGraph 的记忆管理机制：
 
----
+## 核心概念
 
-### 1. **萌芽与奠基（1940s–1950s）**
--...
-2026-02-10 21:29:18 - agents.executoragent - INFO - [executoragent.py:530] - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-10 21:29:18 - agents.executoragent - WARNING - [executoragent.py:729] - 处理人工智能的影响----人工智能的发展历史时sub_url_pool 为空
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E9%80%9A%E7%94%A8%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%8
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.qstheory.cn/dukan/qs/2019-02/16/c_1124114625.htm
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.ibm.com/cn-zh/think/topics/history-of-artificial-intelligence
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.coursera.org/articles/history-of-ai
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://zh.wikipedia.org/zh-hans/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://datawhalechina.github.io/thorough-pytorch/%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://blog.csdn.net/jarodyv/article/details/144699658
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://developer.baidu.com/article/details/2733815
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.casisd.cas.cn/kxcb/kpzs/201903/t20190327_5262266.html
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://arthurchiao.github.io/blog/brief-history-of-ai-notes-zh/
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.itshenji.com/article/324
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://a.nua.edu.cn/2024/0906/c6145a109245/page.htm
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://a.nua.edu.cn/2024/0906/c5939a109245/page.htm
-2026-02-10 21:29:18 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.cac.gov.cn/2017-01/23/c_1120366748.htm
-2026-02-10 21:29:18 - agents.executoragent - INFO - [executoragent.py:712] - 去重统计: 去重前=16, 去重后=16, 去重率=0.0%
-2026-02-10 21:29:18 - agents.executoragent - INFO - [executoragent.py:810] - 去重前: 19 篇
-2026-02-10 21:29:18 - agents.executoragent - INFO - [executoragent.py:811] - 去重后: 16 篇
-2026-02-10 21:29:18 - agents.executoragent - INFO - [executoragent.py:838] - 从 deduplicated_results 获取 16 篇文档
-2026-02-10 21:29:18 - agents.executoragent - INFO - [executoragent.py:876] - 总共需要下载 16 篇文档
-2026-02-10 21:29:18,399 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-10 21:29:19,857 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-10 21:29:19 - agents.executoragent - INFO - [executoragent.py:897] - 开始下载 wikipedia 的 3 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-10 21:29:19 - agents.executoragent - INFO - [executoragent.py:903] - 使用下载工具 wikipedia_download 处理 wikipedia 数据
-2026-02-10 21:29:19 - agents.executoragent - INFO - [executoragent.py:897] - 开始下载 tavily 的 3 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-10 21:29:19 - agents.executoragent - INFO - [executoragent.py:903] - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-10 21:29:19 - agents.executoragent - INFO - [executoragent.py:897] - 开始下载 exa_context 的 10 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-10 21:29:19 - agents.executoragent - INFO - [executoragent.py:903] - 使用下载工具 exa_context_download 处理 exa_context 数据
-2026-02-10 21:29:21 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-10 21:29:21 - agents.executoragent - INFO - [executoragent.py:912] - 下载工具 tavily_download 首项类型: <class 'dict'>
-2026-02-10 21:29:21 - agents.executoragent - INFO - [executoragent.py:917] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=3
-2026-02-10 21:29:21 - agents.executoragent - INFO - [executoragent.py:927] - 成功下载 3 篇 tavily 文档
-2026-02-10 21:29:21 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 exa_context_download 返回类型: <class 'list'>
-2026-02-10 21:29:21 - agents.executoragent - INFO - [executoragent.py:912] - 下载工具 exa_context_download 首项类型: <class 'dict'>
-2026-02-10 21:29:21 - agents.executoragent - INFO - [executoragent.py:917] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=9
-2026-02-10 21:29:21 - agents.executoragent - INFO - [executoragent.py:927] - 成功下载 9 篇 exa_context 文档
-2026-02-10 21:29:21 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 wikipedia_download 返回类型: <class 'list'>
-2026-02-10 21:29:21 - agents.executoragent - INFO - [executoragent.py:912] - 下载工具 wikipedia_download 首项类型: <class 'dict'>
-2026-02-10 21:29:21 - agents.executoragent - INFO - [executoragent.py:917] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=3
-2026-02-10 21:29:21 - agents.executoragent - INFO - [executoragent.py:927] - 成功下载 3 篇 wikipedia 文档
-2026-02-10 21:29:21 - agents.executoragent - INFO - [executoragent.py:955] - 下载完成，共下载 15 篇文档
-2026-02-10 21:29:21 - agents.executoragent - INFO - [executoragent.py:1010] - executor 完成子问题 '人工智能的发展历史' 的处理
-2026-02-10 21:43:44,007 - core.llms - ERROR - LLM配置错误: 不支持的Embedding模型类型: bge-m3. 可用的类型: ['qwen', 'bge']
-2026-02-10 21:43:44,007 - core.llms - WARNING - 使用默认配置重试: LLM配置错误: 不支持的Embedding模型类型: bge-m3. 可用的类型: ['qwen', 'bge']
-2026-02-10 21:43:44,426 - core.llms - INFO - 成功初始化 Chat(qwen)/Embedding(bge) LLM
-2026-02-10 21:43:44,426 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-10 21:43:45,832 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-10 21:43:50 - agents.executoragent - INFO - [executoragent.py:988] - 完成 executor_graph 的初始化构造
-2026-02-10 21:43:50 - agents.executoragent - INFO - [executoragent.py:600] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-10 21:43:50 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 wikipedia_search 搜索: 人工智能的发展历史
-2026-02-10 21:43:50 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 exa_context_search 搜索: 人工智能的发展历史
-2026-02-10 21:43:50 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 tavily_search 搜索: 人工智能的发展历史
-2026-02-10 21:43:54 - agents.executoragent - INFO - [executoragent.py:174] - wikipedia_search 返回了 3 条数据
-2026-02-10 21:43:59 - agents.executoragent - INFO - [executoragent.py:174] - exa_context_search 返回了 10 条数据
-2026-02-10 21:44:04 - agents.executoragent - INFO - [executoragent.py:174] - tavily_search 返回了 5 条数据
-2026-02-10 21:44:04 - agents.executoragent - INFO - [executoragent.py:624] - 搜索完成，共获得 18 条结果
-2026-02-10 21:44:04 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-10 21:44:29 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=False
-2026-02-10 21:44:29 - agents.executoragent - INFO - [executoragent.py:511] - LLM 思考: 人工智能（Artificial Intelligence, AI）的发展历史可以追溯到20世纪中叶，其演进过程大致可分为以下几个阶段：
-
-### 1. **萌芽期（1940s–1950s）**
-- 1943年，沃伦·麦卡洛克（Warren McCulloch）和沃尔特·皮茨（Walter Pitts...
-2026-02-10 21:44:29 - agents.executoragent - INFO - [executoragent.py:530] - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-10 21:44:29 - agents.executoragent - WARNING - [executoragent.py:729] - 处理人工智能的影响----人工智能的发展历史时sub_url_pool 为空
-2026-02-10 21:44:29 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
-2026-02-10 21:44:29 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD
-2026-02-10 21:44:29 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://zh.wikipedia.org/wiki/%E9%80%9A%E7%94%A8%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%8
-2026-02-10 21:44:29 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://zh.wikipedia.org/zh-hans/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8F%B2
-2026-02-10 21:44:29 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://datawhalechina.github.io/thorough-pytorch/%E7%AC%AC%E9%9B%B6%E7%AB%A0/0.
-2026-02-10 21:44:29 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://blog.csdn.net/jarodyv/article/details/144699658
-2026-02-10 21:44:29 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.qstheory.cn/dukan/qs/2019-02/16/c_1124114625.htm
-2026-02-10 21:44:29 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.cac.gov.cn/2017-01/23/c_1120366748.htm
-2026-02-10 21:44:29 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.iso.cuhk.edu.hk/chinese/publications/CUHKUPDates/article.aspx?articl
-2026-02-10 21:44:29 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://developer.baidu.com/article/details/2733815
-2026-02-10 21:44:29 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.casisd.cas.cn/kxcb/kpzs/201903/t20190327_5262266.html
-2026-02-10 21:44:29 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.ibm.com/cn-zh/think/topics/history-of-artificial-intelligence
-2026-02-10 21:44:29 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.cloudflare.com/zh-cn/learning/ai/history-of-ai/
-2026-02-10 21:44:29 - agents.executoragent - INFO - [executoragent.py:712] - 去重统计: 去重前=13, 去重后=13, 去重率=0.0%
-2026-02-10 21:44:29 - agents.executoragent - INFO - [executoragent.py:810] - 去重前: 18 篇
-2026-02-10 21:44:29 - agents.executoragent - INFO - [executoragent.py:811] - 去重后: 13 篇
-2026-02-10 21:44:29 - agents.executoragent - INFO - [executoragent.py:838] - 从 deduplicated_results 获取 13 篇文档
-2026-02-10 21:44:29 - agents.executoragent - INFO - [executoragent.py:876] - 总共需要下载 13 篇文档
-2026-02-10 21:44:29,430 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-10 21:44:30,757 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-10 21:44:30 - agents.executoragent - INFO - [executoragent.py:897] - 开始下载 wikipedia 的 3 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-10 21:44:30 - agents.executoragent - INFO - [executoragent.py:903] - 使用下载工具 wikipedia_download 处理 wikipedia 数据
-2026-02-10 21:44:30 - agents.executoragent - INFO - [executoragent.py:897] - 开始下载 exa_context 的 10 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-10 21:44:30 - agents.executoragent - INFO - [executoragent.py:903] - 使用下载工具 exa_context_download 处理 exa_context 数据
-2026-02-10 21:44:32 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 exa_context_download 返回类型: <class 'list'>
-2026-02-10 21:44:32 - agents.executoragent - INFO - [executoragent.py:912] - 下载工具 exa_context_download 首项类型: <class 'dict'>
-2026-02-10 21:44:32 - agents.executoragent - INFO - [executoragent.py:917] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=10
-2026-02-10 21:44:32 - agents.executoragent - INFO - [executoragent.py:927] - 成功下载 10 篇 exa_context 文档
-2026-02-10 21:44:32 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 wikipedia_download 返回类型: <class 'list'>
-2026-02-10 21:44:32 - agents.executoragent - INFO - [executoragent.py:912] - 下载工具 wikipedia_download 首项类型: <class 'dict'>
-2026-02-10 21:44:32 - agents.executoragent - INFO - [executoragent.py:917] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=3
-2026-02-10 21:44:32 - agents.executoragent - INFO - [executoragent.py:927] - 成功下载 3 篇 wikipedia 文档
-2026-02-10 21:44:32 - agents.executoragent - INFO - [executoragent.py:955] - 下载完成，共下载 13 篇文档
-2026-02-10 21:44:32 - agents.executoragent - INFO - [executoragent.py:1010] - executor 完成子问题 '人工智能的发展历史' 的处理
+LangGraph 的记忆管理主要通过 **Checkpointer**（...
+2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:530] - LLM 决定不调用可选工具，进入清洗阶段
+2026-02-10 21:59:03 - agents.executoragent - WARNING - [executoragent.py:729] - 处理langgraph 使用技巧----langgraph的记忆管理 时sub_url_pool 为空
+2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:749] - 跳过工具 resolve-library-id 的结果（非 paper 结构）
+2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:749] - 跳过工具 query-docs 的结果（非 paper 结构）
+2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:749] - 跳过工具 query-docs 的结果（非 paper 结构）
+2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/1915604388443031303
+2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://modelengine.csdn.net/690c4f185511483559e2a49a.html
+2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraphjs/concepts/memory/
+2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://aistudio.baidu.com/blog/detail/737084298395525
+2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/1981392181592871894
+2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://cloud.tencent.com/developer/article/2588385
+2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://kingnight.github.io/aigc/2025/05/30/LangGraph-5-Long-Term-Memory.html
+2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://medium.com/@marklin.coffee.pro/30-4-%E7%9F%A5%E8%AD%98-langchain-x-langg
+2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://aws.amazon.com/cn/blogs/china/agentic-ai-infrastructure-deep-practice-ex
+2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://medium.com/@suraj.pandey199227/understanding-memory-management-in-langgr
+2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://developer.volcengine.com/articles/7429201977919143973
+2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://langchain-ai.github.io/langgraph/how-tos/memory/
+2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:712] - 去重统计: 去重前=12, 去重后=12, 去重率=0.0%
+2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:810] - 去重前: 15 篇
+2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:811] - 去重后: 12 篇
+2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:838] - 从 deduplicated_results 获取 12 篇文档
+2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:851] - 跳过工具 resolve-library-id 的下载结果合并
+2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:848] - 已将工具 query-docs 结果追加写入 context7_grep.json
+2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:848] - 已将工具 query-docs 结果追加写入 context7_grep.json
+2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:876] - 总共需要下载 12 篇文档
+2026-02-10 21:59:03,211 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-10 21:59:04,548 - core.mcp.tools - INFO - 返回 6 个下载工具
+2026-02-10 21:59:04 - agents.executoragent - INFO - [executoragent.py:897] - 开始下载 tavily 的 2 篇文档到 /home/qinshan/widthresearch/data/downloads
+2026-02-10 21:59:04 - agents.executoragent - INFO - [executoragent.py:903] - 使用下载工具 tavily_download 处理 tavily 数据
+2026-02-10 21:59:04 - agents.executoragent - INFO - [executoragent.py:897] - 开始下载 exa_context 的 10 篇文档到 /home/qinshan/widthresearch/data/downloads
+2026-02-10 21:59:04 - agents.executoragent - INFO - [executoragent.py:903] - 使用下载工具 exa_context_download 处理 exa_context 数据
+2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 tavily_download 返回类型: <class 'list'>
+2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:912] - 下载工具 tavily_download 首项类型: <class 'dict'>
+2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:917] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=2
+2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:927] - 成功下载 2 篇 tavily 文档
+2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 exa_context_download 返回类型: <class 'list'>
+2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:912] - 下载工具 exa_context_download 首项类型: <class 'dict'>
+2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:917] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=10
+2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:927] - 成功下载 10 篇 exa_context 文档
+2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:955] - 下载完成，共下载 12 篇文档
+2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:1010] - executor 完成子问题 'langgraph的记忆管理 ' 的处理

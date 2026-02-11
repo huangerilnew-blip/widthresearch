@@ -4,8 +4,8 @@ from agents.executoragent import ExecutorAgent
 
 # langgraph的记忆管理 ，langgraph 使用技巧
 # 人工智能的发展历史，人工智能的影响
-QUERY = "人工智能的发展历史"
-USER_QUERY = "人工智能的影响"
+QUERY = "langgraph的记忆管理 "
+USER_QUERY = "langgraph 使用技巧"
 THREAD_ID = "test_thread_001"
 USER_ID = "user_001"
 
