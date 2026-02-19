@@ -15,7 +15,8 @@ from concurrent_log_handler import ConcurrentRotatingFileHandler
 from llama_index.core import VectorStoreIndex, Document, Settings, StorageContext
 from llama_index.embeddings.zhipuai import ZhipuAIEmbedding
 from llama_index.vector_stores.chroma import ChromaVectorStore
-from llama_index.core.schema import BaseEmbedding, BaseNode
+from llama_index.core.schema import  BaseNode
+from llama_index.core.embeddings import BaseEmbedding
 from chromadb import PersistentClient
 from llama_index.embeddings.openai_like import OpenAILikeEmbedding
 from core.config import Config
@@ -46,7 +47,7 @@ class VectorStoreManager:
     
     def __init__(
         self,
-        embedding_model: BaseEmbedding,
+        embedding_model: BaseEmbedding=None,
         persist_dir: str = Config.VECTOR_STORE_PATH,
         collection_name: str = Config.VECTTOR_BASE_COLLECTION_NAME
     ):
@@ -68,7 +69,7 @@ class VectorStoreManager:
         logger.info(f"初始化 VectorStoreManager: persist_dir={persist_dir}, collection={collection_name}")
     
     def _get_local_embedding_model(self):
-        """获取本地 vllm 部署的 Embedding 模型
+        """获取本地 vllm/TEI部署的 Embedding 模型
         
         根据配置选择合适的 Embedding 模型：
         1. 如果配置了 VLLM_BASE_URL，尝试使用 TextEmbeddingsInference 连接本地服务
@@ -81,11 +82,11 @@ class VectorStoreManager:
             try:
                 
                 
-                logger.info(f"尝试连接本地 vllm 服务: {Config.VLLM_BASE_URL}")
+                logger.info(f"尝试连接本地 vllm/TEI 服务: {Config.VLLM_BASE_URL}")
                 embedding_model = OpenAILikeEmbedding(
                     base_url=Config.VLLM_BASE_URL,
                     model_name=Config.EMBEDDING_MODEL_NAME,
-                    timeout=30,
+                    timeout=300,
                     embed_batch_size=10
                 )
                 

@@ -29,7 +29,7 @@ from core.rag.document_processor import DocumentProcessor
 from core.rag.rag_postprocess_module import RAGPostProcessModule as RAGModule
 from core.rag.models import BGERerankNodePostprocessor
 from core.config.config import Config
-from core.llms import get_llm
+from core.llms import lang_llm, llama_llm
 from core.rag.reranker import BGEReranker
 from core.file_deduplicator import FileDeduplicator
 from core.log_config import setup_logger
@@ -156,25 +156,29 @@ class MultiAgentGraph:
         self.planner_model = planner_model
         self.executor_model = executor_model
 
-        # 初始化组件
-        self.planner_agent = PlannerAgent(pool, planner_model)
-        self.executor_pool = ExecutorAgentPool(pool, executor_pool_size, executor_model)
-        self.vector_store_manager = VectorStoreManager()
+      
 
         # LLM 和 Reranker
-        self.llm, self.embeding = get_llm(
+        self.llm = lang_llm(
+            chat_name=executor_model,
+            embedding_name=Config.LLM_EMBEDDING
+        )[0]
+        self.llama_llm, self.embeding = llama_llm(
             chat_name=executor_model,
             embedding_name=Config.LLM_EMBEDDING
         )
         if self.embeding:
             Settings.embed_model = self.embeding
-        self.eval_llm = get_llm(
+        self.eval_llm = lang_llm(
             chat_name=Config.LLM_MUTI_AGENT,
             embedding_name=Config.LLM_EMBEDDING
         )[0]
         self.answer_system_prompt = self._build_answer_system_prompt()
         self.reranker = BGEReranker()
-
+        # 初始化组件
+        self.planner_agent = PlannerAgent(pool, planner_model)
+        self.executor_pool = ExecutorAgentPool(pool, executor_pool_size, executor_model)
+        self.vector_store_manager = VectorStoreManager(embedding_model=self.embeding)
         # 创建 BGE Reranker 节点后处理器
         self.node_postprocessor = BGERerankNodePostprocessor(
             reranker=self.reranker,
@@ -185,7 +189,7 @@ class MultiAgentGraph:
         # 文档处理器
         self.document_processor = DocumentProcessor(
             embedding_model=self.vector_store_manager.embedding_model,
-            llm=self.llm
+            llm=self.llama_llm
         )
 
         # 文档去重器

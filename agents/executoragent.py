@@ -3,7 +3,7 @@ import asyncio
 from langchain_core.tools import BaseTool
 from langgraph.prebuilt import ToolNode
 from core.config import Config
-from core.llms import get_llm
+from core.llms import lang_llm
 from core.mcp.context7_grep import Context7GrepMCPClient
 from typing import TypedDict, Annotated, List, Dict, Any
 from langgraph.graph import add_messages, StateGraph, START, END, state
@@ -44,7 +44,7 @@ class ExecutorAgent:
     """
     
     def __init__(self, pool: AsyncConnectionPool | None, modelname: str = Config.LLM_EXECUTOR):
-        self.chat_llm = get_llm(
+        self.chat_llm = lang_llm(
             chat_name=modelname,
             embedding_name=Config.LLM_EMBEDDING
         )[0]

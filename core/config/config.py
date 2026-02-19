@@ -7,10 +7,10 @@ class Config:
     BACKUP_COUNT = 3
     LOG_FILE = "logfile/app.log"
     # PostgreSQL数据库配置参数
-    DB_URI = os.getenv("DB_URI", "postgresql://kevin:123456@localhost:5432/postgres?sslmode=disable")
+    CHECKPOINT_URL="postgresql://qinshan:123@localhost:5432/postgres?sslmode=disable"
     MIN_SIZE = 5
     MAX_SIZE = 10
-
+    
     # Redis数据库配置参数
     REDIS_HOST = "localhost"
     REDIS_PORT = 6379
@@ -18,7 +18,7 @@ class Config:
     SESSION_TIMEOUT = 3600
     LANGUAGE="zh" #wikipedia搜索语言设置，zh:中文,en:英文 planeragent 也会按此方式处理
     # openai:调用gpt模型,qwen:调用阿里通义千问大模型,oneapi:调用oneapi方案支持的模型,ollama:调用本地开源大模型
-    LLM_EMBEDDING = "bge-m3"
+    LLM_EMBEDDING = "bge"
     LLM_PLANNER = "qwen" #只选厂家，没选模型 ，选具体模型详见llms.py    
     LLM_EXECUTOR = "qwen" #只选厂家没选模型,选具体模型详见llms.py
     LLM_MUTI_AGENT = "qwen" #只选厂家没选模型,选具体模型详见llms.py
@@ -66,7 +66,8 @@ class Config:
     MINERU_BASE_URL = "http://localhost:8080"  # MinerU 服务地址
     VLLM_BASE_URL =  "http://localhost:8081"  # vllm Embedding 服务地址
     EMBEDDING_MODEL_NAME = "BAAI/bge-m3"  # Embedding 模型名称
-    DOC_FILTER=0.8
+    DOC_FILTER=0.8 #文档过滤分数线，低于此分数的文档将被过滤掉，默认为0.8
+    BL_MODEL_NAME="text-embedding-v4" #百炼模型名称，默认为text-embedding-v4
 
 def get_rotating_file_handler(config=None):
     """

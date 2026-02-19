@@ -6,17 +6,19 @@
 """
 
 import asyncio
+import logging
 import os
 import tempfile
 import shutil
-from log_config import setup_logger
+from core.log_config import setup_logger
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional
 from datetime import datetime
-from rerank import BGEReranker
+from core.rag.reranker import BGEReranker
 from llama_index.core.postprocessor.types import BaseNodePostprocessor
 from llama_index.core.schema import NodeWithScore, QueryBundle
+from pydantic import ConfigDict
 from core.config.config import Config
 
 @dataclass
@@ -147,24 +149,12 @@ class BGERerankNodePostprocessor(BaseNodePostprocessor):
     使用 BGEReranker 对检索到的节点进行重新打分和排序
     """
     
-    def __init__(
-        self,
-        reranker: BGEReranker,
-        top_n: int = 5,
-        score_threshold: float = Config.RERANK_THRESHOLD
-    ):
-        """初始化 BGE Rerank 节点后处理器
-        
-        Args:
-            reranker: BGEReranker 实例
-            top_n: 保留的最高分数节点数量
-            score_threshold: 分数阈值，低于此分数的节点会被过滤
-        """
-        super().__init__()
-        self.reranker = reranker
-        self.top_n = top_n
-        self.score_threshold = score_threshold
-    
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    reranker: BGEReranker
+    top_n: int = 5
+    score_threshold: float = Config.RERANK_THRESHOLD
+
     def _postprocess_nodes(
         self,
         nodes: List[NodeWithScore],
@@ -226,7 +216,7 @@ class BGERerankNodePostprocessor(BaseNodePostprocessor):
         # 根据 rerank 结果更新节点分数
         reranked_nodes = []
         for item in rerank_results:
-            idx = item["index"]
+            idx = int(item["index"])
             score = item["score"]
             
             # 过滤低于阈值的节点
@@ -359,7 +349,7 @@ class PDFParser:
         return loop.run_until_complete(self.parse_pdf_to_markdown(pdf_path))
 
 
-class jsonreader:
+class JsonReader:
     """
     JSON 行读取器
     提供将 JSON 文件按行读取为 list[str] 的能力
@@ -483,7 +473,7 @@ if __name__ == "__main__":
     temp_json_file.write('{"a": 1}\n')
     temp_json_file.write('{"b": 2}\n')
     temp_json_file.close()
-    reader = jsonreader()
+    reader = JsonReader()
     json_lines = reader.read_json_lines(temp_json_file.name)
     assert json_lines == ['{"a": 1}', '{"b": 2}']
     os.unlink(temp_json_file.name)

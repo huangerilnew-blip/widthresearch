@@ -10,7 +10,7 @@ from langgraph.prebuilt import ToolNode
 from langchain_core.tools import BaseTool
 from concurrent_log_handler import ConcurrentRotatingFileHandler
 from core.config import Config
-from core.llms import get_llm
+from core.llms import lang_llm
 from core.mcp.tools import get_tools
 from core.mcp.context7_grep import Context7GrepMCPClient
 from dotenv import load_dotenv
@@ -94,7 +94,7 @@ class PlannerState(TypedDict):
 
 class PlannerAgent:
     def __init__(self, pool: AsyncConnectionPool=None, modelname: str = Config.LLM_PLANNER):
-        self.chat_llm = get_llm(
+        self.chat_llm = lang_llm(
             chat_name=modelname,
             embedding_name=Config.LLM_EMBEDDING
         )[0]

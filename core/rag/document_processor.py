@@ -21,11 +21,11 @@ from llama_index.core import Document
 from llama_index.core.base.embeddings.base import BaseEmbedding
 from llama_index.core.llms.llm import LLM
 from llama_index.core.node_parser import MarkdownElementNodeParser, SentenceSplitter
-from llama_index.core.readers.file import MarkdownReader
+from llama_index.readers.file.markdown import MarkdownReader
 from llama_index.core.extractors import QuestionsAnsweredExtractor
 from llama_index.core.ingestion import IngestionPipeline
 from core.config import Config
-from core.models import PDFParser, JssonParser
+from core.rag.models import PDFParser, JsonReader
 
 # 设置日志
 logger = logging.getLogger(__name__)
@@ -71,7 +71,7 @@ class DocumentProcessor:
         
         # 初始化 PDFParser（用于 PDF 转 Markdown）
         self.pdf_parser = PDFParser(mineru_server_url=mineru_base_url)
-        self.jsson_parser = JssonParser()
+        self.json_parser = JsonReader()
         # 初始化 MarkdownReader（负责从文件系统加载 Markdown 文档）
         self.markdown_reader = MarkdownReader()
         
@@ -175,8 +175,8 @@ class DocumentProcessor:
                     docs_for_pipeline.append(d)
                 logger.info(f"Markdown 文档 {local_path} 加载为 {len(md_docs)} 个 Document 并加入 pipeline")
             elif file_ext == '.json':
-                # 使用 JssonParser 加载 JSON 文件
-                json_docs = self.jsson_parser.load_data(file=Path(local_path))
+                # 使用 JsonReader 加载 JSON 文件
+                json_docs = self.json_parser.load_data(file=Path(local_path))
                 if not json_docs:
                     logger.warning(f"文档存在，但JSON文档加载失败或内容为空: {local_path}")
                     continue
