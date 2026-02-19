@@ -302,7 +302,7 @@ class MultiAgentGraph:
     async def _execute_first_node(self, state: MultiAgentState) -> Dict[str, Any]:
         """节点 3a: 第一阶段执行 - 探索阶段 (Exploration)
 
-        使用空 url_pool，让 ExecutorAgent 自由探索
+        使用空url_pool，让 ExecutorAgent 自由探索
         """
         logger.info("[节点 3a] 第一阶段执行 - 探索阶段（url_pool=[]）")
         
@@ -326,7 +326,7 @@ class MultiAgentGraph:
             # 第一阶段：url_pool=[] (探索)
             logger.info(f"第一阶段执行: {len(sub_questions)} 个子问题，初始 URL 池为空")
             executor_results, updated_url_pool = await self.executor_pool.execute_questions(
-                qustions=sub_questions,
+                questions=sub_questions,
                 user_query=user_query,
                 base_thread_id=thread_id,
                 user_id=user_id,
@@ -378,7 +378,7 @@ class MultiAgentGraph:
             # 第二阶段：使用第一阶段收集的 url_pool
             logger.info(f"第二阶段执行: {len(sub_questions)} 个子问题，使用第一阶段收集的 {len(url_pool)} 个 URL")
             executor_results, updated_url_pool = await self.executor_pool.execute_questions(
-                qustions=sub_questions,
+                questions=sub_questions,
                 base_thread_id=thread_id,
                 user_id=user_id,
                 url_pool=url_pool,  # 使用第一阶段的 url_pool
@@ -755,7 +755,8 @@ class MultiAgentGraph:
             contents=[]
             question_pool=[]
             num=0
-            for score,node in retrieved_nodes:
+            for nws in retrieved_nodes:
+                node, score = nws.node, nws.score
                 metadata = node.metadata
                 content = node.get_content()
                 source = metadata.get('url', metadata.get('source', '联网检索获得'))

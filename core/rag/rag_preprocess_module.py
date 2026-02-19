@@ -76,7 +76,7 @@ class VectorStoreManager:
         2. 否则使用 ZhipuAI Embedding（与现有代码保持一致）
         3. 如果都不可用，回退到本地 HuggingFace 模型
         """
-        logger.info(f"尝试初始化 Embedding 模型: {Config.EMBEDDING_MODEL_NAME}")
+        logger.info("尝试初始化 Embedding 模型: 'bge-m3'")
         # 优先使用本地 vllm/TEI 服务
         if Config.VLLM_BASE_URL :
             try:
@@ -85,7 +85,7 @@ class VectorStoreManager:
                 logger.info(f"尝试连接本地 vllm/TEI 服务: {Config.VLLM_BASE_URL}")
                 embedding_model = OpenAILikeEmbedding(
                     base_url=Config.VLLM_BASE_URL,
-                    model_name=Config.EMBEDDING_MODEL_NAME,
+                    model_name=Config.LLM_EMBEDDING,
                     timeout=300,
                     embed_batch_size=10
                 )
@@ -116,9 +116,9 @@ class VectorStoreManager:
 
         
         # # 回退到本地 HuggingFace 模型
-        # logger.info(f"使用本地 HuggingFace 模型: {Config.EMBEDDING_MODEL_NAME}")
+        # logger.info(f"使用本地 HuggingFace 模型: bge-m3")
         # embedding_model = HuggingFaceEmbedding(
-        #     model_name=Config.EMBEDDING_MODEL_NAME
+        #     model_name="bge-m3",
         # )
         
         # Settings.embed_model = embedding_model

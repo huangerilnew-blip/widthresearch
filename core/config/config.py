@@ -65,7 +65,6 @@ class Config:
     # 文档处理配置
     MINERU_BASE_URL = "http://localhost:8080"  # MinerU 服务地址
     VLLM_BASE_URL =  "http://localhost:8081"  # vllm Embedding 服务地址
-    EMBEDDING_MODEL_NAME = "BAAI/bge-m3"  # Embedding 模型名称
     DOC_FILTER=0.8 #文档过滤分数线，低于此分数的文档将被过滤掉，默认为0.8
     BL_MODEL_NAME="text-embedding-v4" #百炼模型名称，默认为text-embedding-v4
 

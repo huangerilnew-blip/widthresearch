@@ -23,6 +23,7 @@ async def run_multiagent() -> None:
         min_size=3,
         max_size=6,
         open=False,
+        kwargs={"autocommit": True},
     )
     agent = MultiAgentGraph(pool)  # type: ignore[reportArgumentType]
     try:
@@ -30,6 +31,7 @@ async def run_multiagent() -> None:
             open_result = pool.open()
             if asyncio.iscoroutine(open_result):
                 await open_result
+            await agent.memory.setup()
             result = await agent.run(QUERY, THREAD_ID, USER_ID)
             print(result)
         else:

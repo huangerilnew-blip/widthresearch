@@ -1,82 +1,965 @@
-2026-02-10 21:57:53,378 - core.llms - ERROR - LLM配置错误: 不支持的Embedding模型类型: bge-m3. 可用的类型: ['qwen', 'bge']
-2026-02-10 21:57:53,378 - core.llms - WARNING - 使用默认配置重试: LLM配置错误: 不支持的Embedding模型类型: bge-m3. 可用的类型: ['qwen', 'bge']
-2026-02-10 21:57:53,828 - core.llms - INFO - 成功初始化 Chat(qwen)/Embedding(bge) LLM
-2026-02-10 21:57:53,829 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-10 21:57:55,297 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-10 21:58:05 - agents.executoragent - INFO - [executoragent.py:988] - 完成 executor_graph 的初始化构造
-2026-02-10 21:58:05 - agents.executoragent - INFO - [executoragent.py:600] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-10 21:58:05 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 wikipedia_search 搜索: langgraph的记忆管理 
-2026-02-10 21:58:05 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 exa_context_search 搜索: langgraph的记忆管理 
-2026-02-10 21:58:05 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 tavily_search 搜索: langgraph的记忆管理 
-2026-02-10 21:58:08 - agents.executoragent - WARNING - [executoragent.py:176] - wikipedia_search 返回了 0 条数据
-2026-02-10 21:58:14 - agents.executoragent - INFO - [executoragent.py:174] - exa_context_search 返回了 10 条数据
-2026-02-10 21:58:22 - agents.executoragent - INFO - [executoragent.py:174] - tavily_search 返回了 5 条数据
-2026-02-10 21:58:22 - agents.executoragent - INFO - [executoragent.py:624] - 搜索完成，共获得 15 条结果
-2026-02-10 21:58:22 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-10 21:58:24 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=True
-2026-02-10 21:58:24 - agents.executoragent - INFO - [executoragent.py:526] - LLM 决定调用 1 个可选工具
-2026-02-10 21:58:24 - agents.executoragent - INFO - [executoragent.py:557] - 准备执行 1 个可选工具调用
-2026-02-10 21:58:29 - agents.executoragent - INFO - [executoragent.py:567] - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-10 21:58:29 - agents.executoragent - INFO - [executoragent.py:580] -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-10 21:58:29 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-10 21:58:31 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=True
-2026-02-10 21:58:31 - agents.executoragent - INFO - [executoragent.py:526] - LLM 决定调用 1 个可选工具
-2026-02-10 21:58:31 - agents.executoragent - INFO - [executoragent.py:557] - 准备执行 1 个可选工具调用
-2026-02-10 21:58:36 - agents.executoragent - INFO - [executoragent.py:567] - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-10 21:58:36 - agents.executoragent - INFO - [executoragent.py:580] -   - 工具 query-docs 返回 1 条结果
-2026-02-10 21:58:36 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-10 21:58:38 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=True
-2026-02-10 21:58:38 - agents.executoragent - INFO - [executoragent.py:526] - LLM 决定调用 1 个可选工具
-2026-02-10 21:58:38 - agents.executoragent - INFO - [executoragent.py:557] - 准备执行 1 个可选工具调用
-2026-02-10 21:58:44 - agents.executoragent - INFO - [executoragent.py:567] - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-10 21:58:44 - agents.executoragent - INFO - [executoragent.py:580] -   - 工具 query-docs 返回 1 条结果
-2026-02-10 21:58:44 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=False
-2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:511] - LLM 思考: # LangGraph 的记忆管理机制
+2026-02-19 19:18:35,383 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:18:35,397 - core.llms - INFO - 成功初始化 LlamaIndex Chat(qwen)/Embedding(bge)
+2026-02-19 19:18:35,542 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:18:35,665 - core.rag.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8100
+2026-02-19 19:18:35,787 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:18:35 - agents.planneragent - INFO - [planneragent.py:251] - 完成planner_graph的初始化构造
+2026-02-19 19:18:35,914 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:18:35 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 1/3
+2026-02-19 19:18:36,034 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:18:36 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 2/3
+2026-02-19 19:18:36,155 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:18:36 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 3/3
+2026-02-19 19:18:36 - agents.executor_pool - INFO - [executor_pool.py:64] - 成功创建 3 个 ExecutorAgent 实例
+2026-02-19 19:18:36 - agents.executor_pool - INFO - [executor_pool.py:54] - 初始化 ExecutorAgentPool: pool_size=3, model=qwen
+2026-02-19 19:18:36,155 - core.rag.rag_preprocess_module - INFO - 初始化 VectorStoreManager: persist_dir=vector_storage, collection=base_crunchbase_collection
+2026-02-19 19:18:36,286 - core.rag.document_processor - INFO - 初始化 DocumentProcessor: mineru_url=http://localhost:8080, max_chunk_size=1000
+2026-02-19 19:18:36 - core.file_deduplicator - INFO - [file_deduplicator.py:51] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
+2026-02-19 19:18:36 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1141] - MultiAgentGraph 构建完成（两阶段执行版本）
+2026-02-19 19:18:36 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:209] - 初始化 MultiAgentGraph: executor_pool_size=3
+2026-02-19 19:18:36 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1159] - 开始处理用户查询: langgraph 高阶技巧有哪些？ (user_id=test_user_001, thread_id=test_thread_001)
+2026-02-19 19:18:36 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:220] - [节点 1] 初始化向量存储
+2026-02-19 19:18:36,374 - core.rag.rag_preprocess_module - INFO - 检查本地向量库是否存在
+2026-02-19 19:18:36,374 - core.rag.rag_preprocess_module - INFO - 向量库目录存在: True, Chroma 数据库存在: True
+2026-02-19 19:18:36,374 - core.rag.rag_preprocess_module - INFO - 检测到本地向量库，尝试加载
+2026-02-19 19:18:36,646 - core.rag.rag_preprocess_module - INFO - 找到集合 'base_crunchbase_collection'，包含 6144 个文档
+2026-02-19 19:18:36,647 - core.rag.rag_preprocess_module - INFO - 从现有向量库加载索引
+2026-02-19 19:18:36,648 - core.rag.rag_preprocess_module - INFO - 成功从本地加载向量索引
+2026-02-19 19:18:36 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:225] - 向量存储初始化完成
+2026-02-19 19:18:36 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:246] - [节点 2] 调用 PlannerAgent 拆解查询
+2026-02-19 19:18:36,652 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 19:18:39,100 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-19 19:18:56 - agents.planneragent - INFO - [planneragent.py:131] - planner_agent llm_chat 节点在第0轮迭代中，成功生成AIMessage类型的消息，内容为:
+2026-02-19 19:18:56 - agents.planneragent - INFO - [planneragent.py:133] - planner_agent llm_chat 节点在第0轮迭代中，生成的AIMessage类型的消息包含工具调用，工具调用内容为:[{'name': 'resolve-library-id', 'args': {'query': 'langgraph 高阶技巧有哪些？', 'libraryName': 'langgraph'}, 'id': 'call_c4eeab0fcc3c4270b7f7829f', 'type': 'tool_call'}]
+2026-02-19 19:18:56 - agents.planneragent - INFO - [planneragent.py:186] - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
+2026-02-19 19:19:13 - agents.planneragent - INFO - [planneragent.py:131] - planner_agent llm_chat 节点在第0轮迭代中，成功生成AIMessage类型的消息，内容为:
+2026-02-19 19:19:13 - agents.planneragent - INFO - [planneragent.py:133] - planner_agent llm_chat 节点在第0轮迭代中，生成的AIMessage类型的消息包含工具调用，工具调用内容为:[{'name': 'query-docs', 'args': {'libraryId': '/langchain-ai/langgraph', 'query': 'langgraph 高阶技巧有哪些？'}, 'id': 'call_a45bfc099db74f4fb63bfc99', 'type': 'tool_call'}]
+2026-02-19 19:19:13 - agents.planneragent - INFO - [planneragent.py:186] - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
+2026-02-19 19:19:33 - agents.planneragent - INFO - [planneragent.py:131] - planner_agent llm_chat 节点在第0轮迭代中，成功生成AIMessage类型的消息，内容为:```
+{
+    "tasks": [
+    "LangGraph 中如何使用 Send 实现并行节点执行和 map-reduce 模式",
+    "如何在 LangGraph 中通过 add_conditional_edges 实现基于状态的动态路由",
+    "LangGraph 中 ToolNode 的高阶用法：多工具并行调用与集成",
+    "如何利用 Command 类在 LangGraph 中实现细粒度的执行流控制和 human-in-the-loop 交互",
+    "LangGraph 支持哪些流式输出（streaming）模式，如何用于实时响应生成"
+    ]
+}
+```
+2026-02-19 19:19:33 - agents.planneragent - INFO - [planneragent.py:193] - planner_agent 在第1轮迭代中，成功生成有效的json结构，进入persist_result节点
+2026-02-19 19:19:33 - agents.planneragent - INFO - [planneragent.py:229] - planner_agent persist_result 节点写入结果:{"tasks": ["LangGraph \u4e2d\u5982\u4f55\u4f7f\u7528 Send \u5b9e\u73b0\u5e76\u884c\u8282\u70b9\u6267\u884c\u548c map-reduce \u6a21\u5f0f", "\u5982\u4f55\u5728 LangGraph \u4e2d\u901a\u8fc7 add_conditional_edges \u5b9e\u73b0\u57fa\u4e8e\u72b6\u6001\u7684\u52a8\u6001\u8def\u7531", "LangGraph \u4e2d ToolNode \u7684\u9ad8\u9636\u7528\u6cd5\uff1a\u591a\u5de5\u5177\u5e76\u884c\u8c03\u7528\u4e0e\u96c6\u6210", "\u5982\u4f55\u5229\u7528 Command \u7c7b\u5728 LangGraph \u4e2d\u5b9e\u73b0\u7ec6\u7c92\u5ea6\u7684\u6267\u884c\u6d41\u63a7\u5236\u548c human-in-the-loop \u4ea4\u4e92", "LangGraph \u652f\u6301\u54ea\u4e9b\u6d41\u5f0f\u8f93\u51fa\uff08streaming\uff09\u6a21\u5f0f\uff0c\u5982\u4f55\u7528\u4e8e\u5b9e\u65f6\u54cd\u5e94\u751f\u6210"]}
+2026-02-19 19:19:33 - agents.planneragent - INFO - [planneragent.py:261] - planner_chatmodel对于用户的langgraph 高阶技巧有哪些？ 返回结果为:{"tasks": ["LangGraph \u4e2d\u5982\u4f55\u4f7f\u7528 Send \u5b9e\u73b0\u5e76\u884c\u8282\u70b9\u6267\u884c\u548c map-reduce \u6a21\u5f0f", "\u5982\u4f55\u5728 LangGraph \u4e2d\u901a\u8fc7 add_conditional_edges \u5b9e\u73b0\u57fa\u4e8e\u72b6\u6001\u7684\u52a8\u6001\u8def\u7531", "LangGraph \u4e2d ToolNode \u7684\u9ad8\u9636\u7528\u6cd5\uff1a\u591a\u5de5\u5177\u5e76\u884c\u8c03\u7528\u4e0e\u96c6\u6210", "\u5982\u4f55\u5229\u7528 Command \u7c7b\u5728 LangGraph \u4e2d\u5b9e\u73b0\u7ec6\u7c92\u5ea6\u7684\u6267\u884c\u6d41\u63a7\u5236\u548c human-in-the-loop \u4ea4\u4e92", "LangGraph \u652f\u6301\u54ea\u4e9b\u6d41\u5f0f\u8f93\u51fa\uff08streaming\uff09\u6a21\u5f0f\uff0c\u5982\u4f55\u7528\u4e8e\u5b9e\u65f6\u54cd\u5e94\u751f\u6210"]}
+2026-02-19 19:19:33 - agents.planneragent - INFO - [planneragent.py:265] - planner_chatmodel对于用户的langgraph 高阶技巧有哪些？ 返回结果json解析成功，内容为:{'tasks': ['LangGraph 中如何使用 Send 实现并行节点执行和 map-reduce 模式', '如何在 LangGraph 中通过 add_conditional_edges 实现基于状态的动态路由', 'LangGraph 中 ToolNode 的高阶用法：多工具并行调用与集成', '如何利用 Command 类在 LangGraph 中实现细粒度的执行流控制和 human-in-the-loop 交互', 'LangGraph 支持哪些流式输出（streaming）模式，如何用于实时响应生成']}
+2026-02-19 19:19:33 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:283] - 查询拆解完成，生成 5 个子问题
+2026-02-19 19:19:33 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:307] - [节点 3a] 第一阶段执行 - 探索阶段（url_pool=[]）
+2026-02-19 19:19:33 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:327] - 第一阶段执行: 2 个子问题，初始 URL 池为空
+2026-02-19 19:19:33 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:346] - 第一阶段执行失败: ExecutorAgentPool.execute_questions() got an unexpected keyword argument 'qustions'
+2026-02-19 19:19:33 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:673] - [节点 6] 向量化文档并入库
+2026-02-19 19:19:33 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:694] - 阶段一和阶段二都没有新的BaseNodes需要向量化
+2026-02-19 19:19:33 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:696] - 阶段二没有新的BaseNodes需要向量化，仅阶段一有文档被向量化
+2026-02-19 19:19:33 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:450] - [节点 4a] 第一次文档收集与去重
+2026-02-19 19:19:33 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:466] - 第一次去重完成: 输入 0 个, 输出 0 个, 未输出 0 个
+2026-02-19 19:19:33 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:485] - 从第一阶段 executor_results 提取到 0 个文档元数据
+2026-02-19 19:19:33 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:710] - [节点 7] RAG 检索
+2026-02-19 19:19:33 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:727] - 尝试创建 RAG 检索器，使用 top_k=5
+2026-02-19 19:19:33,849 - core.rag.rag_postprocess_module - INFO - 初始化 RAGModule: top_k=5
+2026-02-19 19:19:33,850 - core.rag.rag_postprocess_module - INFO - 开始 RAG 检索，planner问题数: 5
+2026-02-19 19:19:34,063 - core.rag.rag_postprocess_module - DEBUG - 问题 1/5 初步检索到 5 个节点
+2026-02-19 19:19:34,063 - core.rag.reranker - INFO - 开始异步 rerank，查询: LangGraph 中如何使用 Send 实现并行节点执行和 map-reduce 模式..., 文档数量: 5
+2026-02-19 19:19:36,780 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:19:36,782 - core.rag.rag_postprocess_module - DEBUG - 问题 1/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:19:36,877 - core.rag.rag_postprocess_module - DEBUG - 问题 2/5 初步检索到 5 个节点
+2026-02-19 19:19:36,878 - core.rag.reranker - INFO - 开始异步 rerank，查询: 如何在 LangGraph 中通过 add_conditional_edges 实现基于状态的动态路..., 文档数量: 5
+2026-02-19 19:19:39,878 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:19:39,879 - core.rag.rag_postprocess_module - DEBUG - 问题 2/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:19:39,975 - core.rag.rag_postprocess_module - DEBUG - 问题 3/5 初步检索到 5 个节点
+2026-02-19 19:19:39,975 - core.rag.reranker - INFO - 开始异步 rerank，查询: LangGraph 中 ToolNode 的高阶用法：多工具并行调用与集成..., 文档数量: 5
+2026-02-19 19:19:42,602 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:19:42,602 - core.rag.rag_postprocess_module - DEBUG - 问题 3/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:19:42,708 - core.rag.rag_postprocess_module - DEBUG - 问题 4/5 初步检索到 5 个节点
+2026-02-19 19:19:42,708 - core.rag.reranker - INFO - 开始异步 rerank，查询: 如何利用 Command 类在 LangGraph 中实现细粒度的执行流控制和 human-in-t..., 文档数量: 5
+2026-02-19 19:19:45,574 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:19:45,574 - core.rag.rag_postprocess_module - DEBUG - 问题 4/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:19:45,669 - core.rag.rag_postprocess_module - DEBUG - 问题 5/5 初步检索到 5 个节点
+2026-02-19 19:19:45,669 - core.rag.reranker - INFO - 开始异步 rerank，查询: LangGraph 支持哪些流式输出（streaming）模式，如何用于实时响应生成..., 文档数量: 5
+2026-02-19 19:19:48,399 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:19:48,400 - core.rag.rag_postprocess_module - DEBUG - 问题 5/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:19:48,400 - core.rag.rag_postprocess_module - INFO - 所有问题检索并重排序完成，共 25 个节点
+2026-02-19 19:19:48,400 - core.rag.rag_postprocess_module - INFO - 去重后保留 25 个节点
+2026-02-19 19:19:48,409 - core.rag.rag_postprocess_module - INFO - 内容去重后保留 17 个节点
+2026-02-19 19:19:48,409 - core.rag.rag_postprocess_module - DEBUG - 问题池构建完成，包含 5 个去重后的问题
+2026-02-19 19:19:48,409 - core.rag.rag_postprocess_module - INFO - 构建问题池完成，共 5 个问题
+2026-02-19 19:19:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:742] - RAG 检索完成，获得 17 个节点
+2026-02-19 19:19:48 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:802] - RAG 检索失败: 'tuple' object has no attribute 'metadata'
+2026-02-19 19:19:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1045] - 检索为空，继续重试 (1/3)
+2026-02-19 19:19:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:358] - [节点 3b] 第二阶段执行 - 精炼阶段（使用第一阶段的 url_pool）
+2026-02-19 19:19:48 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:366] - 没有子问题需要执行第二阶段
+2026-02-19 19:19:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:602] - [节点 5a] 第一阶段文档处理（去重后）
+2026-02-19 19:19:48 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:608] - 第一阶段没有文档需要切割处理
+2026-02-19 19:19:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:710] - [节点 7] RAG 检索
+2026-02-19 19:19:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:727] - 尝试创建 RAG 检索器，使用 top_k=5
+2026-02-19 19:19:48,415 - core.rag.rag_postprocess_module - INFO - 初始化 RAGModule: top_k=5
+2026-02-19 19:19:48,415 - core.rag.rag_postprocess_module - INFO - 开始 RAG 检索，planner问题数: 5
+2026-02-19 19:19:48,510 - core.rag.rag_postprocess_module - DEBUG - 问题 1/5 初步检索到 5 个节点
+2026-02-19 19:19:48,511 - core.rag.reranker - INFO - 开始异步 rerank，查询: LangGraph 中如何使用 Send 实现并行节点执行和 map-reduce 模式..., 文档数量: 5
+2026-02-19 19:19:51,291 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:19:51,291 - core.rag.rag_postprocess_module - DEBUG - 问题 1/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:19:51,386 - core.rag.rag_postprocess_module - DEBUG - 问题 2/5 初步检索到 5 个节点
+2026-02-19 19:19:51,386 - core.rag.reranker - INFO - 开始异步 rerank，查询: 如何在 LangGraph 中通过 add_conditional_edges 实现基于状态的动态路..., 文档数量: 5
+2026-02-19 19:19:55,172 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:19:55,173 - core.rag.rag_postprocess_module - DEBUG - 问题 2/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:19:55,270 - core.rag.rag_postprocess_module - DEBUG - 问题 3/5 初步检索到 5 个节点
+2026-02-19 19:19:55,270 - core.rag.reranker - INFO - 开始异步 rerank，查询: LangGraph 中 ToolNode 的高阶用法：多工具并行调用与集成..., 文档数量: 5
+2026-02-19 19:19:57,910 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:19:57,911 - core.rag.rag_postprocess_module - DEBUG - 问题 3/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:19:58,009 - core.rag.rag_postprocess_module - DEBUG - 问题 4/5 初步检索到 5 个节点
+2026-02-19 19:19:58,010 - core.rag.reranker - INFO - 开始异步 rerank，查询: 如何利用 Command 类在 LangGraph 中实现细粒度的执行流控制和 human-in-t..., 文档数量: 5
+2026-02-19 19:20:01,568 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:20:01,568 - core.rag.rag_postprocess_module - DEBUG - 问题 4/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:20:01,662 - core.rag.rag_postprocess_module - DEBUG - 问题 5/5 初步检索到 5 个节点
+2026-02-19 19:20:01,662 - core.rag.reranker - INFO - 开始异步 rerank，查询: LangGraph 支持哪些流式输出（streaming）模式，如何用于实时响应生成..., 文档数量: 5
+2026-02-19 19:20:04,320 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:20:04,321 - core.rag.rag_postprocess_module - DEBUG - 问题 5/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:20:04,321 - core.rag.rag_postprocess_module - INFO - 所有问题检索并重排序完成，共 25 个节点
+2026-02-19 19:20:04,321 - core.rag.rag_postprocess_module - INFO - 去重后保留 25 个节点
+2026-02-19 19:20:04,325 - core.rag.rag_postprocess_module - INFO - 内容去重后保留 17 个节点
+2026-02-19 19:20:04,326 - core.rag.rag_postprocess_module - DEBUG - 问题池构建完成，包含 5 个去重后的问题
+2026-02-19 19:20:04,326 - core.rag.rag_postprocess_module - INFO - 构建问题池完成，共 5 个问题
+2026-02-19 19:20:04 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:742] - RAG 检索完成，获得 17 个节点
+2026-02-19 19:20:04 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:802] - RAG 检索失败: 'tuple' object has no attribute 'metadata'
+2026-02-19 19:20:04 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1045] - 检索为空，继续重试 (2/3)
+2026-02-19 19:20:04 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:509] - [节点 4b] 第二次文档收集与去重
+2026-02-19 19:20:04 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:544] - 第二次去重完成: 输入 0 个, 输出 0 个, 未输出 0 个
+2026-02-19 19:20:04 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:565] - 从第二阶段 executor_results 提取到 0 个文档元数据
+2026-02-19 19:20:04 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:566] - 两阶段总计：0 + 0 = 0 个去重后的文档
+2026-02-19 19:20:04 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:710] - [节点 7] RAG 检索
+2026-02-19 19:20:04 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:727] - 尝试创建 RAG 检索器，使用 top_k=5
+2026-02-19 19:20:04,330 - core.rag.rag_postprocess_module - INFO - 初始化 RAGModule: top_k=5
+2026-02-19 19:20:04,330 - core.rag.rag_postprocess_module - INFO - 开始 RAG 检索，planner问题数: 5
+2026-02-19 19:20:04,421 - core.rag.rag_postprocess_module - DEBUG - 问题 1/5 初步检索到 5 个节点
+2026-02-19 19:20:04,421 - core.rag.reranker - INFO - 开始异步 rerank，查询: LangGraph 中如何使用 Send 实现并行节点执行和 map-reduce 模式..., 文档数量: 5
+2026-02-19 19:20:07,381 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:20:07,382 - core.rag.rag_postprocess_module - DEBUG - 问题 1/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:20:07,473 - core.rag.rag_postprocess_module - DEBUG - 问题 2/5 初步检索到 5 个节点
+2026-02-19 19:20:07,474 - core.rag.reranker - INFO - 开始异步 rerank，查询: 如何在 LangGraph 中通过 add_conditional_edges 实现基于状态的动态路..., 文档数量: 5
+2026-02-19 19:20:11,127 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:20:11,128 - core.rag.rag_postprocess_module - DEBUG - 问题 2/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:20:11,218 - core.rag.rag_postprocess_module - DEBUG - 问题 3/5 初步检索到 5 个节点
+2026-02-19 19:20:11,218 - core.rag.reranker - INFO - 开始异步 rerank，查询: LangGraph 中 ToolNode 的高阶用法：多工具并行调用与集成..., 文档数量: 5
+2026-02-19 19:20:15,121 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:20:15,122 - core.rag.rag_postprocess_module - DEBUG - 问题 3/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:20:15,237 - core.rag.rag_postprocess_module - DEBUG - 问题 4/5 初步检索到 5 个节点
+2026-02-19 19:20:15,237 - core.rag.reranker - INFO - 开始异步 rerank，查询: 如何利用 Command 类在 LangGraph 中实现细粒度的执行流控制和 human-in-t..., 文档数量: 5
+2026-02-19 19:20:18,543 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:20:18,544 - core.rag.rag_postprocess_module - DEBUG - 问题 4/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:20:18,634 - core.rag.rag_postprocess_module - DEBUG - 问题 5/5 初步检索到 5 个节点
+2026-02-19 19:20:18,634 - core.rag.reranker - INFO - 开始异步 rerank，查询: LangGraph 支持哪些流式输出（streaming）模式，如何用于实时响应生成..., 文档数量: 5
+2026-02-19 19:20:21,293 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:20:21,294 - core.rag.rag_postprocess_module - DEBUG - 问题 5/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:20:21,294 - core.rag.rag_postprocess_module - INFO - 所有问题检索并重排序完成，共 25 个节点
+2026-02-19 19:20:21,294 - core.rag.rag_postprocess_module - INFO - 去重后保留 25 个节点
+2026-02-19 19:20:21,297 - core.rag.rag_postprocess_module - INFO - 内容去重后保留 17 个节点
+2026-02-19 19:20:21,297 - core.rag.rag_postprocess_module - DEBUG - 问题池构建完成，包含 5 个去重后的问题
+2026-02-19 19:20:21,297 - core.rag.rag_postprocess_module - INFO - 构建问题池完成，共 5 个问题
+2026-02-19 19:20:21 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:742] - RAG 检索完成，获得 17 个节点
+2026-02-19 19:20:21 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:802] - RAG 检索失败: 'tuple' object has no attribute 'metadata'
+2026-02-19 19:20:21 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:673] - [节点 6] 向量化文档并入库
+2026-02-19 19:20:21 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:694] - 阶段一和阶段二都没有新的BaseNodes需要向量化
+2026-02-19 19:20:21 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:696] - 阶段二没有新的BaseNodes需要向量化，仅阶段一有文档被向量化
+2026-02-19 19:20:21 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:1040] - 检索重试达到上限 3/3，终止流程
+2026-02-19 19:20:21 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:638] - [节点 5b] 第二阶段文档处理（去重后）
+2026-02-19 19:20:21 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:710] - [节点 7] RAG 检索
+2026-02-19 19:20:21 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:727] - 尝试创建 RAG 检索器，使用 top_k=5
+2026-02-19 19:20:21,301 - core.rag.rag_postprocess_module - INFO - 初始化 RAGModule: top_k=5
+2026-02-19 19:20:21,301 - core.rag.rag_postprocess_module - INFO - 开始 RAG 检索，planner问题数: 5
+2026-02-19 19:20:21,392 - core.rag.rag_postprocess_module - DEBUG - 问题 1/5 初步检索到 5 个节点
+2026-02-19 19:20:21,392 - core.rag.reranker - INFO - 开始异步 rerank，查询: LangGraph 中如何使用 Send 实现并行节点执行和 map-reduce 模式..., 文档数量: 5
+2026-02-19 19:20:25,034 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:20:25,035 - core.rag.rag_postprocess_module - DEBUG - 问题 1/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:20:25,126 - core.rag.rag_postprocess_module - DEBUG - 问题 2/5 初步检索到 5 个节点
+2026-02-19 19:20:25,126 - core.rag.reranker - INFO - 开始异步 rerank，查询: 如何在 LangGraph 中通过 add_conditional_edges 实现基于状态的动态路..., 文档数量: 5
+2026-02-19 19:20:27,799 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 19:20:27,799 - core.rag.rag_postprocess_module - DEBUG - 问题 2/5 重排序+过滤后保留 5 个节点
+2026-02-19 19:20:27,894 - core.rag.rag_postprocess_module - DEBUG - 问题 3/5 初步检索到 5 个节点
+2026-02-19 19:20:27,894 - core.rag.reranker - INFO - 开始异步 rerank，查询: LangGraph 中 ToolNode 的高阶用法：多工具并行调用与集成..., 文档数量: 5
+2026-02-19 19:20:42,356 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:20:42,369 - core.llms - INFO - 成功初始化 LlamaIndex Chat(qwen)/Embedding(bge)
+2026-02-19 19:20:42,498 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:20:42,614 - core.rag.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8100
+2026-02-19 19:20:42,730 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:20:42 - agents.planneragent - INFO - [planneragent.py:251] - 完成planner_graph的初始化构造
+2026-02-19 19:20:42,850 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:20:42 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 1/3
+2026-02-19 19:20:42,983 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:20:42 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 2/3
+2026-02-19 19:20:43,126 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:20:43 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 3/3
+2026-02-19 19:20:43 - agents.executor_pool - INFO - [executor_pool.py:64] - 成功创建 3 个 ExecutorAgent 实例
+2026-02-19 19:20:43 - agents.executor_pool - INFO - [executor_pool.py:54] - 初始化 ExecutorAgentPool: pool_size=3, model=qwen
+2026-02-19 19:20:43,127 - core.rag.rag_preprocess_module - INFO - 初始化 VectorStoreManager: persist_dir=vector_storage, collection=base_crunchbase_collection
+2026-02-19 19:20:43,235 - core.rag.document_processor - INFO - 初始化 DocumentProcessor: mineru_url=http://localhost:8080, max_chunk_size=1000
+2026-02-19 19:20:43 - core.file_deduplicator - INFO - [file_deduplicator.py:51] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
+2026-02-19 19:20:43 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1141] - MultiAgentGraph 构建完成（两阶段执行版本）
+2026-02-19 19:20:43 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:209] - 初始化 MultiAgentGraph: executor_pool_size=3
+2026-02-19 19:20:43 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1159] - 开始处理用户查询: langgraph 高阶技巧有哪些？ (user_id=test_user_001, thread_id=test_thread_001)
+2026-02-19 19:20:43 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:220] - [节点 1] 初始化向量存储
+2026-02-19 19:20:43,296 - core.rag.rag_preprocess_module - INFO - 检查本地向量库是否存在
+2026-02-19 19:20:43,296 - core.rag.rag_preprocess_module - INFO - 向量库目录存在: True, Chroma 数据库存在: True
+2026-02-19 19:20:43,296 - core.rag.rag_preprocess_module - INFO - 检测到本地向量库，尝试加载
+2026-02-19 19:20:43,439 - core.rag.rag_preprocess_module - INFO - 找到集合 'base_crunchbase_collection'，包含 6144 个文档
+2026-02-19 19:20:43,439 - core.rag.rag_preprocess_module - INFO - 从现有向量库加载索引
+2026-02-19 19:20:43,440 - core.rag.rag_preprocess_module - INFO - 成功从本地加载向量索引
+2026-02-19 19:20:43 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:225] - 向量存储初始化完成
+2026-02-19 19:20:43 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:246] - [节点 2] 调用 PlannerAgent 拆解查询
+2026-02-19 19:20:43,445 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 19:20:44,990 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-19 19:21:00 - agents.planneragent - INFO - [planneragent.py:131] - planner_agent llm_chat 节点在第0轮迭代中，成功生成AIMessage类型的消息，内容为:
+2026-02-19 19:21:00 - agents.planneragent - INFO - [planneragent.py:133] - planner_agent llm_chat 节点在第0轮迭代中，生成的AIMessage类型的消息包含工具调用，工具调用内容为:[{'name': 'resolve-library-id', 'args': {'query': 'langgraph 高阶技巧有哪些？', 'libraryName': 'langgraph'}, 'id': 'call_af794f023105494ab2590f28', 'type': 'tool_call'}]
+2026-02-19 19:21:00 - agents.planneragent - INFO - [planneragent.py:186] - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
+2026-02-19 19:32:12,428 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:32:12,440 - core.llms - INFO - 成功初始化 LlamaIndex Chat(qwen)/Embedding(bge)
+2026-02-19 19:32:12,570 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:32:12,685 - core.rag.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8100
+2026-02-19 19:32:12,799 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:32:12 - agents.planneragent - INFO - [planneragent.py:251] - 完成planner_graph的初始化构造
+2026-02-19 19:32:12,918 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:32:12 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 1/3
+2026-02-19 19:32:13,037 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:32:13 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 2/3
+2026-02-19 19:32:13,157 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:32:13 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 3/3
+2026-02-19 19:32:13 - agents.executor_pool - INFO - [executor_pool.py:64] - 成功创建 3 个 ExecutorAgent 实例
+2026-02-19 19:32:13 - agents.executor_pool - INFO - [executor_pool.py:54] - 初始化 ExecutorAgentPool: pool_size=3, model=qwen
+2026-02-19 19:32:13,158 - core.rag.rag_preprocess_module - INFO - 初始化 VectorStoreManager: persist_dir=vector_storage, collection=base_crunchbase_collection
+2026-02-19 19:32:13,268 - core.rag.document_processor - INFO - 初始化 DocumentProcessor: mineru_url=http://localhost:8080, max_chunk_size=1000
+2026-02-19 19:32:13 - core.file_deduplicator - INFO - [file_deduplicator.py:51] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
+2026-02-19 19:32:13 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1141] - MultiAgentGraph 构建完成（两阶段执行版本）
+2026-02-19 19:32:13 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:209] - 初始化 MultiAgentGraph: executor_pool_size=3
+2026-02-19 19:32:13 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1159] - 开始处理用户查询: langgraph 高阶技巧有哪些？ (user_id=test_user_001, thread_id=test_thread_001)
+2026-02-19 19:32:13 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:220] - [节点 1] 初始化向量存储
+2026-02-19 19:32:13,337 - core.rag.rag_preprocess_module - INFO - 检查本地向量库是否存在
+2026-02-19 19:32:13,337 - core.rag.rag_preprocess_module - INFO - 向量库目录存在: True, Chroma 数据库存在: True
+2026-02-19 19:32:13,337 - core.rag.rag_preprocess_module - INFO - 检测到本地向量库，尝试加载
+2026-02-19 19:32:13,516 - core.rag.rag_preprocess_module - INFO - 找到集合 'base_crunchbase_collection'，包含 6144 个文档
+2026-02-19 19:32:13,516 - core.rag.rag_preprocess_module - INFO - 从现有向量库加载索引
+2026-02-19 19:32:13,517 - core.rag.rag_preprocess_module - INFO - 成功从本地加载向量索引
+2026-02-19 19:32:13 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:225] - 向量存储初始化完成
+2026-02-19 19:32:13 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:246] - [节点 2] 调用 PlannerAgent 拆解查询
+2026-02-19 19:32:13,522 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 19:32:15,445 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-19 19:32:28 - agents.planneragent - ERROR - [planneragent.py:142] - planner_agent llm_chat 分析用户的问题时，出现错误:Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-df8ec253-6370-9ef8-a295-9e9fc3a09e9c', 'request_id': 'df8ec253-6370-9ef8-a295-9e9fc3a09e9c'}
+2026-02-19 19:32:28 - agents.planneragent - ERROR - [planneragent.py:274] - planner_chatmodel对于用户的langgraph 高阶技巧有哪些？ 出现错误：Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-df8ec253-6370-9ef8-a295-9e9fc3a09e9c', 'request_id': 'df8ec253-6370-9ef8-a295-9e9fc3a09e9c'}
+2026-02-19 19:32:28 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:296] - 查询拆解失败: Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-df8ec253-6370-9ef8-a295-9e9fc3a09e9c', 'request_id': 'df8ec253-6370-9ef8-a295-9e9fc3a09e9c'}
+2026-02-19 19:32:28 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:307] - [节点 3a] 第一阶段执行 - 探索阶段（url_pool=[]）
+2026-02-19 19:32:28 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:327] - 第一阶段执行: 1 个子问题，初始 URL 池为空
+2026-02-19 19:32:28 - agents.executor_pool - INFO - [executor_pool.py:94] - 开始并发执行 1 个子问题 (user_id=test_user_001, url_pool_size=0)
+2026-02-19 19:32:28 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 1 到 Agent 0
+2026-02-19 19:32:28 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:673] - [节点 6] 向量化文档并入库
+2026-02-19 19:32:28 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:694] - 阶段一和阶段二都没有新的BaseNodes需要向量化
+2026-02-19 19:32:28 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:696] - 阶段二没有新的BaseNodes需要向量化，仅阶段一有文档被向量化
+2026-02-19 19:32:28,795 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 19:32:30,913 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-19 19:34:59,401 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:34:59,416 - core.llms - INFO - 成功初始化 LlamaIndex Chat(qwen)/Embedding(bge)
+2026-02-19 19:34:59,555 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:34:59,672 - core.rag.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8100
+2026-02-19 19:34:59,793 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:34:59 - agents.planneragent - INFO - [planneragent.py:251] - 完成planner_graph的初始化构造
+2026-02-19 19:34:59,915 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:34:59 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 1/3
+2026-02-19 19:35:00,031 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:35:00 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 2/3
+2026-02-19 19:35:00,146 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:35:00 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 3/3
+2026-02-19 19:35:00 - agents.executor_pool - INFO - [executor_pool.py:64] - 成功创建 3 个 ExecutorAgent 实例
+2026-02-19 19:35:00 - agents.executor_pool - INFO - [executor_pool.py:54] - 初始化 ExecutorAgentPool: pool_size=3, model=qwen
+2026-02-19 19:35:00,147 - core.rag.rag_preprocess_module - INFO - 初始化 VectorStoreManager: persist_dir=vector_storage, collection=base_crunchbase_collection
+2026-02-19 19:35:00,264 - core.rag.document_processor - INFO - 初始化 DocumentProcessor: mineru_url=http://localhost:8080, max_chunk_size=1000
+2026-02-19 19:35:00 - core.file_deduplicator - INFO - [file_deduplicator.py:51] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
+2026-02-19 19:35:00 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1142] - MultiAgentGraph 构建完成（两阶段执行版本）
+2026-02-19 19:35:00 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:209] - 初始化 MultiAgentGraph: executor_pool_size=3
+2026-02-19 19:35:00 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1160] - 开始处理用户查询: langgraph 高阶技巧有哪些？ (user_id=test_user_001, thread_id=test_thread_001)
+2026-02-19 19:35:00 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:220] - [节点 1] 初始化向量存储
+2026-02-19 19:35:00,371 - core.rag.rag_preprocess_module - INFO - 检查本地向量库是否存在
+2026-02-19 19:35:00,371 - core.rag.rag_preprocess_module - INFO - 向量库目录存在: True, Chroma 数据库存在: True
+2026-02-19 19:35:00,371 - core.rag.rag_preprocess_module - INFO - 检测到本地向量库，尝试加载
+2026-02-19 19:35:00,624 - core.rag.rag_preprocess_module - INFO - 找到集合 'base_crunchbase_collection'，包含 6144 个文档
+2026-02-19 19:35:00,624 - core.rag.rag_preprocess_module - INFO - 从现有向量库加载索引
+2026-02-19 19:35:00,626 - core.rag.rag_preprocess_module - INFO - 成功从本地加载向量索引
+2026-02-19 19:35:00 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:225] - 向量存储初始化完成
+2026-02-19 19:35:00 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:246] - [节点 2] 调用 PlannerAgent 拆解查询
+2026-02-19 19:35:00,632 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 19:35:03,133 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-19 19:35:16 - agents.planneragent - ERROR - [planneragent.py:142] - planner_agent llm_chat 分析用户的问题时，出现错误:Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-5731e6c6-3eea-972d-a574-8dbfd0690fdc', 'request_id': '5731e6c6-3eea-972d-a574-8dbfd0690fdc'}
+2026-02-19 19:35:16 - agents.planneragent - ERROR - [planneragent.py:274] - planner_chatmodel对于用户的langgraph 高阶技巧有哪些？ 出现错误：Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-5731e6c6-3eea-972d-a574-8dbfd0690fdc', 'request_id': '5731e6c6-3eea-972d-a574-8dbfd0690fdc'}
+2026-02-19 19:35:16 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:296] - 查询拆解失败: Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-5731e6c6-3eea-972d-a574-8dbfd0690fdc', 'request_id': '5731e6c6-3eea-972d-a574-8dbfd0690fdc'}
+2026-02-19 19:35:16 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:307] - [节点 3a] 第一阶段执行 - 探索阶段（url_pool=[]）
+2026-02-19 19:35:16 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:327] - 第一阶段执行: 1 个子问题，初始 URL 池为空
+2026-02-19 19:35:16 - agents.executor_pool - INFO - [executor_pool.py:94] - 开始并发执行 1 个子问题 (user_id=test_user_001, url_pool_size=0)
+2026-02-19 19:35:16 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 1 到 Agent 0
+2026-02-19 19:35:16 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:673] - [节点 6] 向量化文档并入库
+2026-02-19 19:35:16 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:694] - 阶段一和阶段二都没有新的BaseNodes需要向量化
+2026-02-19 19:35:16 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:696] - 阶段二没有新的BaseNodes需要向量化，仅阶段一有文档被向量化
+2026-02-19 19:35:16,783 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 19:35:19,332 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-19 19:36:40,845 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:36:40,868 - core.llms - INFO - 成功初始化 LlamaIndex Chat(qwen)/Embedding(bge)
+2026-02-19 19:36:41,009 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:36:41,123 - core.rag.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8100
+2026-02-19 19:36:41,238 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:36:41 - agents.planneragent - INFO - [planneragent.py:251] - 完成planner_graph的初始化构造
+2026-02-19 19:36:41,367 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:36:41 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 1/3
+2026-02-19 19:36:41,486 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:36:41 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 2/3
+2026-02-19 19:36:41,608 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 19:36:41 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 3/3
+2026-02-19 19:36:41 - agents.executor_pool - INFO - [executor_pool.py:64] - 成功创建 3 个 ExecutorAgent 实例
+2026-02-19 19:36:41 - agents.executor_pool - INFO - [executor_pool.py:54] - 初始化 ExecutorAgentPool: pool_size=3, model=qwen
+2026-02-19 19:36:41,609 - core.rag.rag_preprocess_module - INFO - 初始化 VectorStoreManager: persist_dir=vector_storage, collection=base_crunchbase_collection
+2026-02-19 19:36:41,734 - core.rag.document_processor - INFO - 初始化 DocumentProcessor: mineru_url=http://localhost:8080, max_chunk_size=1000
+2026-02-19 19:36:41 - core.file_deduplicator - INFO - [file_deduplicator.py:51] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
+2026-02-19 19:36:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1142] - MultiAgentGraph 构建完成（两阶段执行版本）
+2026-02-19 19:36:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:209] - 初始化 MultiAgentGraph: executor_pool_size=3
+2026-02-19 19:36:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1160] - 开始处理用户查询: langgraph 高阶技巧有哪些？ (user_id=test_user_001, thread_id=test_thread_001)
+2026-02-19 19:36:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:220] - [节点 1] 初始化向量存储
+2026-02-19 19:36:41,858 - core.rag.rag_preprocess_module - INFO - 检查本地向量库是否存在
+2026-02-19 19:36:41,858 - core.rag.rag_preprocess_module - INFO - 向量库目录存在: True, Chroma 数据库存在: True
+2026-02-19 19:36:41,858 - core.rag.rag_preprocess_module - INFO - 检测到本地向量库，尝试加载
+2026-02-19 19:36:42,113 - core.rag.rag_preprocess_module - INFO - 找到集合 'base_crunchbase_collection'，包含 6144 个文档
+2026-02-19 19:36:42,113 - core.rag.rag_preprocess_module - INFO - 从现有向量库加载索引
+2026-02-19 19:36:42,116 - core.rag.rag_preprocess_module - INFO - 成功从本地加载向量索引
+2026-02-19 19:36:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:225] - 向量存储初始化完成
+2026-02-19 19:36:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:246] - [节点 2] 调用 PlannerAgent 拆解查询
+2026-02-19 19:36:42,122 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 19:36:45,035 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-19 19:36:58 - agents.planneragent - ERROR - [planneragent.py:142] - planner_agent llm_chat 分析用户的问题时，出现错误:Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-a936adbc-12b0-92dc-a98f-3908ed63c294', 'request_id': 'a936adbc-12b0-92dc-a98f-3908ed63c294'}
+2026-02-19 19:36:58 - agents.planneragent - ERROR - [planneragent.py:274] - planner_chatmodel对于用户的langgraph 高阶技巧有哪些？ 出现错误：Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-a936adbc-12b0-92dc-a98f-3908ed63c294', 'request_id': 'a936adbc-12b0-92dc-a98f-3908ed63c294'}
+2026-02-19 19:36:58 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:296] - 查询拆解失败: Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-a936adbc-12b0-92dc-a98f-3908ed63c294', 'request_id': 'a936adbc-12b0-92dc-a98f-3908ed63c294'}
+2026-02-19 19:36:58 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:307] - [节点 3a] 第一阶段执行 - 探索阶段（url_pool=[]）
+2026-02-19 19:36:58 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:327] - 第一阶段执行: 1 个子问题，初始 URL 池为空
+2026-02-19 19:36:58 - agents.executor_pool - INFO - [executor_pool.py:94] - 开始并发执行 1 个子问题 (user_id=test_user_001, url_pool_size=0)
+2026-02-19 19:36:58 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 1 到 Agent 0
+2026-02-19 19:36:58 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:673] - [节点 6] 向量化文档并入库
+2026-02-19 19:36:58 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:694] - 阶段一和阶段二都没有新的BaseNodes需要向量化
+2026-02-19 19:36:58 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:696] - 阶段二没有新的BaseNodes需要向量化，仅阶段一有文档被向量化
+2026-02-19 19:36:58,367 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 20:03:06,546 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:03:06,561 - core.llms - INFO - 成功初始化 LlamaIndex Chat(qwen)/Embedding(bge)
+2026-02-19 20:03:06,703 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:03:06,827 - core.rag.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8100
+2026-02-19 20:03:06,951 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:03:06 - agents.planneragent - INFO - [planneragent.py:251] - 完成planner_graph的初始化构造
+2026-02-19 20:03:07,080 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:03:07 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 1/3
+2026-02-19 20:03:07,208 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:03:07 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 2/3
+2026-02-19 20:03:07,334 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:03:07 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 3/3
+2026-02-19 20:03:07 - agents.executor_pool - INFO - [executor_pool.py:64] - 成功创建 3 个 ExecutorAgent 实例
+2026-02-19 20:03:07 - agents.executor_pool - INFO - [executor_pool.py:54] - 初始化 ExecutorAgentPool: pool_size=3, model=qwen
+2026-02-19 20:03:07,335 - core.rag.rag_preprocess_module - INFO - 初始化 VectorStoreManager: persist_dir=vector_storage, collection=base_crunchbase_collection
+2026-02-19 20:03:07,463 - core.rag.document_processor - INFO - 初始化 DocumentProcessor: mineru_url=http://localhost:8080, max_chunk_size=1000
+2026-02-19 20:03:07 - core.file_deduplicator - INFO - [file_deduplicator.py:51] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
+2026-02-19 20:03:07 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1142] - MultiAgentGraph 构建完成（两阶段执行版本）
+2026-02-19 20:03:07 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:209] - 初始化 MultiAgentGraph: executor_pool_size=3
+2026-02-19 20:06:47,136 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:06:47,148 - core.llms - INFO - 成功初始化 LlamaIndex Chat(qwen)/Embedding(bge)
+2026-02-19 20:06:47,274 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:06:47,389 - core.rag.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8100
+2026-02-19 20:06:47,505 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:06:47 - agents.planneragent - INFO - [planneragent.py:251] - 完成planner_graph的初始化构造
+2026-02-19 20:06:47,624 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:06:47 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 1/3
+2026-02-19 20:06:47,739 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:06:47 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 2/3
+2026-02-19 20:06:47,856 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:06:47 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 3/3
+2026-02-19 20:06:47 - agents.executor_pool - INFO - [executor_pool.py:64] - 成功创建 3 个 ExecutorAgent 实例
+2026-02-19 20:06:47 - agents.executor_pool - INFO - [executor_pool.py:54] - 初始化 ExecutorAgentPool: pool_size=3, model=qwen
+2026-02-19 20:06:47,857 - core.rag.rag_preprocess_module - INFO - 初始化 VectorStoreManager: persist_dir=vector_storage, collection=base_crunchbase_collection
+2026-02-19 20:06:47,964 - core.rag.document_processor - INFO - 初始化 DocumentProcessor: mineru_url=http://localhost:8080, max_chunk_size=1000
+2026-02-19 20:06:47 - core.file_deduplicator - INFO - [file_deduplicator.py:51] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
+2026-02-19 20:06:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1142] - MultiAgentGraph 构建完成（两阶段执行版本）
+2026-02-19 20:06:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:209] - 初始化 MultiAgentGraph: executor_pool_size=3
+2026-02-19 20:06:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1160] - 开始处理用户查询: langgraph 高阶技巧有哪些？ (user_id=test_user_001, thread_id=test_thread_001)
+2026-02-19 20:06:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:220] - [节点 1] 初始化向量存储
+2026-02-19 20:06:48,063 - core.rag.rag_preprocess_module - INFO - 检查本地向量库是否存在
+2026-02-19 20:06:48,063 - core.rag.rag_preprocess_module - INFO - 向量库目录存在: True, Chroma 数据库存在: True
+2026-02-19 20:06:48,063 - core.rag.rag_preprocess_module - INFO - 检测到本地向量库，尝试加载
+2026-02-19 20:06:48,293 - core.rag.rag_preprocess_module - INFO - 找到集合 'base_crunchbase_collection'，包含 6144 个文档
+2026-02-19 20:06:48,294 - core.rag.rag_preprocess_module - INFO - 从现有向量库加载索引
+2026-02-19 20:06:48,295 - core.rag.rag_preprocess_module - INFO - 成功从本地加载向量索引
+2026-02-19 20:06:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:225] - 向量存储初始化完成
+2026-02-19 20:06:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:246] - [节点 2] 调用 PlannerAgent 拆解查询
+2026-02-19 20:06:48,302 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 20:06:49,771 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-19 20:07:03 - agents.planneragent - ERROR - [planneragent.py:142] - planner_agent llm_chat 分析用户的问题时，出现错误:Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-b77bf119-2021-9211-8442-18ec7db58cfd', 'request_id': 'b77bf119-2021-9211-8442-18ec7db58cfd'}
+2026-02-19 20:07:03 - agents.planneragent - ERROR - [planneragent.py:274] - planner_chatmodel对于用户的langgraph 高阶技巧有哪些？ 出现错误：Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-b77bf119-2021-9211-8442-18ec7db58cfd', 'request_id': 'b77bf119-2021-9211-8442-18ec7db58cfd'}
+2026-02-19 20:07:03 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:296] - 查询拆解失败: Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-b77bf119-2021-9211-8442-18ec7db58cfd', 'request_id': 'b77bf119-2021-9211-8442-18ec7db58cfd'}
+2026-02-19 20:07:03 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:307] - [节点 3a] 第一阶段执行 - 探索阶段（url_pool=[]）
+2026-02-19 20:07:03 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:327] - 第一阶段执行: 1 个子问题，初始 URL 池为空
+2026-02-19 20:07:03 - agents.executor_pool - INFO - [executor_pool.py:94] - 开始并发执行 1 个子问题 (user_id=test_user_001, url_pool_size=0)
+2026-02-19 20:07:03 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 1 到 Agent 0
+2026-02-19 20:07:03 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:673] - [节点 6] 向量化文档并入库
+2026-02-19 20:07:03 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:694] - 阶段一和阶段二都没有新的BaseNodes需要向量化
+2026-02-19 20:07:03 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:696] - 阶段二没有新的BaseNodes需要向量化，仅阶段一有文档被向量化
+2026-02-19 20:07:03,558 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 20:07:04,906 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-19 20:07:17 - agents.executoragent - INFO - [executoragent.py:988] - 完成 executor_graph 的初始化构造
+2026-02-19 20:07:17 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'langgraph 高阶技巧有哪些？' (user_id=test_user_001, thread_id=test_thread_001_executor_0)
+2026-02-19 20:07:17 - agents.executoragent - INFO - [executoragent.py:600] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-19 20:07:17 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 wikipedia_search 搜索: langgraph 高阶技巧有哪些？
+2026-02-19 20:07:17 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 exa_context_search 搜索: langgraph 高阶技巧有哪些？
+2026-02-19 20:07:17 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 tavily_search 搜索: langgraph 高阶技巧有哪些？
+2026-02-19 20:07:21 - agents.executoragent - WARNING - [executoragent.py:176] - wikipedia_search 返回了 0 条数据
+2026-02-19 20:07:27 - agents.executoragent - INFO - [executoragent.py:174] - exa_context_search 返回了 10 条数据
+2026-02-19 20:07:33 - agents.executoragent - WARNING - [executoragent.py:176] - tavily_search 返回了 0 条数据
+2026-02-19 20:07:33 - agents.executoragent - INFO - [executoragent.py:624] - 搜索完成，共获得 10 条结果
+2026-02-19 20:07:33 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-19 20:07:35 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=True
+2026-02-19 20:07:35 - agents.executoragent - INFO - [executoragent.py:526] - LLM 决定调用 1 个可选工具
+2026-02-19 20:07:35 - agents.executoragent - INFO - [executoragent.py:557] - 准备执行 1 个可选工具调用
+2026-02-19 20:07:50 - agents.executoragent - INFO - [executoragent.py:567] - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-19 20:07:50 - agents.executoragent - INFO - [executoragent.py:580] -   - 工具 resolve-library-id 返回 1 条结果
+2026-02-19 20:07:50 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-19 20:07:52 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=True
+2026-02-19 20:07:52 - agents.executoragent - INFO - [executoragent.py:526] - LLM 决定调用 1 个可选工具
+2026-02-19 20:07:52 - agents.executoragent - INFO - [executoragent.py:557] - 准备执行 1 个可选工具调用
+2026-02-19 20:08:07 - agents.executoragent - INFO - [executoragent.py:567] - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-19 20:08:07 - agents.executoragent - INFO - [executoragent.py:580] -   - 工具 query-docs 返回 1 条结果
+2026-02-19 20:08:07 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-19 20:08:32 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=False
+2026-02-19 20:08:32 - agents.executoragent - INFO - [executoragent.py:511] - LLM 思考: # LangGraph 高阶技巧
 
-LangGraph 通过 **Checkpointer** 机制来实现记忆管理和状态持久化，这是其核心功能之一。下面详细介绍 LangGraph 的记忆管理机制：
+LangGraph 是一个用于构建状态化、多智能体应用的框架，提供了持久化、流式处理和内存管理等高级功能。以下是 LangGraph 的一些高阶技巧：
 
-## 核心概念
+## 1. 并行图执行与状态归约器
 
-LangGraph 的记忆管理主要通过 **Checkpointer**（...
-2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:530] - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-10 21:59:03 - agents.executoragent - WARNING - [executoragent.py:729] - 处理langgraph 使用技巧----langgraph的记忆管理 时sub_url_pool 为空
-2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:749] - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:749] - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:749] - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/1915604388443031303
-2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://modelengine.csdn.net/690c4f185511483559e2a49a.html
-2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraphjs/concepts/memory/
-2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://aistudio.baidu.com/blog/detail/737084298395525
-2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://zhuanlan.zhihu.com/p/1981392181592871894
-2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://cloud.tencent.com/developer/article/2588385
-2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://kingnight.github.io/aigc/2025/05/30/LangGraph-5-Long-Term-Memory.html
-2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://medium.com/@marklin.coffee.pro/30-4-%E7%9F%A5%E8%AD%98-langchain-x-langg
-2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://aws.amazon.com/cn/blogs/china/agentic-ai-infrastructure-deep-practice-ex
-2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://medium.com/@suraj.pandey199227/understanding-memory-management-in-langgr
-2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://developer.volcengine.com/articles/7429201977919143973
-2026-02-10 21:59:03 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://langchain-ai.github.io/langgraph/how-tos/memory/
-2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:712] - 去重统计: 去重前=12, 去重后=12, 去重率=0.0%
-2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:810] - 去重前: 15 篇
-2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:811] - 去重后: 12 篇
-2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:838] - 从 deduplicated_results 获取 12 篇文档
-2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:851] - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:848] - 已将工具 query-docs 结果追加写入 context7_grep.json
-2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:848] - 已将工具 query-docs 结果追加写入 context7_grep.json
-2026-02-10 21:59:03 - agents.executoragent - INFO - [executoragent.py:876] - 总共需要下载 12 篇文档
-2026-02-10 21:59:03,211 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-10 21:59:04,548 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-10 21:59:04 - agents.executoragent - INFO - [executoragent.py:897] - 开始下载 tavily 的 2 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-10 21:59:04 - agents.executoragent - INFO - [executoragent.py:903] - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-10 21:59:04 - agents.executoragent - INFO - [executoragent.py:897] - 开始下载 exa_context 的 10 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-10 21:59:04 - agents.executoragent - INFO - [executoragent.py:903] - 使用下载工具 exa_context_download 处理 exa_context 数据
-2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:912] - 下载工具 tavily_download 首项类型: <class 'dict'>
-2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:917] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=2
-2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:927] - 成功下载 2 篇 tavily 文档
-2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 exa_context_download 返回类型: <class 'list'>
-2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:912] - 下载工具 exa_context_download 首项类型: <class 'dict'>
-2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:917] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=10
-2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:927] - 成功下载 10 篇 exa_context 文档
-2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:955] - 下载完成，共下载 12 篇文档
-2026-02-10 21:59:06 - agents.executoragent - INFO - [executoragent.py:1010] - executor 完成子问题 'langgraph的记忆管理 ' 的处理
+使用 `operator.add` 作为归约器可以实现并行执行节点，同时...
+2026-02-19 20:08:32 - agents.executoragent - INFO - [executoragent.py:530] - LLM 决定不调用可选工具，进入清洗阶段
+2026-02-19 20:08:32 - agents.executoragent - WARNING - [executoragent.py:729] - 处理langgraph 高阶技巧有哪些？----langgraph 高阶技巧有哪些？时sub_url_pool 为空
+2026-02-19 20:08:32 - agents.executoragent - INFO - [executoragent.py:749] - 跳过工具 resolve-library-id 的结果（非 paper 结构）
+2026-02-19 20:08:32 - agents.executoragent - INFO - [executoragent.py:749] - 跳过工具 query-docs 的结果（非 paper 结构）
+2026-02-19 20:08:32 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.cnblogs.com/muzinan110/p/18540008
+2026-02-19 20:08:32 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://ywctech.net/ml-ai/langchain-langgraph-agent-part2/
+2026-02-19 20:08:32 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.cnblogs.com/muzinan110/p/18540042
+2026-02-19 20:08:32 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://github.com/aneasystone/weekly-practice/blob/main/notes/week057-create-ag
+2026-02-19 20:08:32 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://langgraph.com.cn/tutorials/get-started/5-customize-state/index.html
+2026-02-19 20:08:32 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://langchain-ai.github.io/langgraph/how-tos/graph-api/
+2026-02-19 20:08:32 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraphjs/how-tos/branching
+2026-02-19 20:08:32 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.cnblogs.com/studyLog-share/p/19289014
+2026-02-19 20:08:32 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://aws.amazon.com/cn/blogs/china/fast-fashion-e-commerce-agent-design-ideas
+2026-02-19 20:08:32 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.langgraphcn.org/how-tos/streaming-tokens/
+2026-02-19 20:08:32 - agents.executoragent - INFO - [executoragent.py:712] - 去重统计: 去重前=10, 去重后=10, 去重率=0.0%
+2026-02-19 20:08:32 - agents.executoragent - INFO - [executoragent.py:810] - 去重前: 10 篇
+2026-02-19 20:08:32 - agents.executoragent - INFO - [executoragent.py:811] - 去重后: 10 篇
+2026-02-19 20:08:32 - agents.executoragent - INFO - [executoragent.py:838] - 从 deduplicated_results 获取 10 篇文档
+2026-02-19 20:08:32 - agents.executoragent - INFO - [executoragent.py:851] - 跳过工具 resolve-library-id 的下载结果合并
+2026-02-19 20:08:32 - agents.executoragent - INFO - [executoragent.py:848] - 已将工具 query-docs 结果追加写入 context7_grep.json
+2026-02-19 20:08:32 - agents.executoragent - INFO - [executoragent.py:876] - 总共需要下载 10 篇文档
+2026-02-19 20:08:32,440 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 20:08:33,888 - core.mcp.tools - INFO - 返回 6 个下载工具
+2026-02-19 20:08:33 - agents.executoragent - INFO - [executoragent.py:897] - 开始下载 exa_context 的 10 篇文档到 /home/qinshan/widthresearch/data/downloads
+2026-02-19 20:08:33 - agents.executoragent - INFO - [executoragent.py:903] - 使用下载工具 exa_context_download 处理 exa_context 数据
+2026-02-19 20:08:35 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 exa_context_download 返回类型: <class 'list'>
+2026-02-19 20:08:35 - agents.executoragent - INFO - [executoragent.py:912] - 下载工具 exa_context_download 首项类型: <class 'dict'>
+2026-02-19 20:08:35 - agents.executoragent - INFO - [executoragent.py:917] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=9
+2026-02-19 20:08:35 - agents.executoragent - INFO - [executoragent.py:927] - 成功下载 9 篇 exa_context 文档
+2026-02-19 20:08:35 - agents.executoragent - INFO - [executoragent.py:955] - 下载完成，共下载 9 篇文档
+2026-02-19 20:08:35 - agents.executoragent - INFO - [executoragent.py:1010] - executor 完成子问题 'langgraph 高阶技巧有哪些？' 的处理
+2026-02-19 20:08:35 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'langgraph 高阶技巧有哪些？' 的处理
+2026-02-19 20:08:35 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成langgraph 高阶技巧有哪些？后 sub_url_pool 包含 10 个 URL
+2026-02-19 20:08:35 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成langgraph 高阶技巧有哪些？后 downloaded_papers 包含 9 个结果
+2026-02-19 20:08:35 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 1 执行成功
+2026-02-19 20:08:35 - agents.executor_pool - INFO - [executor_pool.py:134] - 并发执行完成: 成功 1/1, 失败 0
+2026-02-19 20:08:35 - agents.executor_pool - INFO - [executor_pool.py:135] - URL 池更新: 0 -> 10 个 URL
+2026-02-19 20:08:35 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:336] - 第一阶段执行完成，完成1 个子问题的检索
+2026-02-19 20:08:35 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:337] - 第一阶段收集到 10 个 URL
+2026-02-19 20:08:35 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:450] - [节点 4a] 第一次文档收集与去重
+2026-02-19 20:08:35 - core.file_deduplicator - INFO - [file_deduplicator.py:164] - 使用 TF-IDF 去重: 9 个文件, 阈值=0.8
+2026-02-19 20:08:35 - core.file_deduplicator - INFO - [file_deduplicator.py:267] - TF-IDF 去重完成: 保留 9 个, 未输出 0 个
+2026-02-19 20:08:35 - core.file_deduplicator - INFO - [file_deduplicator.py:297] - 列表去重完成: 输入 9 个, 输出 9 个, 未输出 0 个
+2026-02-19 20:08:35 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:466] - 第一次去重完成: 输入 9 个, 输出 9 个, 未输出 0 个
+2026-02-19 20:08:35 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:485] - 从第一阶段 executor_results 提取到 9 个文档元数据
+2026-02-19 20:08:35 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:710] - [节点 7] RAG 检索
+2026-02-19 20:08:35 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:727] - 尝试创建 RAG 检索器，使用 top_k=5
+2026-02-19 20:08:35,248 - core.rag.rag_postprocess_module - INFO - 初始化 RAGModule: top_k=5
+2026-02-19 20:08:35,248 - core.rag.rag_postprocess_module - INFO - 开始 RAG 检索，planner问题数: 1
+2026-02-19 20:08:35,426 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 初步检索到 5 个节点
+2026-02-19 20:08:35,426 - core.rag.reranker - INFO - 开始异步 rerank，查询: langgraph 高阶技巧有哪些？..., 文档数量: 5
+2026-02-19 20:08:38,821 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 20:08:38,824 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 重排序+过滤后保留 5 个节点
+2026-02-19 20:08:38,824 - core.rag.rag_postprocess_module - INFO - 所有问题检索并重排序完成，共 5 个节点
+2026-02-19 20:08:38,825 - core.rag.rag_postprocess_module - INFO - 去重后保留 5 个节点
+2026-02-19 20:08:38,826 - core.rag.rag_postprocess_module - INFO - 内容去重后保留 4 个节点
+2026-02-19 20:08:38,826 - core.rag.rag_postprocess_module - DEBUG - 问题池构建完成，包含 1 个去重后的问题
+2026-02-19 20:08:38,827 - core.rag.rag_postprocess_module - INFO - 构建问题池完成，共 1 个问题
+2026-02-19 20:08:38 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:742] - RAG 检索完成，获得 4 个节点
+2026-02-19 20:08:38 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:38 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:38 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:38 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:38 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:38 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:38 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:38 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:38 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:784] - 从全部检索结果中提取并去重后，问题池中共有 0 个问题
+2026-02-19 20:08:38 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1046] - 检索为空，继续重试 (1/3)
+2026-02-19 20:08:38 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:358] - [节点 3b] 第二阶段执行 - 精炼阶段（使用第一阶段的 url_pool）
+2026-02-19 20:08:38 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:366] - 没有子问题需要执行第二阶段
+2026-02-19 20:08:38 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:602] - [节点 5a] 第一阶段文档处理（去重后）
+2026-02-19 20:08:38,833 - core.rag.document_processor - INFO - 开始处理 9 个文档
+2026-02-19 20:08:38,833 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_LangGraph进.md 加载为 7 个 Document 并加入 pipeline
+2026-02-19 20:08:38,834 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_LangGraph_.md 加载为 10 个 Document 并加入 pipeline
+2026-02-19 20:08:38,834 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_WEEK057 -.md 加载为 6 个 Document 并加入 pipeline
+2026-02-19 20:08:38,835 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_自定义状态 - La.md 加载为 5 个 Document 并加入 pipeline
+2026-02-19 20:08:38,836 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_Use the Gr.md 加载为 7 个 Document 并加入 pipeline
+2026-02-19 20:08:38,838 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_如何创建用于并行节点.md 加载为 4 个 Document 并加入 pipeline
+2026-02-19 20:08:38,839 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_千年烟雨尽风流.md 加载为 7 个 Document 并加入 pipeline
+2026-02-19 20:08:38,839 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_快时尚电商行业智能体.md 加载为 10 个 Document 并加入 pipeline
+2026-02-19 20:08:38,839 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_如何从你的图中流式传.md 加载为 6 个 Document 并加入 pipeline
+2026-02-19 20:08:38 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:627] - 第一阶段文档处理失败: 'JsonReader' object has no attribute 'load_data'
+2026-02-19 20:08:38 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:710] - [节点 7] RAG 检索
+2026-02-19 20:08:38 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:727] - 尝试创建 RAG 检索器，使用 top_k=5
+2026-02-19 20:08:38,840 - core.rag.rag_postprocess_module - INFO - 初始化 RAGModule: top_k=5
+2026-02-19 20:08:38,840 - core.rag.rag_postprocess_module - INFO - 开始 RAG 检索，planner问题数: 1
+2026-02-19 20:08:38,936 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 初步检索到 5 个节点
+2026-02-19 20:08:38,936 - core.rag.reranker - INFO - 开始异步 rerank，查询: langgraph 高阶技巧有哪些？..., 文档数量: 5
+2026-02-19 20:08:41,603 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 20:08:41,604 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 重排序+过滤后保留 5 个节点
+2026-02-19 20:08:41,604 - core.rag.rag_postprocess_module - INFO - 所有问题检索并重排序完成，共 5 个节点
+2026-02-19 20:08:41,604 - core.rag.rag_postprocess_module - INFO - 去重后保留 5 个节点
+2026-02-19 20:08:41,606 - core.rag.rag_postprocess_module - INFO - 内容去重后保留 4 个节点
+2026-02-19 20:08:41,606 - core.rag.rag_postprocess_module - DEBUG - 问题池构建完成，包含 1 个去重后的问题
+2026-02-19 20:08:41,606 - core.rag.rag_postprocess_module - INFO - 构建问题池完成，共 1 个问题
+2026-02-19 20:08:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:742] - RAG 检索完成，获得 4 个节点
+2026-02-19 20:08:41 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:41 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:41 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:41 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:784] - 从全部检索结果中提取并去重后，问题池中共有 0 个问题
+2026-02-19 20:08:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1046] - 检索为空，继续重试 (2/3)
+2026-02-19 20:08:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:509] - [节点 4b] 第二次文档收集与去重
+2026-02-19 20:08:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:544] - 第二次去重完成: 输入 0 个, 输出 0 个, 未输出 0 个
+2026-02-19 20:08:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:565] - 从第二阶段 executor_results 提取到 0 个文档元数据
+2026-02-19 20:08:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:566] - 两阶段总计：9 + 0 = 0 个去重后的文档
+2026-02-19 20:08:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:710] - [节点 7] RAG 检索
+2026-02-19 20:08:41 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:727] - 尝试创建 RAG 检索器，使用 top_k=5
+2026-02-19 20:08:41,611 - core.rag.rag_postprocess_module - INFO - 初始化 RAGModule: top_k=5
+2026-02-19 20:08:41,612 - core.rag.rag_postprocess_module - INFO - 开始 RAG 检索，planner问题数: 1
+2026-02-19 20:08:41,712 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 初步检索到 5 个节点
+2026-02-19 20:08:41,712 - core.rag.reranker - INFO - 开始异步 rerank，查询: langgraph 高阶技巧有哪些？..., 文档数量: 5
+2026-02-19 20:08:44,281 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 20:08:44,282 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 重排序+过滤后保留 5 个节点
+2026-02-19 20:08:44,282 - core.rag.rag_postprocess_module - INFO - 所有问题检索并重排序完成，共 5 个节点
+2026-02-19 20:08:44,282 - core.rag.rag_postprocess_module - INFO - 去重后保留 5 个节点
+2026-02-19 20:08:44,284 - core.rag.rag_postprocess_module - INFO - 内容去重后保留 4 个节点
+2026-02-19 20:08:44,284 - core.rag.rag_postprocess_module - DEBUG - 问题池构建完成，包含 1 个去重后的问题
+2026-02-19 20:08:44,284 - core.rag.rag_postprocess_module - INFO - 构建问题池完成，共 1 个问题
+2026-02-19 20:08:44 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:742] - RAG 检索完成，获得 4 个节点
+2026-02-19 20:08:44 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:44 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:44 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:44 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:44 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:44 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:44 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:44 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:44 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:784] - 从全部检索结果中提取并去重后，问题池中共有 0 个问题
+2026-02-19 20:08:44 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:673] - [节点 6] 向量化文档并入库
+2026-02-19 20:08:44 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:694] - 阶段一和阶段二都没有新的BaseNodes需要向量化
+2026-02-19 20:08:44 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:696] - 阶段二没有新的BaseNodes需要向量化，仅阶段一有文档被向量化
+2026-02-19 20:08:44 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:1041] - 检索重试达到上限 3/3，终止流程
+2026-02-19 20:08:44 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:638] - [节点 5b] 第二阶段文档处理（去重后）
+2026-02-19 20:08:44 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:710] - [节点 7] RAG 检索
+2026-02-19 20:08:44 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:727] - 尝试创建 RAG 检索器，使用 top_k=5
+2026-02-19 20:08:44,289 - core.rag.rag_postprocess_module - INFO - 初始化 RAGModule: top_k=5
+2026-02-19 20:08:44,289 - core.rag.rag_postprocess_module - INFO - 开始 RAG 检索，planner问题数: 1
+2026-02-19 20:08:44,392 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 初步检索到 5 个节点
+2026-02-19 20:08:44,392 - core.rag.reranker - INFO - 开始异步 rerank，查询: langgraph 高阶技巧有哪些？..., 文档数量: 5
+2026-02-19 20:08:46,830 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 20:08:46,830 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 重排序+过滤后保留 5 个节点
+2026-02-19 20:08:46,830 - core.rag.rag_postprocess_module - INFO - 所有问题检索并重排序完成，共 5 个节点
+2026-02-19 20:08:46,830 - core.rag.rag_postprocess_module - INFO - 去重后保留 5 个节点
+2026-02-19 20:08:46,832 - core.rag.rag_postprocess_module - INFO - 内容去重后保留 4 个节点
+2026-02-19 20:08:46,832 - core.rag.rag_postprocess_module - DEBUG - 问题池构建完成，包含 1 个去重后的问题
+2026-02-19 20:08:46,832 - core.rag.rag_postprocess_module - INFO - 构建问题池完成，共 1 个问题
+2026-02-19 20:08:46 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:742] - RAG 检索完成，获得 4 个节点
+2026-02-19 20:08:46 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:46 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:46 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:46 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:46 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:46 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:46 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:46 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:46 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:784] - 从全部检索结果中提取并去重后，问题池中共有 0 个问题
+2026-02-19 20:08:46 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:1052] - 流程终止: retrieved_epoch=3
+2026-02-19 20:08:46 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:1041] - 检索重试达到上限 3/3，终止流程
+2026-02-19 20:08:46 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:1052] - 流程终止: retrieved_epoch=4
+2026-02-19 20:08:46 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:673] - [节点 6] 向量化文档并入库
+2026-02-19 20:08:46 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:694] - 阶段一和阶段二都没有新的BaseNodes需要向量化
+2026-02-19 20:08:46 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:696] - 阶段二没有新的BaseNodes需要向量化，仅阶段一有文档被向量化
+2026-02-19 20:08:46 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:710] - [节点 7] RAG 检索
+2026-02-19 20:08:46 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:727] - 尝试创建 RAG 检索器，使用 top_k=5
+2026-02-19 20:08:46,839 - core.rag.rag_postprocess_module - INFO - 初始化 RAGModule: top_k=5
+2026-02-19 20:08:46,839 - core.rag.rag_postprocess_module - INFO - 开始 RAG 检索，planner问题数: 1
+2026-02-19 20:08:46,939 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 初步检索到 5 个节点
+2026-02-19 20:08:46,939 - core.rag.reranker - INFO - 开始异步 rerank，查询: langgraph 高阶技巧有哪些？..., 文档数量: 5
+2026-02-19 20:08:50,230 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 20:08:50,231 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 重排序+过滤后保留 5 个节点
+2026-02-19 20:08:50,231 - core.rag.rag_postprocess_module - INFO - 所有问题检索并重排序完成，共 5 个节点
+2026-02-19 20:08:50,231 - core.rag.rag_postprocess_module - INFO - 去重后保留 5 个节点
+2026-02-19 20:08:50,233 - core.rag.rag_postprocess_module - INFO - 内容去重后保留 4 个节点
+2026-02-19 20:08:50,233 - core.rag.rag_postprocess_module - DEBUG - 问题池构建完成，包含 1 个去重后的问题
+2026-02-19 20:08:50,233 - core.rag.rag_postprocess_module - INFO - 构建问题池完成，共 1 个问题
+2026-02-19 20:08:50 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:742] - RAG 检索完成，获得 4 个节点
+2026-02-19 20:08:50 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:50 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:50 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:50 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:50 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:50 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:50 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:08:50 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:08:50 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:784] - 从全部检索结果中提取并去重后，问题池中共有 0 个问题
+2026-02-19 20:08:50 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:1041] - 检索重试达到上限 3/3，终止流程
+2026-02-19 20:08:50 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:1052] - 流程终止: retrieved_epoch=5
+2026-02-19 20:08:50 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1207] - 节点执行状态: {'init_vector_store': True, 'plan_query': 'error', 'execute_first': True, 'collect_first': True, 'process_first_documents': 'error', 'execute_second': False, 'collect_second': True, 'process_second_documents': False, 'vectorize_documents': True, 'rag_retrieve': True, 'generate_answer': False, 'eval_answer': False, 'terminal_error': 'error'}
+2026-02-19 20:08:50 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1231] - 查询处理完成
+2026-02-19 20:51:55,364 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:51:55,377 - core.llms - INFO - 成功初始化 LlamaIndex Chat(qwen)/Embedding(bge)
+2026-02-19 20:51:55,515 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:51:55,628 - core.rag.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8100
+2026-02-19 20:51:55,742 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:51:55 - agents.planneragent - INFO - [planneragent.py:251] - 完成planner_graph的初始化构造
+2026-02-19 20:51:55,860 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:51:55 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 1/3
+2026-02-19 20:51:55,975 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:51:55 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 2/3
+2026-02-19 20:51:56,090 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 20:51:56 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 3/3
+2026-02-19 20:51:56 - agents.executor_pool - INFO - [executor_pool.py:64] - 成功创建 3 个 ExecutorAgent 实例
+2026-02-19 20:51:56 - agents.executor_pool - INFO - [executor_pool.py:54] - 初始化 ExecutorAgentPool: pool_size=3, model=qwen
+2026-02-19 20:51:56,090 - core.rag.rag_preprocess_module - INFO - 初始化 VectorStoreManager: persist_dir=vector_storage, collection=base_crunchbase_collection
+2026-02-19 20:51:56,205 - core.rag.document_processor - INFO - 初始化 DocumentProcessor: mineru_url=http://localhost:8080, max_chunk_size=1000
+2026-02-19 20:51:56 - core.file_deduplicator - INFO - [file_deduplicator.py:51] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
+2026-02-19 20:51:56 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1142] - MultiAgentGraph 构建完成（两阶段执行版本）
+2026-02-19 20:51:56 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:209] - 初始化 MultiAgentGraph: executor_pool_size=3
+2026-02-19 20:51:56 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1160] - 开始处理用户查询: langgraph 高阶技巧有哪些？ (user_id=test_user_001, thread_id=test_thread_001)
+2026-02-19 20:51:56 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:220] - [节点 1] 初始化向量存储
+2026-02-19 20:51:56,321 - core.rag.rag_preprocess_module - INFO - 检查本地向量库是否存在
+2026-02-19 20:51:56,321 - core.rag.rag_preprocess_module - INFO - 向量库目录存在: True, Chroma 数据库存在: True
+2026-02-19 20:51:56,321 - core.rag.rag_preprocess_module - INFO - 检测到本地向量库，尝试加载
+2026-02-19 20:51:56,553 - core.rag.rag_preprocess_module - INFO - 找到集合 'base_crunchbase_collection'，包含 6144 个文档
+2026-02-19 20:51:56,553 - core.rag.rag_preprocess_module - INFO - 从现有向量库加载索引
+2026-02-19 20:51:56,555 - core.rag.rag_preprocess_module - INFO - 成功从本地加载向量索引
+2026-02-19 20:51:56 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:225] - 向量存储初始化完成
+2026-02-19 20:51:56 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:246] - [节点 2] 调用 PlannerAgent 拆解查询
+2026-02-19 20:51:56,561 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 20:51:58,125 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-19 20:52:11 - agents.planneragent - ERROR - [planneragent.py:142] - planner_agent llm_chat 分析用户的问题时，出现错误:Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-cfac5d4e-0619-9964-93ce-61d65eee3094', 'request_id': 'cfac5d4e-0619-9964-93ce-61d65eee3094'}
+2026-02-19 20:52:11 - agents.planneragent - ERROR - [planneragent.py:274] - planner_chatmodel对于用户的langgraph 高阶技巧有哪些？ 出现错误：Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-cfac5d4e-0619-9964-93ce-61d65eee3094', 'request_id': 'cfac5d4e-0619-9964-93ce-61d65eee3094'}
+2026-02-19 20:52:11 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:296] - 查询拆解失败: Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-cfac5d4e-0619-9964-93ce-61d65eee3094', 'request_id': 'cfac5d4e-0619-9964-93ce-61d65eee3094'}
+2026-02-19 20:52:11 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:307] - [节点 3a] 第一阶段执行 - 探索阶段（url_pool=[]）
+2026-02-19 20:52:11 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:327] - 第一阶段执行: 1 个子问题，初始 URL 池为空
+2026-02-19 20:52:11 - agents.executor_pool - INFO - [executor_pool.py:94] - 开始并发执行 1 个子问题 (user_id=test_user_001, url_pool_size=0)
+2026-02-19 20:52:11 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 1 到 Agent 0
+2026-02-19 20:52:11 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:673] - [节点 6] 向量化文档并入库
+2026-02-19 20:52:11 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:694] - 阶段一和阶段二都没有新的BaseNodes需要向量化
+2026-02-19 20:52:11 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:696] - 阶段二没有新的BaseNodes需要向量化，仅阶段一有文档被向量化
+2026-02-19 20:52:11,882 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 20:52:13,281 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-19 20:52:26 - agents.executoragent - INFO - [executoragent.py:988] - 完成 executor_graph 的初始化构造
+2026-02-19 20:52:26 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'langgraph 高阶技巧有哪些？' (user_id=test_user_001, thread_id=test_thread_001_executor_0)
+2026-02-19 20:52:26 - agents.executoragent - INFO - [executoragent.py:600] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-19 20:52:26 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 wikipedia_search 搜索: langgraph 高阶技巧有哪些？
+2026-02-19 20:52:26 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 exa_context_search 搜索: langgraph 高阶技巧有哪些？
+2026-02-19 20:52:26 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 tavily_search 搜索: langgraph 高阶技巧有哪些？
+2026-02-19 20:52:28 - agents.executoragent - WARNING - [executoragent.py:176] - wikipedia_search 返回了 0 条数据
+2026-02-19 20:52:34 - agents.executoragent - INFO - [executoragent.py:174] - exa_context_search 返回了 10 条数据
+2026-02-19 20:52:40 - agents.executoragent - INFO - [executoragent.py:174] - tavily_search 返回了 1 条数据
+2026-02-19 20:52:40 - agents.executoragent - INFO - [executoragent.py:624] - 搜索完成，共获得 11 条结果
+2026-02-19 20:52:40 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-19 20:52:43 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=True
+2026-02-19 20:52:43 - agents.executoragent - INFO - [executoragent.py:526] - LLM 决定调用 1 个可选工具
+2026-02-19 20:52:43 - agents.executoragent - INFO - [executoragent.py:557] - 准备执行 1 个可选工具调用
+2026-02-19 20:52:54 - agents.executoragent - INFO - [executoragent.py:567] - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-19 20:52:54 - agents.executoragent - INFO - [executoragent.py:580] -   - 工具 resolve-library-id 返回 1 条结果
+2026-02-19 20:52:54 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-19 20:52:57 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=True
+2026-02-19 20:52:57 - agents.executoragent - INFO - [executoragent.py:526] - LLM 决定调用 1 个可选工具
+2026-02-19 20:52:57 - agents.executoragent - INFO - [executoragent.py:557] - 准备执行 1 个可选工具调用
+2026-02-19 20:53:12 - agents.executoragent - INFO - [executoragent.py:567] - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-19 20:53:12 - agents.executoragent - INFO - [executoragent.py:580] -   - 工具 query-docs 返回 1 条结果
+2026-02-19 20:53:12 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-19 20:54:44 - agents.executoragent - ERROR - [executoragent.py:516] - ExecutorAgent-llm_chat_node 状态错误Request timed out.
+2026-02-19 20:54:44 - agents.executoragent - INFO - [executoragent.py:530] - LLM 决定不调用可选工具，进入清洗阶段
+2026-02-19 20:54:44 - agents.executoragent - WARNING - [executoragent.py:729] - 处理langgraph 高阶技巧有哪些？----langgraph 高阶技巧有哪些？时sub_url_pool 为空
+2026-02-19 20:54:44 - agents.executoragent - INFO - [executoragent.py:749] - 跳过工具 resolve-library-id 的结果（非 paper 结构）
+2026-02-19 20:54:44 - agents.executoragent - INFO - [executoragent.py:749] - 跳过工具 query-docs 的结果（非 paper 结构）
+2026-02-19 20:54:44 - agents.executoragent - INFO - [executoragent.py:749] - 跳过工具 resolve-library-id 的结果（非 paper 结构）
+2026-02-19 20:54:44 - agents.executoragent - INFO - [executoragent.py:749] - 跳过工具 query-docs 的结果（非 paper 结构）
+2026-02-19 20:54:44 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.cnblogs.com/muzinan110/p/18540149
+2026-02-19 20:54:44 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.cnblogs.com/muzinan110/p/18540008
+2026-02-19 20:54:44 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://ywctech.net/ml-ai/langchain-langgraph-agent-part2/
+2026-02-19 20:54:44 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://jimmysong.io/zh/book/ai-handbook/agent/langgraph/
+2026-02-19 20:54:44 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraphjs/how-tos/branching
+2026-02-19 20:54:44 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.cnblogs.com/studyLog-share/p/19289014
+2026-02-19 20:54:44 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.langgraphcn.org/how-tos/streaming-tokens/
+2026-02-19 20:54:44 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://aws.amazon.com/cn/blogs/china/fast-fashion-e-commerce-agent-design-ideas
+2026-02-19 20:54:44 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://python.langchain.ac.cn/docs/tutorials/graph
+2026-02-19 20:54:44 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.bookstack.cn/read/langgraph-0.2.73-en/deceb9d0769000c9.md
+2026-02-19 20:54:44 - agents.executoragent - DEBUG - [executoragent.py:685] - 保留结果（URL去重）: https://www.cnblogs.com/muzinan110/p/18540042
+2026-02-19 20:54:44 - agents.executoragent - INFO - [executoragent.py:712] - 去重统计: 去重前=11, 去重后=11, 去重率=0.0%
+2026-02-19 20:54:44 - agents.executoragent - INFO - [executoragent.py:810] - 去重前: 11 篇
+2026-02-19 20:54:44 - agents.executoragent - INFO - [executoragent.py:811] - 去重后: 11 篇
+2026-02-19 20:54:44 - agents.executoragent - INFO - [executoragent.py:838] - 从 deduplicated_results 获取 11 篇文档
+2026-02-19 20:54:44 - agents.executoragent - INFO - [executoragent.py:851] - 跳过工具 resolve-library-id 的下载结果合并
+2026-02-19 20:54:44 - agents.executoragent - INFO - [executoragent.py:848] - 已将工具 query-docs 结果追加写入 context7_grep.json
+2026-02-19 20:54:44 - agents.executoragent - INFO - [executoragent.py:851] - 跳过工具 resolve-library-id 的下载结果合并
+2026-02-19 20:54:44 - agents.executoragent - INFO - [executoragent.py:848] - 已将工具 query-docs 结果追加写入 context7_grep.json
+2026-02-19 20:54:44 - agents.executoragent - INFO - [executoragent.py:876] - 总共需要下载 11 篇文档
+2026-02-19 20:54:44,375 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 20:54:45,735 - core.mcp.tools - INFO - 返回 6 个下载工具
+2026-02-19 20:54:45 - agents.executoragent - INFO - [executoragent.py:897] - 开始下载 tavily 的 1 篇文档到 /home/qinshan/widthresearch/data/downloads
+2026-02-19 20:54:45 - agents.executoragent - INFO - [executoragent.py:903] - 使用下载工具 tavily_download 处理 tavily 数据
+2026-02-19 20:54:45 - agents.executoragent - INFO - [executoragent.py:897] - 开始下载 exa_context 的 10 篇文档到 /home/qinshan/widthresearch/data/downloads
+2026-02-19 20:54:45 - agents.executoragent - INFO - [executoragent.py:903] - 使用下载工具 exa_context_download 处理 exa_context 数据
+2026-02-19 20:54:47 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 tavily_download 返回类型: <class 'list'>
+2026-02-19 20:54:47 - agents.executoragent - INFO - [executoragent.py:912] - 下载工具 tavily_download 首项类型: <class 'dict'>
+2026-02-19 20:54:47 - agents.executoragent - INFO - [executoragent.py:917] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=1
+2026-02-19 20:54:47 - agents.executoragent - INFO - [executoragent.py:927] - 成功下载 1 篇 tavily 文档
+2026-02-19 20:54:47 - agents.executoragent - INFO - [executoragent.py:910] - 下载工具 exa_context_download 返回类型: <class 'list'>
+2026-02-19 20:54:47 - agents.executoragent - INFO - [executoragent.py:912] - 下载工具 exa_context_download 首项类型: <class 'dict'>
+2026-02-19 20:54:47 - agents.executoragent - INFO - [executoragent.py:917] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=3
+2026-02-19 20:54:47 - agents.executoragent - INFO - [executoragent.py:927] - 成功下载 3 篇 exa_context 文档
+2026-02-19 20:54:47 - agents.executoragent - INFO - [executoragent.py:955] - 下载完成，共下载 4 篇文档
+2026-02-19 20:54:47 - agents.executoragent - INFO - [executoragent.py:1010] - executor 完成子问题 'langgraph 高阶技巧有哪些？' 的处理
+2026-02-19 20:54:47 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'langgraph 高阶技巧有哪些？' 的处理
+2026-02-19 20:54:47 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成langgraph 高阶技巧有哪些？后 sub_url_pool 包含 11 个 URL
+2026-02-19 20:54:47 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成langgraph 高阶技巧有哪些？后 downloaded_papers 包含 4 个结果
+2026-02-19 20:54:47 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 1 执行成功
+2026-02-19 20:54:47 - agents.executor_pool - INFO - [executor_pool.py:134] - 并发执行完成: 成功 1/1, 失败 0
+2026-02-19 20:54:47 - agents.executor_pool - INFO - [executor_pool.py:135] - URL 池更新: 0 -> 11 个 URL
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:336] - 第一阶段执行完成，完成1 个子问题的检索
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:337] - 第一阶段收集到 11 个 URL
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:450] - [节点 4a] 第一次文档收集与去重
+2026-02-19 20:54:47 - core.file_deduplicator - INFO - [file_deduplicator.py:164] - 使用 TF-IDF 去重: 4 个文件, 阈值=0.8
+2026-02-19 20:54:47 - core.file_deduplicator - INFO - [file_deduplicator.py:267] - TF-IDF 去重完成: 保留 4 个, 未输出 0 个
+2026-02-19 20:54:47 - core.file_deduplicator - INFO - [file_deduplicator.py:297] - 列表去重完成: 输入 4 个, 输出 4 个, 未输出 0 个
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:466] - 第一次去重完成: 输入 4 个, 输出 4 个, 未输出 0 个
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:485] - 从第一阶段 executor_results 提取到 4 个文档元数据
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:710] - [节点 7] RAG 检索
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:727] - 尝试创建 RAG 检索器，使用 top_k=5
+2026-02-19 20:54:47,235 - core.rag.rag_postprocess_module - INFO - 初始化 RAGModule: top_k=5
+2026-02-19 20:54:47,235 - core.rag.rag_postprocess_module - INFO - 开始 RAG 检索，planner问题数: 1
+2026-02-19 20:54:47,416 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 初步检索到 5 个节点
+2026-02-19 20:54:47,416 - core.rag.reranker - INFO - 开始异步 rerank，查询: langgraph 高阶技巧有哪些？..., 文档数量: 5
+2026-02-19 20:54:47,424 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 20:54:47,427 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 重排序+过滤后保留 5 个节点
+2026-02-19 20:54:47,427 - core.rag.rag_postprocess_module - INFO - 所有问题检索并重排序完成，共 5 个节点
+2026-02-19 20:54:47,427 - core.rag.rag_postprocess_module - INFO - 去重后保留 5 个节点
+2026-02-19 20:54:47,429 - core.rag.rag_postprocess_module - INFO - 内容去重后保留 4 个节点
+2026-02-19 20:54:47,429 - core.rag.rag_postprocess_module - DEBUG - 问题池构建完成，包含 1 个去重后的问题
+2026-02-19 20:54:47,429 - core.rag.rag_postprocess_module - INFO - 构建问题池完成，共 1 个问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:742] - RAG 检索完成，获得 4 个节点
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:784] - 从全部检索结果中提取并去重后，问题池中共有 0 个问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1046] - 检索为空，继续重试 (1/3)
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:358] - [节点 3b] 第二阶段执行 - 精炼阶段（使用第一阶段的 url_pool）
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:366] - 没有子问题需要执行第二阶段
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:602] - [节点 5a] 第一阶段文档处理（去重后）
+2026-02-19 20:54:47,435 - core.rag.document_processor - INFO - 开始处理 4 个文档
+2026-02-19 20:54:47,435 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/tavily_LangGraph高.md 加载为 9 个 Document 并加入 pipeline
+2026-02-19 20:54:47,436 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_使用LangGrap.md 加载为 4 个 Document 并加入 pipeline
+2026-02-19 20:54:47,436 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_在图数据库上构建问答.md 加载为 5 个 Document 并加入 pipeline
+2026-02-19 20:54:47,437 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_思维导图备注.md 加载为 17 个 Document 并加入 pipeline
+2026-02-19 20:54:47 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:627] - 第一阶段文档处理失败: 'JsonReader' object has no attribute 'load_data'
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:710] - [节点 7] RAG 检索
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:727] - 尝试创建 RAG 检索器，使用 top_k=5
+2026-02-19 20:54:47,437 - core.rag.rag_postprocess_module - INFO - 初始化 RAGModule: top_k=5
+2026-02-19 20:54:47,437 - core.rag.rag_postprocess_module - INFO - 开始 RAG 检索，planner问题数: 1
+2026-02-19 20:54:47,520 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 初步检索到 5 个节点
+2026-02-19 20:54:47,521 - core.rag.reranker - INFO - 开始异步 rerank，查询: langgraph 高阶技巧有哪些？..., 文档数量: 5
+2026-02-19 20:54:47,523 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 20:54:47,524 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 重排序+过滤后保留 5 个节点
+2026-02-19 20:54:47,524 - core.rag.rag_postprocess_module - INFO - 所有问题检索并重排序完成，共 5 个节点
+2026-02-19 20:54:47,524 - core.rag.rag_postprocess_module - INFO - 去重后保留 5 个节点
+2026-02-19 20:54:47,526 - core.rag.rag_postprocess_module - INFO - 内容去重后保留 4 个节点
+2026-02-19 20:54:47,526 - core.rag.rag_postprocess_module - DEBUG - 问题池构建完成，包含 1 个去重后的问题
+2026-02-19 20:54:47,526 - core.rag.rag_postprocess_module - INFO - 构建问题池完成，共 1 个问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:742] - RAG 检索完成，获得 4 个节点
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:784] - 从全部检索结果中提取并去重后，问题池中共有 0 个问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1046] - 检索为空，继续重试 (2/3)
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:509] - [节点 4b] 第二次文档收集与去重
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:544] - 第二次去重完成: 输入 0 个, 输出 0 个, 未输出 0 个
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:565] - 从第二阶段 executor_results 提取到 0 个文档元数据
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:566] - 两阶段总计：4 + 0 = 0 个去重后的文档
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:710] - [节点 7] RAG 检索
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:727] - 尝试创建 RAG 检索器，使用 top_k=5
+2026-02-19 20:54:47,531 - core.rag.rag_postprocess_module - INFO - 初始化 RAGModule: top_k=5
+2026-02-19 20:54:47,532 - core.rag.rag_postprocess_module - INFO - 开始 RAG 检索，planner问题数: 1
+2026-02-19 20:54:47,625 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 初步检索到 5 个节点
+2026-02-19 20:54:47,625 - core.rag.reranker - INFO - 开始异步 rerank，查询: langgraph 高阶技巧有哪些？..., 文档数量: 5
+2026-02-19 20:54:47,627 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 20:54:47,628 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 重排序+过滤后保留 5 个节点
+2026-02-19 20:54:47,628 - core.rag.rag_postprocess_module - INFO - 所有问题检索并重排序完成，共 5 个节点
+2026-02-19 20:54:47,628 - core.rag.rag_postprocess_module - INFO - 去重后保留 5 个节点
+2026-02-19 20:54:47,630 - core.rag.rag_postprocess_module - INFO - 内容去重后保留 4 个节点
+2026-02-19 20:54:47,630 - core.rag.rag_postprocess_module - DEBUG - 问题池构建完成，包含 1 个去重后的问题
+2026-02-19 20:54:47,630 - core.rag.rag_postprocess_module - INFO - 构建问题池完成，共 1 个问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:742] - RAG 检索完成，获得 4 个节点
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:784] - 从全部检索结果中提取并去重后，问题池中共有 0 个问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:673] - [节点 6] 向量化文档并入库
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:694] - 阶段一和阶段二都没有新的BaseNodes需要向量化
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:696] - 阶段二没有新的BaseNodes需要向量化，仅阶段一有文档被向量化
+2026-02-19 20:54:47 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:1041] - 检索重试达到上限 3/3，终止流程
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:638] - [节点 5b] 第二阶段文档处理（去重后）
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:710] - [节点 7] RAG 检索
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:727] - 尝试创建 RAG 检索器，使用 top_k=5
+2026-02-19 20:54:47,636 - core.rag.rag_postprocess_module - INFO - 初始化 RAGModule: top_k=5
+2026-02-19 20:54:47,636 - core.rag.rag_postprocess_module - INFO - 开始 RAG 检索，planner问题数: 1
+2026-02-19 20:54:47,721 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 初步检索到 5 个节点
+2026-02-19 20:54:47,722 - core.rag.reranker - INFO - 开始异步 rerank，查询: langgraph 高阶技巧有哪些？..., 文档数量: 5
+2026-02-19 20:54:47,724 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 20:54:47,725 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 重排序+过滤后保留 5 个节点
+2026-02-19 20:54:47,725 - core.rag.rag_postprocess_module - INFO - 所有问题检索并重排序完成，共 5 个节点
+2026-02-19 20:54:47,725 - core.rag.rag_postprocess_module - INFO - 去重后保留 5 个节点
+2026-02-19 20:54:47,727 - core.rag.rag_postprocess_module - INFO - 内容去重后保留 4 个节点
+2026-02-19 20:54:47,727 - core.rag.rag_postprocess_module - DEBUG - 问题池构建完成，包含 1 个去重后的问题
+2026-02-19 20:54:47,727 - core.rag.rag_postprocess_module - INFO - 构建问题池完成，共 1 个问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:742] - RAG 检索完成，获得 4 个节点
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:784] - 从全部检索结果中提取并去重后，问题池中共有 0 个问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:1052] - 流程终止: retrieved_epoch=3
+2026-02-19 20:54:47 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:1041] - 检索重试达到上限 3/3，终止流程
+2026-02-19 20:54:47 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:1052] - 流程终止: retrieved_epoch=4
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:673] - [节点 6] 向量化文档并入库
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:694] - 阶段一和阶段二都没有新的BaseNodes需要向量化
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:696] - 阶段二没有新的BaseNodes需要向量化，仅阶段一有文档被向量化
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:710] - [节点 7] RAG 检索
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:727] - 尝试创建 RAG 检索器，使用 top_k=5
+2026-02-19 20:54:47,733 - core.rag.rag_postprocess_module - INFO - 初始化 RAGModule: top_k=5
+2026-02-19 20:54:47,733 - core.rag.rag_postprocess_module - INFO - 开始 RAG 检索，planner问题数: 1
+2026-02-19 20:54:47,817 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 初步检索到 5 个节点
+2026-02-19 20:54:47,817 - core.rag.reranker - INFO - 开始异步 rerank，查询: langgraph 高阶技巧有哪些？..., 文档数量: 5
+2026-02-19 20:54:47,820 - core.rag.reranker - ERROR - 异步 Rerank 过程出错: Expecting value: line 1 column 1 (char 0)
+2026-02-19 20:54:47,820 - core.rag.rag_postprocess_module - DEBUG - 问题 1/1 重排序+过滤后保留 5 个节点
+2026-02-19 20:54:47,820 - core.rag.rag_postprocess_module - INFO - 所有问题检索并重排序完成，共 5 个节点
+2026-02-19 20:54:47,821 - core.rag.rag_postprocess_module - INFO - 去重后保留 5 个节点
+2026-02-19 20:54:47,822 - core.rag.rag_postprocess_module - INFO - 内容去重后保留 4 个节点
+2026-02-19 20:54:47,822 - core.rag.rag_postprocess_module - DEBUG - 问题池构建完成，包含 1 个去重后的问题
+2026-02-19 20:54:47,822 - core.rag.rag_postprocess_module - INFO - 构建问题池完成，共 1 个问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:742] - RAG 检索完成，获得 4 个节点
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - WARNING - [multi_agent_graph.py:765] - 检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:770] - 检索到节点，来源: base_data, 相似度得分: 0.5
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:784] - 从全部检索结果中提取并去重后，问题池中共有 0 个问题
+2026-02-19 20:54:47 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:1041] - 检索重试达到上限 3/3，终止流程
+2026-02-19 20:54:47 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:1052] - 流程终止: retrieved_epoch=5
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1207] - 节点执行状态: {'init_vector_store': True, 'plan_query': 'error', 'execute_first': True, 'collect_first': True, 'process_first_documents': 'error', 'execute_second': False, 'collect_second': True, 'process_second_documents': False, 'vectorize_documents': True, 'rag_retrieve': True, 'generate_answer': False, 'eval_answer': False, 'terminal_error': 'error'}
+2026-02-19 20:54:47 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1231] - 查询处理完成
+2026-02-19 21:01:52,262 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 21:01:52,276 - core.llms - INFO - 成功初始化 LlamaIndex Chat(qwen)/Embedding(bge)
+2026-02-19 21:01:52,409 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 21:01:52,547 - core.rag.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8100
+2026-02-19 21:01:52,664 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 21:01:52 - agents.planneragent - INFO - [planneragent.py:251] - 完成planner_graph的初始化构造
+2026-02-19 21:01:52,782 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 21:01:52 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 1/3
+2026-02-19 21:01:52,911 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 21:01:52 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 2/3
+2026-02-19 21:01:53,065 - core.llms - INFO - 成功初始化 LangChain Chat(qwen)/Embedding(bge)
+2026-02-19 21:01:53 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 3/3
+2026-02-19 21:01:53 - agents.executor_pool - INFO - [executor_pool.py:64] - 成功创建 3 个 ExecutorAgent 实例
+2026-02-19 21:01:53 - agents.executor_pool - INFO - [executor_pool.py:54] - 初始化 ExecutorAgentPool: pool_size=3, model=qwen
+2026-02-19 21:01:53,066 - core.rag.rag_preprocess_module - INFO - 初始化 VectorStoreManager: persist_dir=vector_storage, collection=base_crunchbase_collection
+2026-02-19 21:01:53,253 - core.rag.document_processor - INFO - 初始化 DocumentProcessor: mineru_url=http://localhost:8080, max_chunk_size=1000
+2026-02-19 21:01:53 - core.file_deduplicator - INFO - [file_deduplicator.py:51] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
+2026-02-19 21:01:53 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1142] - MultiAgentGraph 构建完成（两阶段执行版本）
+2026-02-19 21:01:53 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:209] - 初始化 MultiAgentGraph: executor_pool_size=3
+2026-02-19 21:01:53 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1160] - 开始处理用户查询: langgraph 高阶技巧有哪些？ (user_id=test_user_001, thread_id=test_thread_001)
+2026-02-19 21:01:53 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:220] - [节点 1] 初始化向量存储
+2026-02-19 21:01:53,327 - core.rag.rag_preprocess_module - INFO - 检查本地向量库是否存在
+2026-02-19 21:01:53,327 - core.rag.rag_preprocess_module - INFO - 向量库目录存在: True, Chroma 数据库存在: True
+2026-02-19 21:01:53,327 - core.rag.rag_preprocess_module - INFO - 检测到本地向量库，尝试加载
+2026-02-19 21:01:53,583 - core.rag.rag_preprocess_module - INFO - 找到集合 'base_crunchbase_collection'，包含 6144 个文档
+2026-02-19 21:01:53,583 - core.rag.rag_preprocess_module - INFO - 从现有向量库加载索引
+2026-02-19 21:01:53,584 - core.rag.rag_preprocess_module - INFO - 成功从本地加载向量索引
+2026-02-19 21:01:53 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:225] - 向量存储初始化完成
+2026-02-19 21:01:53 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:246] - [节点 2] 调用 PlannerAgent 拆解查询
+2026-02-19 21:01:53,590 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 21:01:55,367 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-19 21:02:11 - agents.planneragent - ERROR - [planneragent.py:142] - planner_agent llm_chat 分析用户的问题时，出现错误:Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-2c7620ad-f67d-94c9-964b-e929817d6a1b', 'request_id': '2c7620ad-f67d-94c9-964b-e929817d6a1b'}
+2026-02-19 21:02:11 - agents.planneragent - ERROR - [planneragent.py:274] - planner_chatmodel对于用户的langgraph 高阶技巧有哪些？ 出现错误：Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-2c7620ad-f67d-94c9-964b-e929817d6a1b', 'request_id': '2c7620ad-f67d-94c9-964b-e929817d6a1b'}
+2026-02-19 21:02:11 - agents.multi_agent_graph - ERROR - [multi_agent_graph.py:296] - 查询拆解失败: Error code: 400 - {'error': {'message': '<400> InternalError.Algo.InvalidParameter: An assistant message with "tool_calls" must be followed by tool messages responding to each "tool_call_id". The following tool_call_ids did not have response messages: message[10].role', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_parameter_error'}, 'id': 'chatcmpl-2c7620ad-f67d-94c9-964b-e929817d6a1b', 'request_id': '2c7620ad-f67d-94c9-964b-e929817d6a1b'}
+2026-02-19 21:02:11 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:307] - [节点 3a] 第一阶段执行 - 探索阶段（url_pool=[]）
+2026-02-19 21:02:11 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:327] - 第一阶段执行: 1 个子问题，初始 URL 池为空
+2026-02-19 21:02:11 - agents.executor_pool - INFO - [executor_pool.py:94] - 开始并发执行 1 个子问题 (user_id=test_user_001, url_pool_size=0)
+2026-02-19 21:02:11 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 1 到 Agent 0
+2026-02-19 21:02:11 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:673] - [节点 6] 向量化文档并入库
+2026-02-19 21:02:11 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:694] - 阶段一和阶段二都没有新的BaseNodes需要向量化
+2026-02-19 21:02:11 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:696] - 阶段二没有新的BaseNodes需要向量化，仅阶段一有文档被向量化
+2026-02-19 21:02:11,748 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-19 21:02:13,138 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-19 21:02:26 - agents.executoragent - INFO - [executoragent.py:988] - 完成 executor_graph 的初始化构造
+2026-02-19 21:02:26 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'langgraph 高阶技巧有哪些？' (user_id=test_user_001, thread_id=test_thread_001_executor_0)
+2026-02-19 21:02:26 - agents.executoragent - INFO - [executoragent.py:600] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-19 21:02:26 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 wikipedia_search 搜索: langgraph 高阶技巧有哪些？
+2026-02-19 21:02:26 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 exa_context_search 搜索: langgraph 高阶技巧有哪些？
+2026-02-19 21:02:26 - agents.executoragent - INFO - [executoragent.py:115] - 调用工具 tavily_search 搜索: langgraph 高阶技巧有哪些？
+2026-02-19 21:02:28 - agents.executoragent - WARNING - [executoragent.py:176] - wikipedia_search 返回了 0 条数据
+2026-02-19 21:02:37 - agents.executoragent - INFO - [executoragent.py:174] - exa_context_search 返回了 10 条数据
+2026-02-19 21:02:40 - agents.executoragent - INFO - [executoragent.py:174] - tavily_search 返回了 1 条数据
+2026-02-19 21:02:40 - agents.executoragent - INFO - [executoragent.py:624] - 搜索完成，共获得 11 条结果
+2026-02-19 21:02:40 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-19 21:02:45 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=True
+2026-02-19 21:02:45 - agents.executoragent - INFO - [executoragent.py:526] - LLM 决定调用 1 个可选工具
+2026-02-19 21:02:45 - agents.executoragent - INFO - [executoragent.py:557] - 准备执行 1 个可选工具调用
+2026-02-19 21:03:00 - agents.executoragent - INFO - [executoragent.py:567] - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-19 21:03:00 - agents.executoragent - INFO - [executoragent.py:580] -   - 工具 resolve-library-id 返回 1 条结果
+2026-02-19 21:03:00 - agents.executoragent - INFO - [executoragent.py:499] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-19 21:03:03 - agents.executoragent - INFO - [executoragent.py:509] - LLM 决策结果: 是否调用工具=True
+2026-02-19 21:03:03 - agents.executoragent - INFO - [executoragent.py:526] - LLM 决定调用 1 个可选工具
+2026-02-19 21:03:03 - agents.executoragent - INFO - [executoragent.py:557] - 准备执行 1 个可选工具调用

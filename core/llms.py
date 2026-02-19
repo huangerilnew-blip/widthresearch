@@ -50,7 +50,7 @@ MODEL_CONFIGS = {
         "bge": {
             "base_url": Config.VLLM_BASE_URL,
             "api_key": "NA",
-            "model_name": Config.EMBEDDING_MODEL_NAME
+            "model_name": "bge-m3"
     }
 }
 }

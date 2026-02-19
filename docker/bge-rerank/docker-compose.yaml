@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  tei:
+    image: ghcr.io/huggingface/text-embeddings-inference:86-1.6
+    container_name: bge-rerank
+
+    ports:
+      - "8100:8100"
+
+    volumes:
+      - /home/qinshan/models/bge_rerank:/data
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+    command: >
+      --model-id /data/
+      --dtype float16
+
+    restart: "no"

@@ -176,23 +176,34 @@ class DocumentProcessor:
                 logger.info(f"Markdown 文档 {local_path} 加载为 {len(md_docs)} 个 Document 并加入 pipeline")
             elif file_ext == '.json':
                 # 使用 JsonReader 加载 JSON 文件
-                json_docs = self.json_parser.load_data(file=Path(local_path))
+                json_lines = self.json_parser.read_json_lines(local_path)
+                json_docs = []
+                for line in json_lines:
+                    if not line.strip():
+                        continue
+                    try:
+                        json_docs.append(json.loads(line))
+                    except json.JSONDecodeError:
+                        logger.warning(f"JSON 行解析失败，已跳过: {line[:200]}")
                 if not json_docs:
                     logger.warning(f"文档存在，但JSON文档加载失败或内容为空: {local_path}")
                     continue
                 for item in json_docs:
+                    if not isinstance(item, dict):
+                        logger.warning(f"JSON 文档条目格式错误，已跳过: {item}")
+                        continue
                     meta_data = item.get("metadata")
                     source = item.get("source") or "联网搜索"
-                    if not meta_data:
+                    library_id = None
+                    if not isinstance(meta_data, dict):
                         logger.warning(f"可选工具保存的JSON文档中的条目缺少'metadata'字段")
                     else:
-                        if hasattr(meta_data,library_id):
-                            library_id = meta_data.get("library_id")
-                    if library_id:
-                        base_metadata={"source": source, "library_id": library_id}
+                        library_id = meta_data.get("library_id")
                     base_metadata = {
-                        "source": source #来源或"联网检索"
-                        }
+                        "source": source
+                    }
+                    if library_id:
+                        base_metadata["library_id"] = library_id
                     node=BaseNode(text=item.get("text", ""), metadata=base_metadata)
                     if not item.get("text", "").strip():
                         logger.warning(f"JSON文档中的条目文本为空:{item}")
