@@ -14,7 +14,7 @@ import json
 import logging
 from pathlib import Path
 from typing import List, Tuple, Dict, Optional
-from llama_index.core.schema import BaseNode
+from llama_index.core.schema import BaseNode, TextNode
 from concurrent_log_handler import ConcurrentRotatingFileHandler
 
 from llama_index.core import Document
@@ -204,7 +204,7 @@ class DocumentProcessor:
                     }
                     if library_id:
                         base_metadata["library_id"] = library_id
-                    node=BaseNode(text=item.get("text", ""), metadata=base_metadata)
+                    node=TextNode(text=item.get("text", ""), metadata=base_metadata)
                     if not item.get("text", "").strip():
                         logger.warning(f"JSON文档中的条目文本为空:{item}")
                     json_nodes.append(node)

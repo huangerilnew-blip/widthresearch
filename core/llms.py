@@ -1,6 +1,5 @@
 import os
 import logging
-import importlib
 from typing import cast, Any
 from concurrent_log_handler import ConcurrentRotatingFileHandler
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
@@ -8,7 +7,7 @@ from llama_index.embeddings.openai_like import OpenAILikeEmbedding
 from pydantic import SecretStr
 from core.config import Config
 from dotenv import load_dotenv
-
+from llama_index.llms.openai_like import OpenAILike
 # # 设置日志基本配置，级别为DEBUG或INFO
 logger = logging.getLogger(__name__)
 # 设置日志器级别为DEBUG
@@ -39,7 +38,12 @@ MODEL_CONFIGS = {
             "base_url": os.getenv("BASE_URL"),
             "api_key": os.getenv("API_KEY"),
             "model_name": os.getenv("CHAT_MODEL")
-        }
+        },
+        "deepseek": {
+            "base_url": os.getenv("BASE_URL"),
+            "api_key": os.getenv("API_KEY"),
+            "model_name": "deepseek-v3.2"
+    }
     },
     "embedding": {
         "qwen": {
@@ -58,7 +62,7 @@ MODEL_CONFIGS = {
 # 默认配置
 DEFAULT_CHAT_NAME = "qwen"
 DEFAULT_EMBEDDING_NAME = "bge"
-DEFAULT_TEMPERATURE = 0
+DEFAULT_TEMPERATURE = 0.9
 
 
 class LLMInitializationError(Exception):
@@ -158,12 +162,8 @@ def _initialize_lang_llm(
 
 
 def _get_openai_like_cls() -> type[Any]:
-    try:
-        module = importlib.import_module("llama_index.llms.openai_like")
-        return getattr(module, "OpenAILike")
-    except (ImportError, AttributeError):
-        from llama_index.llms.openai import OpenAI
-        return OpenAI
+    
+    return OpenAILike
 
 
 def _initialize_llama_llm(
@@ -190,6 +190,8 @@ def _initialize_llama_llm(
             api_base=chat_base_url,
             api_key=chat_api_key,
             temperature=DEFAULT_TEMPERATURE,
+            is_chat_model=True,
+            is_function_calling_model=True,
         )
 
         llm_embedding = OpenAILikeEmbedding(

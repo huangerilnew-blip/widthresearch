@@ -69,10 +69,20 @@ class BGEReranker:
             
             # 将结果转换为标准格式
             rerank_results = []
-            for item in result:
+            ranks = getattr(result, "ranks", result)
+            for item in ranks:
+                if hasattr(item, "index") and hasattr(item, "score"):
+                    idx, score = item.index, item.score
+                elif isinstance(item, dict):
+                    idx, score = item.get("index"), item.get("score")
+                elif isinstance(item, (tuple, list)) and len(item) >= 2:
+                    idx, score = item[0], item[1]
+                else:
+                    logger.warning(f"无法解析 rerank 结果项: {item}")
+                    continue
                 rerank_results.append({
-                    "index": item.index,
-                    "score": item.score
+                    "index": int(idx),
+                    "score": float(score)
                 })
             
             # 按分数排序(降序)
