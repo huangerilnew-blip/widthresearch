@@ -40,9 +40,9 @@ MODEL_CONFIGS = {
             "model_name": os.getenv("CHAT_MODEL")
         },
         "deepseek": {
-            "base_url": os.getenv("BASE_URL"),
-            "api_key": os.getenv("API_KEY"),
-            "model_name": "deepseek-v3.2"
+            "base_url": os.getenv("DS_BASE_URL"),
+            "api_key": os.getenv("DS_API_KEY"),
+            "model_name": "deepseek-chat"
     }
     },
     "embedding": {

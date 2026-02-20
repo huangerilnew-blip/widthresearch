@@ -308,10 +308,10 @@ class MultiAgentGraph:
         
         sub_questions = state.get("sub_questions", [])
         if len(sub_questions) > 3:
-            sub_questions = sub_questions[:3]
+            sub_questions_first = sub_questions[:3]
         if len(sub_questions) <=3:
-            sub_questions = sub_questions[:2]
-        if not sub_questions:
+            sub_questions_first = sub_questions[:2]
+        if not sub_questions_first:
             logger.warning("没有子问题需要执行第一阶段")
             return {
                 "first_executor_results": [],
@@ -324,9 +324,9 @@ class MultiAgentGraph:
 
         try:
             # 第一阶段：url_pool=[] (探索)
-            logger.info(f"第一阶段执行: {len(sub_questions)} 个子问题，初始 URL 池为空")
+            logger.info(f"第一阶段执行: {len(sub_questions_first)} 个子问题，初始 URL 池为空")
             executor_results, updated_url_pool = await self.executor_pool.execute_questions(
-                questions=sub_questions,
+                questions=sub_questions_first,
                 user_query=user_query,
                 base_thread_id=thread_id,
                 user_id=user_id,
@@ -359,10 +359,10 @@ class MultiAgentGraph:
 
         sub_questions = state.get("sub_questions", [])
         if len(sub_questions) > 3:
-            sub_questions = sub_questions[3:]
+            sub_questions_second = sub_questions[3:]
         if len(sub_questions) <=3:
-            sub_questions = sub_questions[2:]
-        if not sub_questions:
+            sub_questions_second = sub_questions[2:]
+        if not sub_questions_second:
             logger.warning("没有子问题需要执行第二阶段")
             return {
                 "second_executor_results": [],
@@ -376,9 +376,9 @@ class MultiAgentGraph:
             logger.warning("第一阶段没有收集到任何 URL，第二阶段将无法执行url检索去重")
         try:
             # 第二阶段：使用第一阶段收集的 url_pool
-            logger.info(f"第二阶段执行: {len(sub_questions)} 个子问题，使用第一阶段收集的 {len(url_pool)} 个 URL")
+            logger.info(f"第二阶段执行: {len(sub_questions_second)} 个子问题，使用第一阶段收集的 {len(url_pool)} 个 URL")
             executor_results, updated_url_pool = await self.executor_pool.execute_questions(
-                questions=sub_questions,
+                questions=sub_questions_second,
                 base_thread_id=thread_id,
                 user_id=user_id,
                 url_pool=url_pool,  # 使用第一阶段的 url_pool
@@ -753,13 +753,14 @@ class MultiAgentGraph:
                     **self._with_flag(state, "rag_retrieve", False)
                 }
             contents=[]
+            contents_str=[]
             question_pool=[]
             num=0
             for nws in retrieved_nodes:
                 node, score = nws.node, nws.score
                 metadata = node.metadata
                 content = node.get_content()
-                source = metadata.get('url', metadata.get('source', '联网检索获得'))
+                source = metadata.get('url', metadata.get('source', '联网检索获得')).strip("\n")
                 questions=metadata.get("questions_this_excerpt_can_answer",[])
                 if not questions:
                     logger.warning(f"检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题") 
@@ -768,7 +769,8 @@ class MultiAgentGraph:
                     logger.info(f"已将检索已将basenode添加到question_pool到,问题个数: {len(questions)}")   
                 num+=1
                 logger.info(f"检索到节点，来源: {source}, 相似度得分: {score}")
-                contents.append({"content": content, "source": source})
+                contents.append({"source": source,"content": content })
+                contents_str.append(f"来源: {source}---内容: {content}")
             questions_pool: List[str] = []
             seen_questions: Set[str] = set()
             for question in question_pool:
@@ -788,7 +790,7 @@ class MultiAgentGraph:
                 "correct_context": correct_context,
                 "messages": [
                     SystemMessage(
-                        content=contents,
+                        content="\n\n".join(contents_str),
                         metadata={"num_retreved": f"累计检索到 {num} 个相关节点"}
                     ),
                     SystemMessage(
@@ -900,7 +902,7 @@ class MultiAgentGraph:
         """构建检索上下文字符串"""
         retrieved_contexts = []
         for item in retrieved_nodes:
-            if instance(item, dict):
+            if isinstance(item, dict):
                 content = item.get("content", "")
                 source = item.get("source", "联网检索")
             else:

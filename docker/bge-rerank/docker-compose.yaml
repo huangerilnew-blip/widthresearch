@@ -22,5 +22,6 @@ services:
     command: >
       --model-id /data/
       --dtype float16
+      --port 8100
 
     restart: "no"

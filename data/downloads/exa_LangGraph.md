@@ -1,153 +1,408 @@
-# LangGraph 记忆系统实战：反馈循环+ 动态Prompt 让AI 持续学习
+# LangGraph 快速入门 - AiDocZh
 
 **URL**:
-https://cloud.tencent.com/developer/article/2588385
+https://www.aidoczh.com/langgraph/tutorials/introduction/
 
 ## 元数据
-- 发布日期: 2025-11-15T00:00:00+00:00
+- 发布日期: 2026-02-20T20:40:07.476603
 
 ## 完整内容
 ---
-LangGraph 记忆系统实战：反馈循环+ 动态Prompt 让AI 持续学习-腾讯云开发者社区-腾讯云
-[] 
-[deephub] 
-## LangGraph 记忆系统实战：反馈循环+ 动态Prompt 让AI 持续学习**关注作者
-[*腾讯云*] 
-[*开发者社区*] 
-[文档] [建议反馈] [控制台] 
-登录/注册
-[首页] 
-学习活动专区圈层工具[MCP广场![]] 
-文章/答案/技术大牛搜索**
-搜索**关闭**
-发布deephub
-**
-**
-**
-**
-**
-[社区首页] &gt;[专栏] &gt;LangGraph 记忆系统实战：反馈循环+ 动态Prompt 让AI 持续学习# LangGraph 记忆系统实战：反馈循环+ 动态Prompt 让AI 持续学习![作者头像] 
-deephub
-**关注
-发布于2025-11-15 11:44:45
-发布于2025-11-15 11:44:45
-7030
-举报**文章被收录于专栏：[DeepHub IMBA] DeepHub IMBA
-**点击上方“Deephub Imba”,关注公众号,好文章不错过 !**
-代理系统或者RAG 方案，基本都需要一个双层记忆架构，这样LLM 既能保持对当前上下文的专注，又能记住过往交互的内容。短期记忆负责单个会话内的即时信息管理，长期记忆则跨会话存储知识，让系统能够持续学习和进化。两者配合，代理才能表现出连贯性、上下文感知能力，看起来更加智能。这些记忆组件在现代AI 架构中的位置如下图所示：![] 
-#### 线程级记忆（短期）这种记忆在单个对话线程内运作，追踪已经发生的消息、上传的文件、检索到的文档，以及代理在该会话中交互的其他内容。可以把它理解为代理的&quot;工作记忆&quot;。它帮助代理理解上下文，自然地延续讨论，不会丢失之前的步骤。LangGraph 通过检查点机制自动管理这部分记忆。对话结束后，短期记忆会被清空，下次会话则会重新开始一个新的记忆。#### 跨线程记忆（长期）第二种记忆设计用于跨越多个聊天会话。长期记忆存储代理可能需要在多个会话中记住的信息——用户偏好、早期决策、过程中学到的重要事实等。LangGraph 将这些数据以JSON 文档形式保存在记忆存储中，通过命名空间（类似文件夹）和键（类似文件名）整齐组织。因为这种记忆在对话后不会消失，所以代理能够随时间积累知识，提供更一致、更个性化的响应。> 本文会探讨生产级AI 系统如何使用LangGraph 管理长期记忆流。LangGraph 是一个构建可扩展、上下文感知AI 工作流的主流框架。### LangGraph 数据持久层处理代理记忆时，LangGraph 是最常用的组件。其中Store 功能尤为关键，它根据项目的运行位置管理记忆的保存、检索和更新方式。LangGraph 提供了几种存储实现，在简单性、持久性和可扩展性之间取得平衡。每种选项适合开发或部署的特定阶段。![] 
-下面分别说明每种类型的使用场景。#### InMemory Store（用于 notebook 和快速测试）这是最简单的存储选项，适合短期实验或演示。![] 
-使用`from langgraph.store.memory import InMemoryStore`导入，创建一个完全在内存中运行的存储，使用标准 Python 字典。不写入磁盘，进程结束后所有信息都会丢失。但速度快，易用，非常适合测试工作流或尝试新的图配置。如果需要，也可以添加语义搜索能力。#### 本地开发存储（langgraph dev）
-这个选项的行为与上面的内存版本类似，但是可以在会话之间提供了基本持久性。![] 
-用`langgraph dev`命令运行应用时，LangGraph 会自动使用Python 的pickle 格式将存储保存到本地文件系统，并在重启开发环境后恢复数据。这个方式轻量且方便，不需要外部数据库。同样支持语义搜索功能，所以它非常适合开发阶段，但不适合生产环境。#### 生产存储（LangGraph Platform 或自托管）大规模或生产部署，LangGraph 使用与pgvector 集成的PostgreSQL 数据库实现高效的向量存储和语义检索。![] 
-这样可以提供完整的数据持久性、内置可靠性，并且能够处理更大的工作负载或多用户系统。语义搜索依靠pgvector ，默认使用余弦相似度作为相似性度量，也可以根据需求自定义。这种配置确保记忆数据安全存储，跨会话保持可用，即使在高流量或分布式工作负载下也能稳定运行。> 基础知识介绍完毕，接下来开始逐步编写完整的工作架构代码。### InMemory 功能实践本文要实现的是InMemory 功能，这是基于AI 系统中最常用的内存管理方式。> 它按顺序执行，在逐步构建或测试技术流程时非常实用。![] 
-InMemory 功能允许在运行代码时临时存储数据，通过了解它可以有助于我们理解LangGraph 中内存处理的工作原理。从LangGraph 导入`InMemoryStore`开始。这个类让我们直接在内存中存储记忆，不需要外部数据库或文件系统。
-代码语言：javascript
-复制```
-`# Import the InMemoryStore class for storing memories in memory (no persistence)
-from langgraph.store.memory import InMemoryStore # Initialize an in-memory store instance for use in this notebook
-in\_memory\_store = InMemoryStore()`
+🚀 LangGraph 快速入门
+
+Skip to content
+
+# 🚀 LangGraph 快速入门¶
+
+在本教程中，我们将构建一个支持的聊天机器人，在LangGraph中可以：
+
+✅ 通过搜索网络 来 回答常见问题 ✅ 在调用之间保持对话状态 ✅ 将复杂查询 转发给人工进行审核 ✅ 使用自定义状态 来控制其行为 ✅ 回溯并探索 替代对话路径
+
+我们将从一个 基本的聊天机器人 开始，并逐步添加更复杂的功能，在此过程中介绍关键的LangGraph概念。让我们开始吧！🌟
+
+## 设置¶
+
+首先，安装所需的包并配置您的环境：
+
 ```
-这里创建了InMemoryStore 的实例，用于保存临时数据。因为只在内存中运行，进程停止后所有存储的数据都会被清除。> LangGraph 中的每个记忆都保存在命名空间（namespace）中。
-命名空间像标签或文件夹，帮助组织记忆。它被定义为元组，可以有一个或多个部分。下面这个例子使用包含用户ID 和&quot;memories&quot; 标签的元组。代码语言：javascript
-复制```
-`# Define a user ID for memory storage
-user\_id = &quot;&quot;1&quot;&quot; # Set the namespace for storing and retrieving memories
-namespace\_for\_memory = (user\_id, &quot;&quot;memories&quot;&quot;)`
+%%capture --no-stderr
+%pip install -U langgraph langsmith langchain_anthropic
+
 ```
-命名空间可以代表任何东西，不一定基于用户ID，所以可以根据应用结构自由分组记忆。
-下面我们保存一个记忆到存储中，使用`put`方法。这个方法需要三样东西：命名空间、唯一键和实际的记忆值。
-这里键是用`uuid`库生成的唯一标识符，记忆值是存储信息的字典——一个简单的偏好设置。
-代码语言：javascript
-复制```
-`import uuid # Generate a unique ID for the memory
-memory\_id = str(uuid.uuid4()) # Create a memory dictionary
-memory = {&quot;&quot;food\_preference&quot;&quot;: &quot;&quot;I like pizza&quot;&quot;} # Save the memory in the defined namespace
-in\_memory\_store.put(namespace\_for\_memory, memory\_id, memory)`
+
 ```
-这会将记忆条目添加到之前定义的命名空间下的内存存储中。存储记忆后，可以用`search`方法取回。这个方法在命名空间内查找并返回属于它的所有记忆列表。
-每个记忆都是一个`Item`对象，包含命名空间、键、值和时间戳等详细信息。可以转换为字典以便更清晰地查看数据。
-代码语言：javascript
-复制```
-`# Retrieve all stored memories for the given namespace
-memories = in\_memory\_store.search(namespace\_for\_memory) # View the latest memory
-memories[-1].dict()`
+import getpass
+import os
+
+
+def _set_env(var: str):
+    if not os.environ.get(var):
+        os.environ[var] = getpass.getpass(f"{var}: ")
+
+
+_set_env("ANTHROPIC_API_KEY")
+
 ```
-在notebook 中运行这段代码，得到以下输出：代码语言：javascript
-复制```
-`###### OUTPUT ######
-{ &#x27;&#x27;namespace&#x27;&#x27;: [&#x27;&#x27;1&#x27;&#x27;, &#x27;&#x27;memories&#x27;&#x27;], &#x27;&#x27;key&#x27;&#x27;: &#x27;&#x27;c8619cd4-3d3f-4108-857c-5c8c12f39e87&#x27;&#x27;, &#x27;&#x27;value&#x27;&#x27;: {&#x27;&#x27;food\_preference&#x27;&#x27;: &#x27;&#x27;I like pizza&#x27;&#x27;}, &#x27;&#x27;created\_at&#x27;&#x27;: &#x27;&#x27;2025-10-08T15:46:16.531625+00:00&#x27;&#x27;, &#x27;&#x27;updated\_at&#x27;&#x27;: &#x27;&#x27;2025-10-08T15:46:16.531625+00:00&#x27;&#x27;, &#x27;&#x27;score&#x27;&#x27;: None }`
+
 ```
-输出显示了存储的记忆详情。最重要的是**value**字段，包含实际保存的信息。其他字段帮助识别和管理记忆创建的时间和位置。
-存储就绪后，可以将其连接到图中，让记忆和检查点协同工作。这里使用两个主要组件：* **InMemorySaver**管理线程间的检查点
-* **InMemoryStore**存储跨线程的记忆
-代码语言：javascript
-复制```
-`# To enable threads (conversations)
-from langgraph.checkpoint.memory import InMemorySaver checkpointer = InMemorySaver() # To enable across-thread memory
-from langgraph.store.memory import InMemoryStore in\_memory\_store = InMemoryStore() # Compile the graph with the checkpointer and store
-# graph = graph.compile(checkpointer=checkpointer, store=in\_memory\_store)`
+ANTHROPIC_API_KEY:  ········
+
 ```
-这使图能够记住线程内的对话上下文（短期），并使用相同的内存机制在线程间保留重要信息（长期）。> 这是转向生产级存储之前测试记忆行为的简单有效方式。### 构建代理架构在使用记忆系统工作流之前，需要构建使用它的智能代理。因为本文专注于记忆管理，所以只会构建一个中等复杂的电子邮件助手，模拟在真实场景中探索记忆的工作方式。![] 
-下面我们从零开始构建这个系统，定义数据结构、&quot;大脑&quot;（提示词）和能力（工具）。最终得到一个不仅能回复邮件，还能从反馈中学习的代理。
-#### 定义模式处理数据前需要定义其形状。模式是代理信息流的蓝图，确保一切结构化、可预测且类型安全。首先编写`RouterSchema`。需要它是为了让初始分类步骤可靠。不能冒险让 LLM 在期望明确决定时返回非结构化文本。这个Pydantic 模型会强制LLM 返回一个干净的JSON 对象，包含推理过程和一个严格为&#x27;ignore&#x27;、&#x27;respond&#x27; 或&#x27;notify&#x27; 之一的分类结果。代码语言：javascript
-复制```
-`# Import the necessary libraries from Pydantic and Python&#x27;&#x27;s typing module
-from pydantic import BaseModel, Field from typing\_extensions import TypedDict, Literal # Define a Pydantic model for our router&#x27;&#x27;s structured output.
-class RouterSchema(BaseModel): &quot;&quot;&quot;&quot;&quot;&quot;Analyze the unread email and route it according to its content.&quot;&quot;&quot;&quot;&quot;&quot; # Add a field for the LLM to explain its step-by-step reasoning.
-reasoning: str = Field(description=&quot;&quot;分类背后的逐步推理。&quot;&quot;) # Add a field to hold the final classification.
-# The `Literal` type restricts the output to one of these three specific strings.
-classification: Literal[&quot;&quot;ignore&quot;&quot;, &quot;&quot;respond&quot;&quot;, &quot;&quot;notify&quot;&quot;] = Field( description=&quot;&quot;电子邮件的分类。&quot;&quot; )`
+
+为LangGraph开发设置 [LangSmith] 
+
+注册使用LangSmith，快速发现问题并提高您的LangGraph项目的性能。LangSmith允许您使用跟踪数据来调试、测试和监控基于LangGraph构建的LLM应用程序 — 阅读更多关于如何启动的信息，请 [点击这里] 。
+
+## 第1部分：构建一个基本的聊天机器人¶
+
+我们将首先使用LangGraph创建一个简单的聊天机器人。这个聊天机器人将直接对用户消息做出回应。虽然简单，但它将说明使用LangGraph构建的核心概念。在本节结束时，您将构建一个基本的聊天机器人。
+
+首先创建一个`StateGraph`。`StateGraph`对象定义了我们聊天机器人的结构，作为一个“状态机”。我们将添加`nodes`来表示聊天机器人可以调用的llm和函数，并添加`edges`来指定机器人如何在这些函数之间转换。
+
 ```
-这是在为分类LLM 创建契约。后面与LangChain 的`.with\_structured\_output()`方法配对时，能保证输出是一个可预测的 Python 对象，让图中的逻辑更加健壮。接下来需要一个地方存储代理单次运行的所有信息，这就是`State`的作用。它像一个中央白板，图的每个部分都可以读写。
-代码语言：javascript
-复制```
-`# Import the base state class from LangGraph
-from langgraph.graph import MessagesState # Define the central state object for our graph.
-class State(MessagesState): # This field will hold the initial raw email data.
-email\_input: dict # This field will store the decision made by our triage router.
-classification\_decision: Literal[&quot;&quot;ignore&quot;&quot;, &quot;&quot;respond&quot;&quot;, &quot;&quot;notify&quot;&quot;]`
+from typing import Annotated
+
+from typing_extensions import TypedDict
+
+from langgraph.graph import StateGraph, START, END
+from langgraph.graph.message import add_messages
+
+
+class State(TypedDict):
+    # Messages have the type "list". The `add_messages` function
+    # 在注释中定义了该状态键应如何更新。
+    # （在这种情况下，它将消息附加到列表中，而不是覆盖它们）
+    messages: Annotated[list, add_messages]
+
+
+graph_builder = StateGraph(State)
+
 ```
-继承自LangGraph 的`MessagesState`，自动获得一个`messages`列表来跟踪对话历史。然后添加自定义字段。随着流程从一个节点移动到另一个节点，这个`State`对象会被传递并累积信息。
-最后定义一个小但重要的`StateInput`模式，规定图的初始输入应该是什么样子。
-代码语言：javascript
-复制```
-`# Define a TypedDict for the initial input to our entire workflow.
-class StateInput(TypedDict): # The workflow must be started with a dictionary containing an &#x27;&#x27;email\_input&#x27;&#x27; key.
-email\_input: dict`
+
+API Reference: [StateGraph] | [START] | [END] | [add_messages] 
+
+我们的图现在可以处理两个关键任务：
+
+1. 对`messages`的更新将附加到现有列表中，而不是覆盖它，这得益于与`Annotated`语法一起使用的预构建 [add_messages] 函数。
+2. 每个`node`可以接收当前`State`作为输入，并输出对状态的更新。
+
+---
+
+概念
+
+定义图的第一步是定义它的`State`。`State`包括图的架构和处理状态更新的 [reducer 函数] 。在我们的示例中，`State`是一个`TypedDict`，其中有一个键：`messages`。 [add_messages] reducer 函数用于将新消息附加到列表中，而不是覆盖它。没有 reducer 注释的键将覆盖先前的值。请在 [此指南] 中了解更多有关状态、reducer 及相关概念的信息。
+
+---
+
+接下来，添加一个 "`chatbot`" 节点。节点表示工作单元。它们通常是常规的 python 函数。
+
 ```
-这个简单的模式从应用入口点就提供了清晰性和类型安全性，确保对图的任何调用都以正确的数据结构开始。#### 创建提示词使用提示词方法来指导和引导LLM 行为。对于代理，会定义几个提示词，每个都有特定的任务。代理从我们这里学到任何东西之前，需要一套基准指令。这些默认字符串会在第一次运行时加载到记忆存储中，为代理行为提供起点。首先定义`default\_background`给代理一个角色。
-代码语言：javascript
-复制```
-`# Define a default persona for the agent.
-default\_background=&quot;&quot;&quot;&quot;&quot;&quot; I&#x27;&#x27;m Lance, a software engineer at LangChain. &quot;&quot;&quot;&quot;&quot;&quot;`
+from langchain_anthropic import ChatAnthropic
+
+llm = ChatAnthropic(model="claude-3-5-sonnet-20240620")
+
+
+def chatbot(state: State):
+    return {"messages": [llm.invoke(state["messages"])]}
+
+
+# 第一个参数是唯一的节点名称。
+# 第二个参数是将在每次调用时使用的函数或对象。
+# 节点正在被使用。
+graph_builder.add_node("chatbot", chatbot)
+
 ```
-接下来是`default\_triage\_instructions`，分类路由器遵循的初始规则。
-代码语言：javascript
-复制```
-`# Define the initial rules for the triage LLM.
-default\_triage\_instructions = &quot;&quot;&quot;&quot;&quot;&quot; Emails that are not worth responding to: - Marketing newsletters and promotional emails - Spam or suspicious emails - CC&#x27;&#x27;d on FYI threads with no direct questions Emails that require notification but no response: - Team member out sick or on vacation - Build system notifications or deployments Emails that require a response: - Direct questions from team members - Meeting requests requiring confirmation &quot;&quot;&quot;&quot;&quot;&quot;`
+
+API Reference: [ChatAnthropic] 
+
+注意`chatbot`节点函数如何将当前的`State`作为输入，并返回一个包含更新后的`messages`列表的字典，键为 "messages"。这是所有 LangGraph 节点函数的基本模式。
+
+我们`State`中的`add_messages`函数将 LLM 的响应消息追加到状态中已有的消息中。
+
+接下来，添加一个`entry`点。这告诉我们的图 每次运行时应该从哪里开始工作。
+
 ```
-然后是`default\_response\_preferences`，定义代理的初始写作风格。
-代码语言：javascript
-复制```
-`# Define the default preferences for how the agent should compose emails.
-default\_response\_preferences = &quot;&quot;&quot;&quot;&quot;&quot; Use professional and concise language. If the e-mail mentions a deadline, make sure to explicitly acknowledge and reference the deadline in your response. When responding to meeting scheduling requests: - If times are proposed, verify calendar availability and commit to one. - If no times are proposed, check your calendar and propose multiple options. &quot;&quot;&quot;&quot;&quot;&quot;`
+graph_builder.add_edge(START, "chatbot")
+
 ```
-最后是`default\_cal\_preferences`，指导日程安排行为。
-代码语言：javascript
-复制```
-`# Define the default preferences for scheduling meetings.
-default\_cal\_preferences = &quot;&quot;&quot;&quot;&quot;&quot; 30 minute meetings are preferred, but 15 minute meetings are also acceptable. &quot;&quot;&quot;&quot;&quot;&quot;`
+
+同样，设置一个`finish`点。这指示图 “每当运行这个节点时，你可以退出。”
+
 ```
-现在创建使用这些默认值的提示词，首先是`triage\_system\_prompt`。
-代码语言：javascript
-复制```
-`# Define the system prompt for the initial triage step.
-triage\_system\_prompt = &quot;&quot;&quot;&quot;&quot;&quot; &lt;&lt; Role &gt;&gt; Your role is to triage incoming emails based on background and instructions. &lt;&lt;/ Role &gt;&gt; &lt;&lt; Background &gt;&gt; {background} &lt;&lt;/ Background &gt;&gt; &lt;&lt; Instructions &gt;&gt; Categorize each email into IGNORE, NOTIFY, or RESPOND. &lt;&lt;/ Instructions &gt;&gt; &lt;&lt; Rules &gt;&gt; {triage\_instructions} &lt;&lt;/ Rules &gt;&gt; &quot;&quot;&quot;&quot;&quot;&quot;`
+graph_builder.add_edge("chatbot", END)
+
 ```
-这个提示词模板给分类路由器提供角色和指令。`{background}`和`{triage\_instructions}
+
+最后，我们希望能够运行我们的图。为此，调用图构建器上的 "`compile()`"。这会创建一个 "`CompiledGraph`"，我们可以在我们的状态上调用它。
+
+```
+graph = graph_builder.compile()
+
+```
+
+您可以使用`get_graph`方法和`draw`方法之一（如`draw_ascii`或`draw_png`）来可视化图形。每个`draw`方法都需要额外的依赖项。
+
+```
+from IPython.display import Image, display
+
+try:
+    display(Image(graph.get_graph().draw_mermaid_png()))
+except Exception:
+    # 这需要一些额外的依赖，并且是可选的。
+    pass
+
+```
+
+现在让我们运行聊天机器人！
+
+提示： 您可以随时通过输入 "quit"、"exit" 或 "q" 来退出聊天循环。
+
+```
+def stream_graph_updates(user_input: str):
+    for event in graph.stream({"messages": [("user", user_input)]}):
+        for value in event.values():
+            print("Assistant:", value["messages"][-1].content)
+
+
+while True:
+    try:
+        user_input = input("User: ")
+        if user_input.lower() in ["quit", "exit", "q"]:
+            print("Goodbye!")
+            break
+
+        stream_graph_updates(user_input)
+    except:
+        # 如果 input() 不可用，则备选方案。
+        user_input = "What do you know about LangGraph?"
+        print("User: " + user_input)
+        stream_graph_updates(user_input)
+        break
+
+```
+
+```
+Assistant: LangGraph is a library designed to help build stateful multi-agent applications using language models. It provides tools for creating workflows and state machines to coordinate multiple AI agents or language model interactions. LangGraph is built on top of LangChain, leveraging its components while adding graph-based coordination capabilities. It's particularly useful for developing more complex, stateful AI applications that go beyond simple query-response interactions.
+Goodbye!
+
+```
+
+恭喜你！ 你已经使用LangGraph构建了你的第一个聊天机器人。这个机器人可以通过接受用户输入并使用LLM生成响应来进行基本的对话。你可以通过提供的链接查看上述调用的 [LangSmith Trace] 。
+
+然而，你可能注意到机器人的知识仅限于其训练数据。在接下来的部分，我们将添加一个网络搜索工具，以扩展机器人的知识，使其更加强大。
+
+以下是本节的完整代码供你参考：
+
+完整代码
+
+```
+from typing import Annotated
+
+from langchain_anthropic import ChatAnthropic
+from typing_extensions import TypedDict
+
+from langgraph.graph import StateGraph
+from langgraph.graph.message import add_messages
+
+
+class State(TypedDict):
+    messages: Annotated[list, add_messages]
+
+
+graph_builder = StateGraph(State)
+
+
+llm = ChatAnthropic(model="claude-3-5-sonnet-20240620")
+
+
+def chatbot(state: State):
+    return {"messages": [llm.invoke(state["messages"])]}
+
+
+# 第一个参数是唯一的节点名称
+# 第二个参数是每当使用该节点时将被调用的函数或对象。
+graph_builder.add_node("chatbot", chatbot)
+graph_builder.set_entry_point("chatbot")
+graph_builder.set_finish_point("chatbot")
+graph = graph_builder.compile()
+
+```
+
+## 第二部分：🛠️ 用工具增强聊天机器人¶
+
+为了处理我们的聊天机器人无法“凭记忆”回答的查询，我们将集成一个网络搜索工具。我们的机器人可以使用这个工具找到相关信息并提供更好的响应。
+
+#### 要求¶
+
+在我们开始之前，请确保您已安装必要的软件包并设置了 API 密钥：
+
+首先，安装使用 [Tavily 搜索引擎] 所需的依赖，并设置您的 [TAVILY_API_KEY] 。
+
+```
+%%capture --no-stderr
+%pip install -U tavily-python langchain_community
+
+```
+
+```
+_set_env("TAVILY_API_KEY")
+
+```
+
+```
+TAVILY_API_KEY:  ········
+
+```
+
+请提供ipynb文件中的markdown内容，我将为您翻译成中文。
+
+```
+from langchain_community.tools.tavily_search import TavilySearchResults
+
+tool = TavilySearchResults(max_results=2)
+tools = [tool]
+tool.invoke("What's a 'node' in LangGraph?")
+
+```
+
+```
+[{'url': 'https://medium.com/@cplog/introduction-to-langgraph-a-beginners-guide-14f9be027141',
+  'content': 'Nodes: Nodes are the building blocks of your LangGraph. Each node represents a function or a computation step. You define nodes to perform specific tasks, such as processing input, making ...'},
+ {'url': 'https://saksheepatil05.medium.com/demystifying-langgraph-a-beginner-friendly-dive-into-langgraph-concepts-5ffe890ddac0',
+  'content': 'Nodes (Tasks): Nodes are like the workstations on the assembly line. Each node performs a specific task on the product. In LangGraph, nodes are Python functions that take the current state, do some work, and return an updated state. Next, we define the nodes, each representing a task in our sandwich-making process.'}]
+
+```
+
+API Reference: [TavilySearchResults] 
+
+结果是我们的聊天机器人可以用来回答问题的页面摘要。
+
+接下来，我们将开始定义我们的图形。以下内容与第一部分**完全相同**，除了我们在我们的LLM上添加了`bind_tools`。这让LLM知道如果它想使用我们的搜索引擎，应该使用正确的JSON格式。
+
+```
+from typing import Annotated
+
+from langchain_anthropic import ChatAnthropic
+from typing_extensions import TypedDict
+
+from langgraph.graph import StateGraph, START, END
+from langgraph.graph.message import add_messages
+
+
+class State(TypedDict):
+    messages: Annotated[list, add_messages]
+
+
+graph_builder = StateGraph(State)
+
+
+llm = ChatAnthropic(model="claude-3-5-sonnet-20240620")
+# 修改：告诉语言模型可以调用哪些工具。
+llm_with_tools = llm.bind_tools(tools)
+
+
+def chatbot(state: State):
+    return {"messages": [llm_with_tools.invoke(state["messages"])]}
+
+
+graph_builder.add_node("chatbot", chatbot)
+
+```
+
+API Reference: [ChatAnthropic] | [StateGraph] | [START] | [END] | [add_messages] 
+
+接下来，我们需要创建一个函数，以便在调用工具时实际运行这些工具。我们通过将工具添加到一个新的节点来实现这一点。
+
+下面，我们实现了一个`BasicToolNode`，它检查状态中最近的消息，并在消息包含`tool_calls`时调用工具。它依赖于LLM的`tool_calling`支持，该支持在Anthropic、OpenAI、Google Gemini以及其他多个LLM提供商中可用。
+
+稍后我们将用LangGraph的预构建 [ToolNode] 来替代它，以加快进程，但首先自己构建它是很有启发性的。
+
+```
+import json
+
+from langchain_core.messages import ToolMessage
+
+
+class BasicToolNode:
+    """一个运行上一个AI消息中请求的工具的节点。"""
+
+    def __init__(self, tools: list) -> None:
+        self.tools_by_name = {tool.name: tool for tool in tools}
+
+    def __call__(self, inputs: dict):
+        if messages := inputs.get("messages", []):
+            message = messages[-1]
+        else:
+            raise ValueError("No message found in input")
+        outputs = []
+        for tool_call in message.tool_calls:
+            tool_result = self.tools_by_name[tool_call["name"]].invoke(
+                tool_call["args"]
+            )
+            outputs.append(
+                ToolMessage(
+                    content=json.dumps(tool_result),
+                    name=tool_call["name"],
+                    tool_call_id=tool_call["id"],
+                )
+            )
+        return {"messages": outputs}
+
+
+tool_node = BasicToolNode(tools=[tool])
+graph_builder.add_node("tools", tool_node)
+
+```
+
+API Reference: [ToolMessage] 
+
+添加了工具节点后，我们可以定义`conditional_edges`。
+
+回想一下，**边**负责将控制流从一个节点路由到下一个节点。**条件边**通常包含“if”语句，以根据当前图的状态路由到不同的节点。这些函数接收当前图的`state`，并返回一个字符串或字符串列表，指示下一个要调用的节点。
+
+下面定义一个名为`route_tools`的路由函数，该函数检查聊天机器人的输出中的工具调用。通过调用`add_conditional_edges`将此函数提供给图，以告知图在`chatbot`节点完成后检查此函数以查看下一步该去哪里。
+
+如果存在工具调用，则条件将路由到`tools`，否则路由到`END`。
+
+稍后，我们将用预构建的 [tools_condition] 来替代这个函数，以使其更加简洁，但我们首先自己实现它可以使事情更加清晰。
+
+```
+from typing import Literal
+
+
+def route_tools(
+    state: State,
+):
+    """
+    在conditional_edge中使用以便在最后一条消息有工具调用时路由到ToolNode。否则，路由到结束。
+    """
+    if isinstance(state, list):
+        ai_message = state[-1]
+    elif messages := state.get("messages", []):
+        ai_message = messages[-1]
+    else:
+        raise ValueError(f"No messages found in input state to tool_edge: {state}")
+    if hasattr(ai_message, "tool_calls") and len(ai_message.tool_calls) > 0:
+        return "tools"
+    return END
+
+
+# The `tools_condition` function returns "tools" if the chatbot asks to use a tool, and "END" if
+# 直接响应是可以的。这个条件路由定义了主要的代理循环。
+graph_builder.add_conditional_edges(
+    "chatbot",
+    route_tools,
+    # 以下字典允许你告诉图形将条件的输出解释为特定节点。
+    # 它默认为恒等函数，但如果你
+    # want to use a node named something else apart from "tools",
+    # 你可以将字典的值更新为其他内容。
+    # e.g., "tools": "my_tools"
+    {"tools": "tools", END: END},
+)
+# 每当调用一个工具时，我们会返回到聊天机器人以决定下一步。
+graph_builder.add_edge("tools", "chatbot")
+graph_builder.add_edge(START,
 
 
 ---
-*数据来源: Exa搜索 | 获取时间: 2026-02-10 21:59:05*
+*数据来源: Exa搜索 | 获取时间: 2026-02-20 20:40:34*

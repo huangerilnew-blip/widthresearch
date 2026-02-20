@@ -148,6 +148,7 @@ class DocumentProcessor:
                 "source": source, #来源或"联网检索"
                 "title": title, #title或文件名
                 "url": url,#url或来源或"unknown"
+                "path": local_path,
             }
 
             if file_ext == '.pdf':
@@ -200,7 +201,8 @@ class DocumentProcessor:
                     else:
                         library_id = meta_data.get("library_id")
                     base_metadata = {
-                        "source": source
+                        "source": source,
+                        "path": local_path,
                     }
                     if library_id:
                         base_metadata["library_id"] = library_id
@@ -217,16 +219,39 @@ class DocumentProcessor:
             raise ValueError("document-process中没有可处理的文档")
         
         # 2. 通过 IngestionPipeline 执行：MarkdownElementNodeParser -> SentenceSplitter -> QuestionsAnsweredExtractor
-        try:
-            logger.info(f"开始通过 IngestionPipeline 处理 {len(docs_for_pipeline)} 个 Document")
-            nodes = self.ingestion_pipeline.run(
-                documents=docs_for_pipeline,
-                in_place=True,
-                show_progress=False,
-            )
-        except Exception as e:
-            logger.error(f"IngestionPipeline 处理失败: {e}")
-            raise e
+        logger.info(f"开始通过 IngestionPipeline 处理 {len(docs_for_pipeline)} 个 Document")
+        nodes: List[BaseNode] = []
+        def _resolve_doc_path(doc: Document) -> str:
+            metadata = getattr(doc, "metadata", None)
+            if isinstance(metadata, dict):
+                return (
+                    metadata.get("path")
+                    or metadata.get("file_path")
+                    or metadata.get("local_path")
+                    or metadata.get("title")
+                    or metadata.get("url")
+                    or metadata.get("source")
+                    or ""
+                )
+            return ""
+
+        for doc in docs_for_pipeline:
+            try:
+                nodes.extend(
+                    self.ingestion_pipeline.run(
+                        documents=[doc],
+                        in_place=True,
+                        show_progress=False,
+                    )
+                )
+            except Exception as e:
+                doc_path = _resolve_doc_path(doc)
+                logger.error(
+                    "IngestionPipeline 处理失败，已跳过文档: %s, error: %s",
+                    doc_path or "unknown",
+                    e,
+                )
+                continue
         
         # 3. 返回处理后的节点列表
         logger.info(f"文档处理完成: {len(nodes)} 个节点")
