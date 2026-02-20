@@ -1,7 +1,7 @@
 import asyncio
 
 from typing import TypedDict, Annotated, List, Any
-from langchain_core.messages import AnyMessage, AIMessage, SystemMessage, HumanMessage
+from langchain_core.messages import AnyMessage, AIMessage, SystemMessage, HumanMessage, ToolMessage
 from langgraph.graph import add_messages, StateGraph, START, END
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from psycopg_pool import AsyncConnectionPool
@@ -129,6 +129,16 @@ class PlannerAgent:
                 result = await self.llm_with_tools.ainvoke(state["planner_messages"])
                 if isinstance(result, AIMessage):
                     logger.info(f"planner_agent llm_chat 节点在第{state['epoch']}轮迭代中，成功生成AIMessage类型的消息，内容为:{result.content}")
+                    tool_calls = result.tool_calls or []
+                    logger.info(
+                        "planner_agent llm_chat: tool_calls_count=%s, tool_names=%s",
+                        len(tool_calls),
+                        [call.get("name") for call in tool_calls],
+                    )
+                    logger.info(
+                        "planner_agent llm_chat: planner_messages_len=%s",
+                        len(state["planner_messages"]),
+                    )
                     if result.tool_calls:
                         logger.info(f"planner_agent llm_chat 节点在第{state['epoch']}轮迭代中，生成的AIMessage类型的消息包含工具调用，工具调用内容为:{result.tool_calls}")
                         epoch=state["epoch"]
@@ -145,13 +155,53 @@ class PlannerAgent:
     async def _tool_node(self, state: PlannerState) -> dict:
         tools = await self._ensure_planner_tools()
         tool_node = ToolNode(tools, messages_key="planner_messages")
-        tool_result = await tool_node.ainvoke(state)
-        if isinstance(tool_result, dict) and "planner_messages" in tool_result:
-            tool_messages = tool_result["planner_messages"]
+        tool_messages_raw: Any = []
+        tool_calls = []
+        last_message = state["planner_messages"][-1]
+        if isinstance(last_message, AIMessage):
+            tool_calls = last_message.tool_calls or []
+            tool_names = [call.get("name") for call in tool_calls]
+            registered = [tool.name for tool in tools]
+            missing = [name for name in tool_names if name and name not in registered]
+            logger.info("planner_agent tool_node: tool_calls=%s", tool_names)
+            logger.info("planner_agent tool_node: registered_tools=%s", registered)
+            if missing:
+                logger.warning("planner_agent tool_node: missing_tools=%s", missing)
+        try:
+            tool_result = await tool_node.ainvoke(state)
+            if isinstance(tool_result, dict) and "planner_messages" in tool_result:
+                tool_messages_raw = tool_result["planner_messages"]
+            else:
+                tool_messages_raw = tool_result
+        except Exception as e:
+            logger.error(f"planner_agent tool_node 执行失败: {e}")
+            tool_messages_raw = []
+
+        if not isinstance(tool_messages_raw, list):
+            tool_messages = [tool_messages_raw]
         else:
-            tool_messages = tool_result
-        if not isinstance(tool_messages, list):
-            tool_messages = [tool_messages]
+            tool_messages = tool_messages_raw
+
+        existing_tool_ids = {
+            message.tool_call_id
+            for message in tool_messages
+            if isinstance(message, ToolMessage)
+        }
+        logger.info(
+            "planner_agent tool_node: tool_messages_count=%s, tool_message_ids=%s",
+            len(existing_tool_ids),
+            sorted(existing_tool_ids),
+        )
+        for call in tool_calls:
+            call_id = call.get("id")
+            if not call_id or call_id in existing_tool_ids:
+                continue
+            tool_messages.append(
+                ToolMessage(
+                    content="tool execution failed or empty result",
+                    tool_call_id=call_id,
+                )
+            )
         return {"planner_messages": tool_messages}
 
     def _condition_router(self, state: PlannerState, planner_epoch=Config.PLANNER_EPOCH):

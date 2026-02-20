@@ -185,11 +185,11 @@ class MultiAgentGraph:
             top_n=Config.RERANK_TOP_N,
             score_threshold=Config.RERANK_THRESHOLD
         )
-
+        self.node_postprocessor_model=llama_llm(chat_name="deepseek")[0]
         # 文档处理器
         self.document_processor = DocumentProcessor(
             embedding_model=self.vector_store_manager.embedding_model,
-            llm=self.llama_llm
+            llm=self.node_postprocessor_model
         )
 
         # 文档去重器

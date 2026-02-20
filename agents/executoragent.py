@@ -506,7 +506,17 @@ class ExecutorAgent:
 
             # 记录决策结果
             has_tool_calls = hasattr(response, 'tool_calls') and bool(response.tool_calls)
+            tool_calls = response.tool_calls if hasattr(response, "tool_calls") else []
             logger.info(f"LLM 决策结果: 是否调用工具={has_tool_calls}")
+            logger.info(
+                "executor_agent llm_chat: tool_calls_count=%s, tool_names=%s",
+                len(tool_calls),
+                [call.get("name") for call in tool_calls] if tool_calls else [],
+            )
+            logger.info(
+                "executor_agent llm_chat: executor_messages_len=%s",
+                len(state["executor_messages"]),
+            )
             if hasattr(response, 'content') and response.content:
                 logger.info(f"LLM 思考: {response.content[:150]}...")
 
@@ -548,10 +558,17 @@ class ExecutorAgent:
         if not hasattr(last_message, 'tool_calls') or not last_message.tool_calls:
             logger.warning("AIMessage 中没有 tool_calls")
             return {"optional_search_results": []}
-        
+
         optional_tools = self._get_optional_tools()
         tool_node = ToolNode(optional_tools)
         tool_call_info = self._build_tool_call_info(last_message.tool_calls)
+        tool_names = [call.get("name") for call in last_message.tool_calls]
+        registered = [tool.name for tool in optional_tools]
+        missing = [name for name in tool_names if name and name not in registered]
+        logger.info("executor_agent tool_node: tool_calls=%s", tool_names)
+        logger.info("executor_agent tool_node: registered_tools=%s", registered)
+        if missing:
+            logger.warning("executor_agent tool_node: missing_tools=%s", missing)
         
         try:
             logger.info(f"准备执行 {len(last_message.tool_calls)} 个可选工具调用")
@@ -565,6 +582,16 @@ class ExecutorAgent:
             
             normalized_tool_messages = []
             logger.info(f"可选工具执行完成，返回 {len(tool_messages)} 条 ToolMessage")
+            tool_message_ids = [
+                getattr(tool_msg, "tool_call_id", None)
+                for tool_msg in tool_messages
+                if getattr(tool_msg, "tool_call_id", None)
+            ]
+            logger.info(
+                "executor_agent tool_node: tool_messages_count=%s, tool_message_ids=%s",
+                len(tool_message_ids),
+                tool_message_ids,
+            )
             for tool_msg in tool_messages:
                 tool_call_id = getattr(tool_msg, "tool_call_id", None)
                 call_info = tool_call_info.get(tool_call_id, {})
