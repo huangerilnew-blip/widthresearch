@@ -23,5 +23,5 @@ services:
       --model-id /data/
       --dtype float16
       --port 8100
-
+      --payload-limit 10000000
     restart: "no"
