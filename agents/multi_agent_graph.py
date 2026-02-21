@@ -1176,6 +1176,7 @@ class MultiAgentGraph:
             "process_second_documents",
         )
         if all(flags.get(key) is not False for key in required_flags):
+            logger.info("[join_vectorize] 进入 vectorize_documents")
             return "vectorize_documents"
         return "end"
 
