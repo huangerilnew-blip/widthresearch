@@ -32,6 +32,7 @@ class ExecutorState(TypedDict):
     search_results: List[Dict]  # 所有搜索结果（必需工具 + 可选工具）
     deduplicated_results: List[Dict]  # 去重后的结果
     downloaded_papers: List[Dict]  # 已下载的论文
+    optional_epoch: int  # 可选工具循环轮数
 
 class ExecutorAgent:
     """
@@ -528,6 +529,12 @@ class ExecutorAgent:
     
     def _should_call_optional_tools(self, state: ExecutorState) -> str:
         """条件路由：判断是否需要调用可选工具"""
+        # 检查是否达到最大循环轮数
+        optional_epoch = state.get("optional_epoch", 0)
+        if optional_epoch >= Config.EXECUTOR_OPTIONAL_EPOCH:
+            logger.warning(f"达到可选工具最大循环轮数 ({Config.EXECUTOR_OPTIONAL_EPOCH})，强制进入清洗阶段")
+            return "clean"
+
         last_message = state["executor_messages"][-1]
 
         if isinstance(last_message, AIMessage):
@@ -610,7 +617,11 @@ class ExecutorAgent:
                 except Exception:
                     logger.info(f"  - 工具 {tool_name} 执行完成")
             
-            return {"optional_search_results": normalized_tool_messages, "executor_messages": normalized_tool_messages}
+            return {
+                "optional_search_results": normalized_tool_messages,
+                "executor_messages": normalized_tool_messages,
+                "optional_epoch": state.get("optional_epoch", 0) + 1
+            }
         
         except Exception as e:
             logger.error(f"执行可选工具时出错: {e}")
@@ -1029,7 +1040,8 @@ class ExecutorAgent:
             "search_results": [],
             "deduplicated_results": [],
             "downloaded_papers": [],
-            "sub_url_pool": sub_url_pool
+            "sub_url_pool": sub_url_pool,
+            "optional_epoch": 0
         }
         
         try:

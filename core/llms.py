@@ -40,10 +40,15 @@ MODEL_CONFIGS = {
             "model_name": os.getenv("CHAT_MODEL")
         },
         "deepseek": {
-            "base_url": os.getenv("DS_BASE_URL"),
+            "base_url": "https://api.deepseek.com",
             "api_key": os.getenv("DS_API_KEY"),
             "model_name": "deepseek-chat"
-    }
+    },
+    "glm": {
+            "base_url": "https://open.bigmodel.cn/api/coding/paas/v4",
+            "api_key": os.getenv("GLM_API_KEY"),
+            "model_name": "GLM-5"
+        }
     },
     "embedding": {
         "qwen": {

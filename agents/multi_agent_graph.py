@@ -18,7 +18,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import json
 import ast
 import logging
-from typing import Dict, Any, List, Optional, TypedDict, Annotated, Union, Set
+import time
+from typing import Dict, Any, List, Optional, TypedDict, Annotated, Union, Set, Literal
 from psycopg_pool import AsyncConnectionPool
 from concurrent_log_handler import ConcurrentRotatingFileHandler
 from llama_index.core import Settings
@@ -115,7 +116,7 @@ class MultiAgentState(TypedDict):
     # 内部状态
     vector_store_initialized: bool  # 向量库是否已初始化
     inited_vector_index: bool  # 向量索引是否已初始化
-    flags: Annotated[Dict[str, Union[bool, str]], merge_flags]  # 节点执行状态
+    flags: Annotated[Dict[str, Union[bool, Literal["success", "skipped", "error"]]], merge_flags]  # 节点执行状态
     epoch: int  # 生成答案迭代次数
     last_answer: str  # 上一次生成的答案
     last_evaluation: Optional[Dict[str, Any]]  # 上一次评估结果
@@ -217,21 +218,26 @@ class MultiAgentGraph:
 
         加载基础向量库（公司信息等）
         """
-        logger.info("[节点 1] 初始化向量存储")
+        start_ts = time.monotonic()
+        logger.info("[init_vector_store] 初始化向量存储")
 
         try:
             if self.vector_store_index is None:
                 self.vector_store_index = self.vector_store_manager.load_or_build_index()
                 logger.info("向量存储初始化完成")
 
+            elapsed = time.monotonic() - start_ts
+            logger.info("[init_vector_store] 完成 状态=success 耗时=%.2fs", elapsed)
             return {
                 "vector_store_initialized": True,
                 "inited_vector_index": True,
-                **self._with_flag(state, "init_vector_store", True)
+                **self._with_flag(state, "init_vector_store", "success")
             }
 
         except Exception as e:
+            elapsed = time.monotonic() - start_ts
             logger.error(f"向量存储初始化失败: {e}")
+            logger.info("[init_vector_store] 完成 状态=error 耗时=%.2fs", elapsed)
             return {
                 "vector_store_initialized": False,
                 "inited_vector_index": False,
@@ -243,7 +249,8 @@ class MultiAgentGraph:
 
         将用户查询拆解为多个子问题
         """
-        logger.info("[节点 2] 调用 PlannerAgent 拆解查询")
+        start_ts = time.monotonic()
+        logger.info("[plan_query] 调用 PlannerAgent 拆解查询")
 
         original_query = state.get("original_query", "")
         thread_id = state.get("thread_id", "default")
@@ -263,6 +270,8 @@ class MultiAgentGraph:
                     data = json.loads(result)
                 except json.JSONDecodeError:
                     logger.error(f"解析 JSON 失败: {result}")
+                    elapsed = time.monotonic() - start_ts
+                    logger.info("[plan_query] 完成 状态=error 耗时=%.2fs", elapsed)
                     return {
                         "sub_questions": [original_query],
                         **self._with_flag(state, "plan_query", "error")
@@ -271,6 +280,8 @@ class MultiAgentGraph:
                 data = result
             else:
                 logger.error(f"PlannerAgent 返回了非预期的类型: {type(result)}")
+                elapsed = time.monotonic() - start_ts
+                logger.info("[plan_query] 完成 状态=error 耗时=%.2fs", elapsed)
                 return {
                     "sub_questions": [original_query],
                     **self._with_flag(state, "plan_query", "error")
@@ -281,19 +292,25 @@ class MultiAgentGraph:
 
             if isinstance(tasks, list) and len(tasks) >= 3:
                 logger.info(f"查询拆解完成，生成 {len(tasks)} 个子问题")
+                elapsed = time.monotonic() - start_ts
+                logger.info("[plan_query] 完成 状态=success 耗时=%.2fs 子问题数=%d", elapsed, len(tasks))
                 return {
                     "sub_questions": tasks,
-                    **self._with_flag(state, "plan_query", True)
+                    **self._with_flag(state, "plan_query", "success")
                 }
             elif isinstance(tasks, list) and len(tasks) <3:
                 logger.warning(f"子问题数量不足: {len(tasks)}")
+                elapsed = time.monotonic() - start_ts
+                logger.info("[plan_query] 完成 状态=success 耗时=%.2fs 子问题数=%d", elapsed, len(tasks))
                 return {
                     "sub_questions": tasks if tasks else [original_query],
-                    **self._with_flag(state, "plan_query", True)
+                    **self._with_flag(state, "plan_query", "success")
                 }
 
         except Exception as e:
+            elapsed = time.monotonic() - start_ts
             logger.error(f"查询拆解失败: {e}")
+            logger.info("[plan_query] 完成 状态=error 耗时=%.2fs", elapsed)
             return {
                 "sub_questions": [original_query],
                 **self._with_flag(state, "plan_query", "error")
@@ -304,7 +321,8 @@ class MultiAgentGraph:
 
         使用空url_pool，让 ExecutorAgent 自由探索
         """
-        logger.info("[节点 3a] 第一阶段执行 - 探索阶段（url_pool=[]）")
+        start_ts = time.monotonic()
+        logger.info("[execute_first] 第一阶段执行 - 探索阶段（url_pool=[]）")
         
         sub_questions = state.get("sub_questions", [])
         if len(sub_questions) > 3:
@@ -313,10 +331,12 @@ class MultiAgentGraph:
             sub_questions_first = sub_questions[:2]
         if not sub_questions_first:
             logger.warning("没有子问题需要执行第一阶段")
+            elapsed = time.monotonic() - start_ts
+            logger.info("[execute_first] 完成 状态=skipped 耗时=%.2fs", elapsed)
             return {
                 "first_executor_results": [],
                 "url_pool": [],
-                **self._with_flag(state, "execute_first", False)
+                **self._with_flag(state, "execute_first", "skipped")
             }
         thread_id = state.get("thread_id", "default")
         user_id = state.get("user_id", "default_user")
@@ -335,15 +355,23 @@ class MultiAgentGraph:
 
             logger.info(f"第一阶段执行完成，完成{len(executor_results)} 个子问题的检索")
             logger.info(f"第一阶段收集到 {len(updated_url_pool)} 个 URL")
-
+            elapsed = time.monotonic() - start_ts
+            logger.info(
+                "[execute_first] 完成 状态=success 耗时=%.2fs 子问题数=%d URL数=%d",
+                elapsed,
+                len(sub_questions_first),
+                len(updated_url_pool),
+            )
             return {
                 "first_executor_results": executor_results, #结构是[{"sub_url_pool": ..., "downloaded_papers": ...}...]
                 "url_pool": updated_url_pool,
-                **self._with_flag(state, "execute_first", True)
+                **self._with_flag(state, "execute_first", "success")
             }
 
         except Exception as e:
+            elapsed = time.monotonic() - start_ts
             logger.error(f"第一阶段执行失败: {e}")
+            logger.info("[execute_first] 完成 状态=error 耗时=%.2fs", elapsed)
             return {
                 "first_executor_results": [],
                 "url_pool": [],
@@ -355,7 +383,8 @@ class MultiAgentGraph:
 
         使用第一阶段收集的 url_pool，进行精准检索
         """
-        logger.info("[节点 3b] 第二阶段执行 - 精炼阶段（使用第一阶段的 url_pool）")
+        start_ts = time.monotonic()
+        logger.info("[execute_second] 第二阶段执行 - 精炼阶段（使用第一阶段的 url_pool）")
 
         sub_questions = state.get("sub_questions", [])
         if len(sub_questions) > 3:
@@ -364,9 +393,11 @@ class MultiAgentGraph:
             sub_questions_second = sub_questions[2:]
         if not sub_questions_second:
             logger.warning("没有子问题需要执行第二阶段")
+            elapsed = time.monotonic() - start_ts
+            logger.info("[execute_second] 完成 状态=skipped 耗时=%.2fs", elapsed)
             return {
                 "second_executor_results": [],
-                **self._with_flag(state, "execute_second", False)
+                **self._with_flag(state, "execute_second", "skipped")
             }
         thread_id = state.get("thread_id", "default")
         user_id = state.get("user_id", "default_user")
@@ -387,15 +418,23 @@ class MultiAgentGraph:
 
             logger.info(f"第二阶段执行完成，获得 {len(executor_results)} 个结果")
             logger.info(f"第二阶段 URL Pool: {len(url_pool)} -> {len(updated_url_pool)}")
-
+            elapsed = time.monotonic() - start_ts
+            logger.info(
+                "[execute_second] 完成 状态=success 耗时=%.2fs 子问题数=%d URL数=%d",
+                elapsed,
+                len(sub_questions_second),
+                len(updated_url_pool),
+            )
             return {
                 "second_executor_results": executor_results,
                 "url_pool": updated_url_pool,
-                **self._with_flag(state, "execute_second", True)
+                **self._with_flag(state, "execute_second", "success")
             }
 
         except Exception as e:
+            elapsed = time.monotonic() - start_ts
             logger.error(f"第二阶段执行失败: {e}")
+            logger.info("[execute_second] 完成 状态=error 耗时=%.2fs", elapsed)
             return {
                 "second_executor_results": [],
                 **self._with_flag(state, "execute_second", "error")
@@ -447,7 +486,8 @@ class MultiAgentGraph:
 
         在第一阶段执行后，对下载的文档进行去重
         """
-        logger.info("[节点 4a] 第一次文档收集与去重")
+        start_ts = time.monotonic()
+        logger.info("[collect_first] 第一次文档收集与去重")
 
         executor_results = state.get("first_executor_results", [])
 
@@ -483,15 +523,23 @@ class MultiAgentGraph:
                 processed_file_paths.append(file_info)
 
             logger.info(f"从第一阶段 executor_results 提取到 {len(all_documents)} 个文档元数据")
-
+            elapsed = time.monotonic() - start_ts
+            logger.info(
+                "[collect_first] 完成 状态=success 耗时=%.2fs 文档数=%d 去重后=%d",
+                elapsed,
+                len(all_documents),
+                len(unique_documents),
+            )
             return {
                 "first_all_documents": unique_documents,
                 "first_processed_file_paths": processed_file_paths,
-                **self._with_flag(state, "collect_first", True)
+                **self._with_flag(state, "collect_first", "success")
             }
 
         except Exception as e:
+            elapsed = time.monotonic() - start_ts
             logger.error(f"第一次文档收集失败: {e}")
+            logger.info("[collect_first] 完成 状态=error 耗时=%.2fs", elapsed)
             import traceback
             traceback.print_exc()
 
@@ -506,7 +554,8 @@ class MultiAgentGraph:
 
         在第二阶段执行后，对下载的文档进行第二次去重
         """
-        logger.info("[节点 4b] 第二次文档收集与去重")
+        start_ts = time.monotonic()
+        logger.info("[collect_second] 第二次文档收集与去重")
 
         executor_results = state.get("second_executor_results", [])
         previous_file_paths = state.get("first_processed_file_paths", [])
@@ -567,15 +616,23 @@ class MultiAgentGraph:
                 f"两阶段总计：{len(previous_file_paths)} + {len(processed_file_paths)} = "
                 f"{len(stage_unique_files)} 个去重后的文档"
             )
-
+            elapsed = time.monotonic() - start_ts
+            logger.info(
+                "[collect_second] 完成 状态=success 耗时=%.2fs 文档数=%d 去重后=%d",
+                elapsed,
+                len(all_documents),
+                len(unique_documents),
+            )
             return {
                 "second_all_documents": unique_documents,
                 "second_processed_file_paths": processed_file_paths,
-                **self._with_flag(state, "collect_second", True)
+                **self._with_flag(state, "collect_second", "success")
             }
 
         except Exception as e:
+            elapsed = time.monotonic() - start_ts
             logger.error(f"第二次文档收集失败: {e}")
+            logger.info("[collect_second] 完成 状态=error 耗时=%.2fs", elapsed)
             import traceback
             traceback.print_exc()
 
@@ -599,32 +656,41 @@ class MultiAgentGraph:
 
         PDF 转 Markdown、切割、问题改写
         """
-        logger.info("[节点 5a] 第一阶段文档处理（去重后）")
+        start_ts = time.monotonic()
+        logger.info("[process_first_documents] 第一阶段文档处理（去重后）")
 
         documents = state.get("first_all_documents", [])
         existing_docs = state.get("first_llama_docs", [])
 
         if not documents and not existing_docs:
+            elapsed = time.monotonic() - start_ts
             logger.error("第一阶段没有文档需要切割处理")
+            logger.info("[process_first_documents] 完成 状态=skipped 耗时=%.2fs", elapsed)
             return {
                 "first_llama_docs": existing_docs,
-                **self._with_flag(state, "process_first_documents", False)
+                **self._with_flag(state, "process_first_documents", "skipped")
             }
         if not documents and existing_docs:
             logger.info("第一阶段已完成但无新文档需要切割处理")
+            elapsed = time.monotonic() - start_ts
+            logger.info("[process_first_documents] 完成 状态=success 耗时=%.2fs 文档片段数=%d", elapsed, len(existing_docs))
             return {
                 "first_llama_docs": existing_docs,
-                **self._with_flag(state, "process_first_documents", True)
+                **self._with_flag(state, "process_first_documents", "success")
             }
         try:
             processed_docs = await self._process_documents(documents, "第一阶段")
             merged_docs = existing_docs + processed_docs
+            elapsed = time.monotonic() - start_ts
+            logger.info("[process_first_documents] 完成 状态=success 耗时=%.2fs 文档片段数=%d", elapsed, len(merged_docs))
             return {
                 "first_llama_docs": merged_docs,
-                **self._with_flag(state, "process_first_documents", True)
+                **self._with_flag(state, "process_first_documents", "success")
             }
         except Exception as e:
+            elapsed = time.monotonic() - start_ts
             logger.error(f"第一阶段文档处理失败: {e}")
+            logger.info("[process_first_documents] 完成 状态=error 耗时=%.2fs", elapsed)
             return {
                 "first_llama_docs": existing_docs,
                 **self._with_flag(state, "process_first_documents", "error")
@@ -635,47 +701,67 @@ class MultiAgentGraph:
 
         PDF 转 Markdown、切割、问题改写
         """
-        logger.info("[节点 5b] 第二阶段文档处理（去重后）")
+        start_ts = time.monotonic()
+        logger.info("[process_second_documents] 第二阶段文档处理（去重后）")
 
         documents = state.get("second_all_documents", [])
         existing_docs = state.get("second_llama_docs", [])
 
         if not documents and not existing_docs:
+            elapsed = time.monotonic() - start_ts
+            logger.info("[process_second_documents] 完成 状态=skipped 耗时=%.2fs", elapsed)
             return {
                 "second_llama_docs": existing_docs,
-                **self._with_flag(state, "process_second_documents", False)
+                **self._with_flag(state, "process_second_documents", "skipped")
             }
         if not documents and existing_docs:
             logger.info("第二阶段已完成但无新文档需要切割处理")
+            elapsed = time.monotonic() - start_ts
+            logger.info("[process_second_documents] 完成 状态=success 耗时=%.2fs 文档片段数=%d", elapsed, len(existing_docs))
             return {
                 "second_llama_docs": existing_docs,
-                **self._with_flag(state, "process_second_documents", True)
+                **self._with_flag(state, "process_second_documents", "success")
             }
         try:
             processed_docs = await self._process_documents(documents, "第二阶段")
             merged_docs = existing_docs + processed_docs
+            elapsed = time.monotonic() - start_ts
+            logger.info("[process_second_documents] 完成 状态=success 耗时=%.2fs 文档片段数=%d", elapsed, len(merged_docs))
             return {
                 "second_llama_docs": merged_docs,
-                **self._with_flag(state, "process_second_documents", True)
+                **self._with_flag(state, "process_second_documents", "success")
             }
         except Exception as e:
+            elapsed = time.monotonic() - start_ts
             logger.error(f"第二阶段文档处理失败: {e}")
+            logger.info("[process_second_documents] 完成 状态=error 耗时=%.2fs", elapsed)
             return {
                 "second_llama_docs": existing_docs,
                 **self._with_flag(state, "process_second_documents", "error")
             }
+
+    async def _join_vectorize_node(self, state: MultiAgentState) -> Dict[str, Any]:
+        """向量化前的汇合节点
+
+        用于等待 init_vector_store / process_first_documents / process_second_documents
+        三个节点都已写入 flags 后再继续。
+        """
+        return {}
 
     async def _vectorize_documents_node(self, state: MultiAgentState) -> Dict[str, Any]:
         """节点 6: 向量化文档并入库
 
         将处理后的文档向量化并存入向量库
         """
-        logger.info("[节点 6] 向量化文档并入库")
+        start_ts = time.monotonic()
+        logger.info("[vectorize_documents] 向量化文档并入库")
 
         if not state.get("inited_vector_index", False):
+            elapsed = time.monotonic() - start_ts
             logger.info("向量库尚未初始化，跳过向量化")
+            logger.info("[vectorize_documents] 完成 状态=skipped 耗时=%.2fs", elapsed)
             return {
-                **self._with_flag(state, "vectorize_documents", False)
+                **self._with_flag(state, "vectorize_documents", "skipped")
             }
 
         first_llama_docs = state.get("first_llama_docs", [])
@@ -694,12 +780,21 @@ class MultiAgentGraph:
                 logger.info("阶段一和阶段二都没有新的BaseNodes需要向量化")
             if not second_llama_docs :
                 logger.info("阶段二没有新的BaseNodes需要向量化，仅阶段一有文档被向量化")
+            elapsed = time.monotonic() - start_ts
+            logger.info(
+                "[vectorize_documents] 完成 状态=success 耗时=%.2fs 新增=第1阶段%d 第2阶段%d",
+                elapsed,
+                len(first_llama_docs),
+                len(second_llama_docs),
+            )
             return {
-                **self._with_flag(state, "vectorize_documents", True)
+                **self._with_flag(state, "vectorize_documents", "success")
             }
 
         except Exception as e:
+            elapsed = time.monotonic() - start_ts
             logger.error(f"向量化失败: {e}")
+            logger.info("[vectorize_documents] 完成 状态=error 耗时=%.2fs", elapsed)
             return {**self._with_flag(state, "vectorize_documents", "error")}
 
     async def _rag_retrieve_node(self, state: MultiAgentState) -> Dict[str, Any]:
@@ -707,19 +802,22 @@ class MultiAgentGraph:
 
         基于子问题进行向量检索和重排序
         """
-        logger.info("[节点 7] RAG 检索")
+        start_ts = time.monotonic()
+        logger.info("[rag_retrieve] RAG 检索")
 
         sub_questions = state.get("sub_questions", [])
         retrieved_epoch = state.get("retrieved_epoch", 0)
 
         if self.vector_store_index is None:
+            elapsed = time.monotonic() - start_ts
             logger.info("向量化尚未完成或索引为空，跳过检索")
+            logger.info("[rag_retrieve] 完成 状态=skipped 耗时=%.2fs", elapsed)
             return {
                 "retrieved_nodes": [],
                 "retrieved_epoch": retrieved_epoch,
                 "correct_context": False,
                 "messages": [SystemMessage(content="初始向量化尚未完成，严重错误- 跳过检索")],
-                **self._with_flag(state, "rag_retrieve", False)
+                **self._with_flag(state, "rag_retrieve", "skipped")
             }
 
         try:
@@ -746,11 +844,13 @@ class MultiAgentGraph:
                 logger.warning(
                     f"RAG 检索为空，准备重试: retrieved_epoch={updated_epoch}"
                 )
+                elapsed = time.monotonic() - start_ts
+                logger.info("[rag_retrieve] 完成 状态=empty 耗时=%.2fs", elapsed)
                 return {
                     "retrieved_nodes": [],
                     "retrieved_epoch": updated_epoch,
                     "correct_context": False,
-                    **self._with_flag(state, "rag_retrieve", False)
+                    **self._with_flag(state, "rag_retrieve", "skipped")
                 }
             contents=[]
             contents_str=[]
@@ -784,6 +884,13 @@ class MultiAgentGraph:
             correct_context = len(questions_pool) > 0
             updated_epoch = retrieved_epoch + 1 
             logger.info(f"从全部检索结果中提取并去重后，问题池中共有 {len(questions_pool)} 个问题")
+            elapsed = time.monotonic() - start_ts
+            logger.info(
+                "[rag_retrieve] 完成 状态=success 耗时=%.2fs 节点数=%d 问题池数=%d",
+                elapsed,
+                len(contents),
+                len(questions_pool),
+            )
             return {
                 "retrieved_nodes": contents,
                 "retrieved_epoch": updated_epoch,
@@ -798,11 +905,13 @@ class MultiAgentGraph:
                         metadata={"message_type": "question_pool"}
                     )
                 ],
-                **self._with_flag(state, "rag_retrieve", True)
+                **self._with_flag(state, "rag_retrieve", "success")
             }
 
         except Exception as e:
+            elapsed = time.monotonic() - start_ts
             logger.error(f"RAG 检索失败: {e}")
+            logger.info("[rag_retrieve] 完成 状态=error 耗时=%.2fs", elapsed)
             updated_epoch = retrieved_epoch + 1
             return {
                 "retrieved_nodes": [],
@@ -816,7 +925,8 @@ class MultiAgentGraph:
 
         基于检索结果和问题池生成最终答案
         """
-        logger.info("[节点 9] 尝试生成最终答案")
+        start_ts = time.monotonic()
+        logger.info("[generate_answer] 尝试生成最终答案")
         epoch = state.get("epoch", 0)
         try:
             base_messages: List[AnyMessage] = state["messages"]
@@ -825,15 +935,18 @@ class MultiAgentGraph:
             response = await self.llm.ainvoke(base_messages)
 
             logger.info(f"轮次：{epoch+1}答案生成完成(注:轮次从1开始计数)")
-
+            elapsed = time.monotonic() - start_ts
+            logger.info("[generate_answer] 完成 状态=success 耗时=%.2fs 轮次=%d", elapsed, epoch + 1)
             return {
                 "epoch": epoch + 1,
                 "messages": [response],
-                **self._with_flag(state, "generate_answer", True)
+                **self._with_flag(state, "generate_answer", "success")
             }
 
         except Exception as e:
+            elapsed = time.monotonic() - start_ts
             logger.error(f"生成答案失败: {e}")
+            logger.info("[generate_answer] 完成 状态=error 耗时=%.2fs 轮次=%d", elapsed, epoch + 1)
             return {
                 "epoch": epoch + 1,
                 **self._with_flag(state, "generate_answer", "error")
@@ -843,15 +956,15 @@ class MultiAgentGraph:
     # 辅助方法
     # ========================================================================
 
-    def _init_flags(self) -> Dict[str, Union[bool, str]]:
+    def _init_flags(self) -> Dict[str, Union[bool, Literal["success", "skipped", "error"]]]:
         return {node_name: False for node_name in NODE_FLAG_KEYS}
 
     def _with_flag(
         self,
         state: MultiAgentState,
         node_name: str,
-        status: Union[bool, str]
-    ) -> Dict[str, Dict[str, Union[bool, str]]]:
+        status: Union[bool, Literal["success", "skipped", "error"]]
+    ) -> Dict[str, Dict[str, Union[bool, Literal["success", "skipped", "error"]]]]:
         return {"flags": {node_name: status}}
 
     def _build_answer_system_prompt(self) -> str:
@@ -981,7 +1094,8 @@ class MultiAgentGraph:
 
     async def _eval_answer_node(self, state: MultiAgentState) -> Dict[str, Any]:
         """节点 10: 评估生成答案"""
-        logger.info("[节点 10] 评估生成答案")
+        start_ts = time.monotonic()
+        logger.info("[eval_answer] 评估生成答案")
 
         messages = state.get("messages", [])
         retrieved_nodes = state.get("retrieved_nodes", [])
@@ -999,7 +1113,9 @@ class MultiAgentGraph:
             logger.info(f"评估模型原始输出: {content}")
             eval_result = self._parse_eval_response(content)
         except Exception as e:
+            elapsed = time.monotonic() - start_ts
             logger.error(f"评估答案失败: {e}")
+            logger.info("[eval_answer] 完成 状态=error 耗时=%.2fs", elapsed)
             eval_result = {
                 "passed": False,
                 "suggestions": ["评估过程出错，请重新生成答案"]
@@ -1010,15 +1126,19 @@ class MultiAgentGraph:
             }
         if isinstance(content, str):
             logger.info(f"评估结果原始内容(str格式): {content}")
+            elapsed = time.monotonic() - start_ts
+            logger.info("[eval_answer] 完成 状态=fail 耗时=%.2fs", elapsed)
             return {
                 "last_evaluation": eval_result, 
-                **self._with_flag(state, "eval_answer", False)
+                **self._with_flag(state, "eval_answer", "success")
             }
         elif isinstance(content, dict):
             logger.info(f"评估结果原始内容（dict格式）: {content}")
+            elapsed = time.monotonic() - start_ts
+            logger.info("[eval_answer] 完成 状态=success 耗时=%.2fs", elapsed)
             return {
                 "last_evaluation": eval_result,
-                **self._with_flag(state, "eval_answer", True)
+                **self._with_flag(state, "eval_answer", "success")
             }
 
     def _should_continue_generation(self, state: MultiAgentState) -> str:
@@ -1048,12 +1168,26 @@ class MultiAgentGraph:
         logger.info(f"检索为空，继续重试 ({retrieved_epoch}/{Config.GENER_EPOCH})")
         return "rag_retrieve"
 
+    def _route_to_vectorize(self, state: MultiAgentState) -> str:
+        flags = state.get("flags") or {}
+        required_flags = (
+            "init_vector_store",
+            "process_first_documents",
+            "process_second_documents",
+        )
+        if all(flags.get(key) is not False for key in required_flags):
+            return "vectorize_documents"
+        return "end"
+
     async def _terminal_error_node(self, state: MultiAgentState) -> Dict[str, Any]:
         """终止节点: 返回系统错误回答"""
+        start_ts = time.monotonic()
         error_message = "系统错误，无法正确回答"
         logger.error(
             f"流程终止: retrieved_epoch={state.get('retrieved_epoch', 0)}"
         )
+        elapsed = time.monotonic() - start_ts
+        logger.info("[terminal_error] 完成 状态=error 耗时=%.2fs", elapsed)
         return {
             "final_answer": error_message,
             **self._with_flag(state, "terminal_error", "error")
@@ -1093,6 +1227,7 @@ class MultiAgentGraph:
         builder.add_node("execute_second", self._execute_second_node)
         builder.add_node("collect_second", self._collect_second_node)
         builder.add_node("process_second_documents", self._process_second_documents_node)
+        builder.add_node("join_vectorize", self._join_vectorize_node)
         builder.add_node("vectorize_documents", self._vectorize_documents_node)
         builder.add_node("rag_retrieve", self._rag_retrieve_node)
         builder.add_node("generate_answer", self._generate_answer_node)
@@ -1112,10 +1247,18 @@ class MultiAgentGraph:
         builder.add_edge("execute_second", "collect_second")
         builder.add_edge("collect_second", "process_second_documents")
 
-        # 动态入库：init_vector_store 完成后启动 vectorize_documents
-        builder.add_edge("init_vector_store", "vectorize_documents")
-        builder.add_edge("process_first_documents", "vectorize_documents")
-        builder.add_edge("process_second_documents", "vectorize_documents")
+        # 向量化前汇合：等待关键节点写入 flags
+        builder.add_edge("init_vector_store", "join_vectorize")
+        builder.add_edge("process_first_documents", "join_vectorize")
+        builder.add_edge("process_second_documents", "join_vectorize")
+        builder.add_conditional_edges(
+            "join_vectorize",
+            self._route_to_vectorize,
+            {
+                "vectorize_documents": "vectorize_documents",
+                "end": END,
+            }
+        )
 
         # 后续流程保持不变
         builder.add_edge("vectorize_documents", "rag_retrieve")
@@ -1204,9 +1347,18 @@ class MultiAgentGraph:
                 node_name for node_name, status in flags.items() if status == "error"
             ]
             execution_succeeded = bool(flags) and all(
-                status is True for status in flags.values()
+                status not in (False, "error") for status in flags.values()
             )
             logger.info(f"节点执行状态: {flags}")
+            missing_keys = [key for key in NODE_FLAG_KEYS if key not in flags]
+            unset_keys = [key for key, value in flags.items() if value is False]
+            error_keys = [key for key, value in flags.items() if value == "error"]
+            logger.info(
+                "节点结果完整性: missing=%s unset=%s errors=%s",
+                missing_keys,
+                unset_keys,
+                error_keys,
+            )
 
             question_pool = self._extract_question_pool_from_messages(result.get("messages", []))
             final_result = {
