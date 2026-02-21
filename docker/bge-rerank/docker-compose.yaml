@@ -9,7 +9,7 @@ services:
       - "8100:8100"
 
     volumes:
-      - /home/qinshan/models/bge_rerank:/data
+      - /root/autodl_tmp/my_llms/bge_rerank_v2_m3:/data
 
     deploy:
       resources:
@@ -24,4 +24,5 @@ services:
       --dtype float16
       --port 8100
       --payload-limit 10000000
+      --max-batch-tokens 1000000
     restart: "no"
