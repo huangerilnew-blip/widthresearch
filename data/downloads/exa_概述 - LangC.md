@@ -1,7 +1,7 @@
 # 概述 - LangChain 框架
 
 **URL**:
-https://github.langchain.ac.cn/langgraph/concepts/subgraphs
+https://github.langchain.ac.cn/langgraph/concepts/human_in_the_loop
 
 ## 元数据
 - 发布日期: 2025-01-01T00:00:00+00:00
@@ -9,20 +9,18 @@ https://github.langchain.ac.cn/langgraph/concepts/subgraphs
 ## 完整内容
 ---
 概述 - LangChain 教程[跳到内容] 
-**LangGraph 平台文档已迁移！**请在新的[LangChain 文档] 网站上查找 LangGraph 平台文档。[] # 子图[¶] 
-子图（subgraph）是一个在另一个图中作为[节点] 使用的[图] ——这是封装概念在 LangGraph 中的应用。子图允许您构建包含多个组件的复杂系统，而这些组件本身就是图。![Subgraph] 
-使用子图的一些原因包括：* 构建[多智能体系统] 
-* 当您想在多个图中重用一组节点时* 当您希望不同的团队独立开发图的不同部分时，您可以将每个部分定义为一个子图。只要遵守子图的接口（输入和输出模式），父图就可以在不了解子图任何细节的情况下进行构建。添加子图时，主要的问题是父图和子图如何通信，即它们在图执行期间如何相互传递[状态] 。有两种情况：
-* 父图和子图的状态[模式] 中有**共享的状态键**。在这种情况下，您可以[将子图作为父图中的一个节点包含进来] 。
-```
-`[]<web_link>fromlanggraph.graphimportStateGraph,MessagesState,START[]<web_link>[]<web_link># Subgraph[]<web_link>[]<web_link>defcall\_model(state:MessagesState):[]<web_link>response=model.invoke(state["messages"])[]<web_link>return{"messages":response}[]<web_link>[]<web_link>subgraph\_builder=StateGraph(State)[]<web_link>subgraph\_builder.add\_node(call\_model)[]<web_link>...[]<web_link>subgraph=subgraph\_builder.compile()[]<web_link>[]<web_link># Parent graph[]<web_link>[]<web_link>builder=StateGraph(State)[]<web_link>builder.add\_node("subgraph\_node",subgraph)[]<web_link>builder.add\_edge(START,"subgraph\_node")[]<web_link>graph=builder.compile()[]<web_link>...[]<web_link>graph.invoke({"messages":[{"role":"user","content":"hi!"}]})`
-```
-* 父图和子图有**不同的模式**（它们的状态[模式] 中没有共享的状态键）。在这种情况下，您必须[从父图的一个节点内部调用子图] ：当父图和子图具有不同的状态模式，并且您需要在调用子图之前或之后转换状态时，这种方法很有用。
-```
-`[]<web_link>fromtyping\_extensionsimportTypedDict,Annotated[]<web_link>fromlangchain\_core.messagesimportAnyMessage[]<web_link>fromlanggraph.graphimportStateGraph,MessagesState,START[]<web_link>fromlanggraph.graph.messageimportadd\_messages[]<web_link>[]<web_link>classSubgraphMessagesState(TypedDict):[]<web_link>subgraph\_messages:Annotated[list[AnyMessage],add\_messages][]<web_link>[]<web_link># Subgraph[]<web_link>[]<web_link>defcall\_model(state:SubgraphMessagesState):[]<web_link>response=model.invoke(state["subgraph\_messages"])[]<web_link>return{"subgraph\_messages":response}[]<web_link>[]<web_link>subgraph\_builder=StateGraph(SubgraphMessagesState)[]<web_link>subgraph\_builder.add\_node("call\_model\_from\_subgraph",call\_model)[]<web_link>subgraph\_builder.add\_edge(START,"call\_model\_from\_subgraph")[]<web_link>...[]<web_link>subgraph=subgraph\_builder.compile()[]<web_link>[]<web_link># Parent graph[]<web_link>[]<web_link>defcall\_subgraph(state:MessagesState):[]<web_link>response=subgraph.invoke({"subgraph\_messages":state["messages"]})[]<web_link>return{"messages":response["subgraph\_messages"]}[]<web_link>[]<web_link>builder=StateGraph(State)[]<web_link>builder.add\_node("subgraph\_node",call\_subgraph)[]<web_link>builder.add\_edge(START,"subgraph\_node")[]<web_link>graph=builder.compile()[]<web_link>...[]<web_link>graph.invoke({"messages":[{"role":"user","content":"hi!"}]})`
-```
+**LangGraph 平台文档已迁移！**请在新的[LangChain 文档] 网站上查找 LangGraph 平台文档。[] # 人机协作(Human-in-the-loop)[¶] 
+要在代理或工作流中审查、编辑和批准工具调用，请[使用 LangGraph 的人机协同（human-in-the-loop）功能] ，以便在工作流的任何时刻进行人工干预。这在大型语言模型 (LLM) 驱动的应用中尤其有用，因为模型输出可能需要验证、修正或额外的上下文。![image] 
+提示有关如何使用人机协同的信息，请参阅[启用人工干预] 和[使用服务器 API 实现人机协同] 。
+## 核心功能[¶] 
+* **持久化执行状态**：中断功能使用了 LangGraph 的[持久化] 层，该层会保存图的状态，从而可以无限期地暂停图的执行，直到您恢复为止。这是因为 LangGraph 在每一步之后都会为图状态创建检查点，这使得系统能够持久化执行上下文并在之后从中断处继续恢复工作流。这支持了没有时间限制的异步人工审查或输入。有两种暂停图的方法* [动态中断] ：在特定节点内部，根据图的当前状态使用`interrupt`来暂停图。
+* [静态中断] ：使用`interrupt\_before`和`interrupt\_after`在预定义的点暂停图，即在节点执行之前或之后。
+![image] 一个由3个顺序步骤组成的示例图，在 step\_3 之前设有一个断点。* **灵活的集成点**：人机协同逻辑可以引入到工作流的任何一点。这允许有针对性的人工参与，例如批准 API 调用、修正输出或引导对话。## 模式[¶] 
+您可以使用`interrupt`和`Command`实现四种典型的设计模式
+* [批准或拒绝] ：在关键步骤（如 API 调用）之前暂停图，以审查和批准该操作。如果操作被拒绝，您可以阻止图执行该步骤，并可能采取替代操作。此模式通常涉及根据人工输入来路由图。* [审查和编辑状态] ：暂停图以审查和编辑图状态。这对于纠正错误或用附加信息更新状态很有用。此模式通常涉及用人工输入来更新状态。
+* [审查工具调用] ：在工具执行之前，暂停图以审查和编辑 LLM 请求的工具调用。* [验证人工输入] ：在进入下一步之前，暂停图以验证人工输入。
 回到顶
 
 
 ---
-*数据来源: Exa搜索 | 获取时间: 2026-02-21 19:56:59*
+*数据来源: Exa搜索 | 获取时间: 2026-02-22 20:38:19*

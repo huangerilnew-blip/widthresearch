@@ -108,6 +108,7 @@ class MultiAgentState(TypedDict):
 
     # RAG 阶段
     retrieved_nodes: List  # RAG 检索结果
+    retrieved_nodes_score: List  # RAG 检索原始结果（含 score 与 node）
     retrieved_epoch: int  # 检索重试次数
     correct_context: bool  # 上下文与问题池是否有效
 
@@ -818,6 +819,7 @@ class MultiAgentGraph:
             logger.info("[rag_retrieve] 完成 状态=skipped 耗时=%.2fs", elapsed)
             return {
                 "retrieved_nodes": [],
+                "retrieved_nodes_score": [],
                 "retrieved_epoch": retrieved_epoch,
                 "correct_context": False,
                 "messages": [SystemMessage(content="初始向量化尚未完成，严重错误- 跳过检索")],
@@ -837,13 +839,13 @@ class MultiAgentGraph:
             )
 
             # 执行检索，获取去重后的节点
-            retrieved_nodes = await rag_module.retrieve_postprecess(
+            retrieved_nodes_score = await rag_module.retrieve_postprecess(
                 planner_questions=sub_questions
             )
 
-            logger.info(f"RAG 检索完成，获得 {len(retrieved_nodes)} 个节点")
+            logger.info(f"RAG 检索完成，获得 {len(retrieved_nodes_score)} 个节点")
 
-            if not retrieved_nodes:
+            if not retrieved_nodes_score:
                 updated_epoch = retrieved_epoch + 1
                 logger.warning(
                     f"RAG 检索为空，准备重试: retrieved_epoch={updated_epoch}"
@@ -852,6 +854,7 @@ class MultiAgentGraph:
                 logger.info("[rag_retrieve] 完成 状态=empty 耗时=%.2fs", elapsed)
                 return {
                     "retrieved_nodes": [],
+                    "retrieved_nodes_score": [],
                     "retrieved_epoch": updated_epoch,
                     "correct_context": False,
                     **self._with_flag(state, "rag_retrieve", "skipped")
@@ -860,7 +863,7 @@ class MultiAgentGraph:
             contents_str=[]
             question_pool=[]
             num=0
-            for nws in retrieved_nodes:
+            for nws in retrieved_nodes_score:
                 node, score = nws.node, nws.score
                 metadata = node.metadata
                 content = node.get_content()
@@ -897,6 +900,7 @@ class MultiAgentGraph:
             )
             return {
                 "retrieved_nodes": contents,
+                "retrieved_nodes_score": retrieved_nodes_score,
                 "retrieved_epoch": updated_epoch,
                 "correct_context": correct_context,
                 "messages": [
@@ -919,6 +923,7 @@ class MultiAgentGraph:
             updated_epoch = retrieved_epoch + 1
             return {
                 "retrieved_nodes": [],
+                "retrieved_nodes_score": [],
                 "retrieved_epoch": updated_epoch,
                 "correct_context": False,
                 **self._with_flag(state, "rag_retrieve", "error")
@@ -1106,6 +1111,53 @@ class MultiAgentGraph:
             suggestions = [str(suggestions)]
         suggestions = [str(item) for item in suggestions if item]
         return {"passed": passed, "suggestions": suggestions}
+
+    def _build_observation_input(self, retrieved_nodes_score: List) -> List[Dict[str, Any]]:
+        retrieved_count = len(retrieved_nodes_score or [])
+        logger.info("开始构建观测输入: retrieved_nodes_score=%d", retrieved_count)
+        observations: List[Dict[str, Any]] = []
+        empty_content_count = 0
+        for item in retrieved_nodes_score or []:
+            node = getattr(item, "node", None)
+            if node is None:
+                continue
+            content = ""
+            if hasattr(node, "get_content"):
+                content = str(node.get_content())
+            if not content:
+                empty_content_count += 1
+            metadata = getattr(node, "metadata", {}) or {}
+            questions = metadata.get("questions_this_excerpt_can_answer", [])
+            if not isinstance(questions, list):
+                questions = [questions]
+            observations.append({
+                "content": content,
+                "questions": [str(question) for question in questions if question]
+            })
+        logger.info(
+            "观测输入构建完成: observations=%d empty_content=%d",
+            len(observations),
+            empty_content_count,
+        )
+        return observations
+
+    def _persist_observation(self, instruction: str, input_items: List[Dict[str, Any]], output: str) -> None:
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        output_path = os.path.join(project_root, "observational_data.json")
+        logger.info(
+            "写入观测数据: path=%s input_items=%d output_len=%d",
+            output_path,
+            len(input_items),
+            len(output or ""),
+        )
+        record = {
+            "instruction": instruction,
+            "input": input_items,
+            "output": output
+        }
+        with open(output_path, "a", encoding="utf-8") as file:
+            file.write(json.dumps(record, ensure_ascii=False) + "\n")
+        logger.info("观测数据追加写入完成")
 
     async def _eval_answer_node(self, state: MultiAgentState) -> Dict[str, Any]:
         """节点 10: 评估生成答案"""
@@ -1341,6 +1393,7 @@ class MultiAgentGraph:
             "first_llama_docs": [],
             "second_llama_docs": [],
             "retrieved_nodes": [],
+            "retrieved_nodes_score": [],
             "final_answer": "",
             "vector_store_initialized": False,
             "inited_vector_index": False,
@@ -1382,6 +1435,17 @@ class MultiAgentGraph:
                 if isinstance(last_message, AIMessage):
                     answer = str(last_message.content)
             print(f"[final_answer] {answer}")
+            evaluation = result.get("last_evaluation") or {}
+            if evaluation.get("passed") is True:
+                try:
+                    retrieved_nodes_score = result.get("retrieved_nodes_score", [])
+                    logger.info("评估通过，准备持久化观测数据")
+                    input_items = self._build_observation_input(retrieved_nodes_score)
+                    self._persist_observation(user_query, input_items, answer)
+                except Exception as persist_error:
+                    logger.warning(f"观测数据持久化失败: {persist_error}")
+            else:
+                logger.info("评估未通过，不记录本次运行的观测数据")
             final_result = {
                 'query': user_query,
                 'user_id': user_id,

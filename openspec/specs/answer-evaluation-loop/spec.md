@@ -5,7 +5,7 @@ TBD - created by archiving change add-answer-evaluation-loop. Update Purpose aft
 ## Requirements
 ### Requirement: 答案生成评估循环
 
-系统 SHALL 在 `_generate_answer_node` 生成答案后进行评估，根据评估结果决定是否重新生成。
+系统 SHALL 在 `_generate_answer_node` 生成答案后进行评估，根据评估结果决定是否重新生成，并在评估通过后触发观测数据持久化。
 
 #### Scenario: 首次生成与评估
 
@@ -20,6 +20,11 @@ TBD - created by archiving change add-answer-evaluation-loop. Update Purpose aft
 - **AND** 证据标注正确
 - **THEN** SHALL 路由到 `END`
 - **AND** 使用当前 `final_answer` 作为最终结果
+
+#### Scenario: 评估通过触发观测数据持久化
+
+- **WHEN** `_eval_answer_node` 评估结果为通过
+- **THEN** `run` MUST 使用 `retrieved_nodes_score` 解析观测数据并追加写入 `observational_data.json`
 
 #### Scenario: 评估不通过且未达上限
 
