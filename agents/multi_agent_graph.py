@@ -15,6 +15,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import asyncio
 import json
 import ast
 import logging
@@ -647,9 +648,12 @@ class MultiAgentGraph:
             logger.info(f"{stage_label}没有文档需要处理")
             return []
 
-        llama_docs = await self.document_processor.get_nodes(documents)
+        llama_docs = await asyncio.to_thread(self._process_documents_sync, documents)
         logger.info(f"{stage_label}文档处理完成: {len(llama_docs)} 个片段")
         return llama_docs
+
+    def _process_documents_sync(self, documents: List[Dict]) -> List:
+        return asyncio.run(self.document_processor.get_nodes(documents))
 
     async def _process_first_documents_node(self, state: MultiAgentState) -> Dict[str, Any]:
         """节点 5a: 第一阶段文档处理
