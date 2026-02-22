@@ -8,6 +8,7 @@
 - MarkdownElementNodeParser: 解析文档并优化表格处理
 """
 
+import asyncio
 import os
 import re
 import json
@@ -16,12 +17,11 @@ from pathlib import Path
 from typing import List, Tuple, Dict, Optional
 from llama_index.core.schema import BaseNode, TextNode
 from concurrent_log_handler import ConcurrentRotatingFileHandler
-
 from llama_index.core import Document
 from llama_index.core.base.embeddings.base import BaseEmbedding
 from llama_index.core.llms.llm import LLM
 from llama_index.core.node_parser import MarkdownElementNodeParser, SentenceSplitter
-from llama_index.readers.file.markdown import MarkdownReader
+from llama_index.readers.markitdown import MarkItDownReader
 from llama_index.core.extractors import QuestionsAnsweredExtractor
 from llama_index.core.ingestion import IngestionPipeline
 from core.config import Config
@@ -68,12 +68,13 @@ class DocumentProcessor:
         self.llm = llm
         self.mineru_base_url = mineru_base_url
         self.max_chunk_size = max_chunk_size
+        self._nodes_lock = asyncio.Lock()
         
         # 初始化 PDFParser（用于 PDF 转 Markdown）
         self.pdf_parser = PDFParser(mineru_server_url=mineru_base_url)
         self.json_parser = JsonReader()
         # 初始化 MarkdownReader（负责从文件系统加载 Markdown 文档）
-        self.markdown_reader = MarkdownReader()
+        self.markdown_reader = MarkItDownReader()
         
         # 初始化 MarkdownElementNodeParser（负责结构化解析 + 表格优化）
         self.markdown_parser = MarkdownElementNodeParser(
@@ -116,149 +117,151 @@ class DocumentProcessor:
         Returns:
             处理后的 Node 列表（包含改写问题的元数据）
         """
-        logger.info(f"开始处理 {len(documents)} 个文档")
-        json_nodes:List[BaseNode ]= []
-        docs_for_pipeline: List[Document] = []
-        optional_file=os.path.join(Config.DOC_SAVE_PATH, "context7_grep.json")  # 可选文件的添加
-        documents.append({"extra": {"saved_path": optional_file}})
-        # 1. 先将所有原始文件转为 LlamaIndex Document（Markdown 文本）
-        for doc_meta in documents:
-            # 获取文档路径
-            extra = doc_meta.get("extra")
-            saved_path = extra.get("saved_path") if isinstance(extra, dict) else ""
-            local_path = (
-                saved_path
-                or doc_meta.get("local_path")
-                or doc_meta.get("file_path")
-                or doc_meta.get("path")
-                or ""
-            )
-            if not local_path:
-               logger.warning(f"文档路径为空: {doc_meta.get('title', 'unknown')}")
-               continue
-            if not os.path.exists(local_path):
-                logger.warning(f"文档路径不存在: {local_path}")
-                continue
-            # 判断文件类型
-            file_ext = os.path.splitext(local_path)[1].lower()
-            source = doc_meta.get("source") or "联网检索"
-            title = doc_meta.get("title") or Path(local_path).stem
-            url = doc_meta.get("url") or source
-            base_metadata = {
-                "source": source, #来源或"联网检索"
-                "title": title, #title或文件名
-                "url": url,#url或来源或"unknown"
-                "path": local_path,
-            }
-
-            if file_ext == '.pdf':
-                # PDF 转 Markdown
-                markdown_text = await self._pdf_to_markdown(local_path)
-                if not markdown_text:
-                    logger.error(f"文件存在，但是PDF 转 Markdown 失败: {local_path}")
-                    continue
-                temp_doc = Document(
-                    text=markdown_text,
-                    metadata=base_metadata,
-                )
-                docs_for_pipeline.append(temp_doc)
-                logger.info(f"PDF 文档 {local_path} 转换为 Markdown 并加入 pipeline")
-        
-            elif file_ext in ['.md', '.markdown']:
-                # 使用 MarkdownReader 加载 Markdown 文件
-                md_docs = self.markdown_reader.load_data(file=Path(local_path))
-                if not md_docs:
-                    logger.error(f"文档存在，但Markdown 文档加载失败: {local_path}")
-                    continue
-
-                for d in md_docs:
-                    d.metadata = base_metadata
-                    docs_for_pipeline.append(d)
-                logger.info(f"Markdown 文档 {local_path} 加载为 {len(md_docs)} 个 Document 并加入 pipeline")
-            elif file_ext == '.json':
-                # 使用 JsonReader 加载 JSON 文件
-                json_lines = self.json_parser.read_json_lines(local_path)
-                json_docs = []
-                for line in json_lines:
-                    if not line.strip():
-                        continue
-                    try:
-                        json_docs.append(json.loads(line))
-                    except json.JSONDecodeError:
-                        logger.warning(f"JSON 行解析失败，已跳过: {line[:200]}")
-                if not json_docs:
-                    logger.warning(f"文档存在，但JSON文档加载失败或内容为空: {local_path}")
-                    continue
-                for item in json_docs:
-                    if not isinstance(item, dict):
-                        logger.warning(f"JSON 文档条目格式错误，已跳过: {item}")
-                        continue
-                    meta_data = item.get("metadata")
-                    source = item.get("source") or "联网搜索"
-                    library_id = None
-                    if not isinstance(meta_data, dict):
-                        logger.warning(f"可选工具保存的JSON文档中的条目缺少'metadata'字段")
-                    else:
-                        library_id = meta_data.get("library_id")
-                    base_metadata = {
-                        "source": source,
-                        "path": local_path,
-                    }
-                    if library_id:
-                        base_metadata["library_id"] = library_id
-                    node=TextNode(text=item.get("text", ""), metadata=base_metadata)
-                    if not item.get("text", "").strip():
-                        logger.warning(f"JSON文档中的条目文本为空:{item}")
-                    json_nodes.append(node)
-            else:
-                logger.warning(f"不支持的文件类型{file_ext}，跳过: {local_path}")
-                continue
-
-        if not docs_for_pipeline:
-            logger.error("使用lama_index的MarkdownReader和PDFParser处理文档失败，未生成任何Document对象")
-            raise ValueError("document-process中没有可处理的文档")
-        
-        # 2. 通过 IngestionPipeline 执行：MarkdownElementNodeParser -> SentenceSplitter -> QuestionsAnsweredExtractor
-        logger.info(f"开始通过 IngestionPipeline 处理 {len(docs_for_pipeline)} 个 Document")
-        nodes: List[BaseNode] = []
-        def _resolve_doc_path(doc: Document) -> str:
-            metadata = getattr(doc, "metadata", None)
-            if isinstance(metadata, dict):
-                return (
-                    metadata.get("path")
-                    or metadata.get("file_path")
-                    or metadata.get("local_path")
-                    or metadata.get("title")
-                    or metadata.get("url")
-                    or metadata.get("source")
+        async with self._nodes_lock:
+            logger.info(f"开始处理 {len(documents)} 个文档")
+            json_nodes:List[BaseNode ]= []
+            docs_for_pipeline: List[Document] = []
+            optional_file=os.path.join(Config.DOC_SAVE_PATH, "context7_grep.json")  # 可选文件的添加
+            documents.append({"extra": {"saved_path": optional_file}})
+            # 1. 先将所有原始文件转为 LlamaIndex Document（Markdown 文本）
+            for doc_meta in documents:
+                # 获取文档路径
+                extra = doc_meta.get("extra")
+                saved_path = extra.get("saved_path") if isinstance(extra, dict) else ""
+                local_path = (
+                    saved_path
+                    or doc_meta.get("local_path")
+                    or doc_meta.get("file_path")
+                    or doc_meta.get("path")
                     or ""
                 )
-            return ""
-
-        for doc in docs_for_pipeline:
-            try:
-                nodes.extend(
-                    self.ingestion_pipeline.run(
-                        documents=[doc],
-                        in_place=True,
-                        show_progress=False,
+                if not local_path:
+                   logger.warning(f"文档路径为空: {doc_meta.get('title', 'unknown')}")
+                   continue
+                if not os.path.exists(local_path):
+                    logger.warning(f"文档路径不存在: {local_path}")
+                    continue
+                # 判断文件类型
+                file_ext = os.path.splitext(local_path)[1].lower()
+                source = doc_meta.get("source") or "联网检索"
+                title = doc_meta.get("title") or Path(local_path).stem
+                url = doc_meta.get("url") or source
+                base_metadata = {
+                    "source": source, #来源或"联网检索"
+                    "title": title, #title或文件名
+                    "url": url,#url或来源或"unknown"
+                    "path": local_path,
+                }
+                json_docs:List[Dict] = []
+                if file_ext == '.pdf':
+                    # PDF 转 Markdown
+                    markdown_text = await self._pdf_to_markdown(local_path)
+                    if not markdown_text:
+                        logger.error(f"文件存在，但是PDF 转 Markdown 失败: {local_path}")
+                        continue
+                    temp_doc = Document(
+                        text=markdown_text,
+                        metadata=base_metadata,
                     )
-                )
-            except Exception as e:
-                doc_path = _resolve_doc_path(doc)
-                logger.error(
-                    "IngestionPipeline 处理失败，已跳过文档: %s, error: %s",
-                    doc_path or "unknown",
-                    e,
-                )
-                continue
-        
-        # 3. 返回处理后的节点列表
-        logger.info(f"文档处理完成: {len(nodes)} 个节点")
-        if json_nodes:
-            logger.info(f"另外添加了 {len(json_nodes)} 个来自 可选工具JSON 文档的节点")
-            nodes.extend(json_nodes)
-        return nodes
+                    docs_for_pipeline.append(temp_doc)
+                    logger.info(f"PDF 文档 {local_path} 转换为 Markdown 并加入 pipeline")
+
+                elif file_ext in ['.md', '.markdown']:
+                    # 使用 MarkdownReader 加载 Markdown 文件
+                    md_docs = self.markdown_reader.load_data(file_path=Path(local_path))
+                    if not md_docs:
+                        logger.error(f"文档存在，但Markdown 文档加载失败: {local_path}")
+                        continue
+
+                    for d in md_docs:
+                        d.metadata = base_metadata
+                        docs_for_pipeline.append(d)
+                    logger.info(f"Markdown 文档 {local_path} 加载为 {len(md_docs)} 个 Document 并加入 pipeline")
+                
+                elif file_ext == '.json':
+                    # 使用 JsonReader 加载 JSON 文件
+                    json_lines = self.json_parser.read_json_lines(local_path)
+                    
+                    for line in json_lines:
+                        if not line.strip():
+                            continue
+                        try:
+                            json_docs.append(json.loads(line))
+                        except json.JSONDecodeError:
+                            logger.warning(f"JSON 行解析失败，已跳过: {line[:200]}")
+                    if not json_docs:
+                        logger.warning(f"文档存在，但JSON文档加载失败或内容为空: {local_path}")
+                        continue
+                    for item in json_docs:
+                        if not isinstance(item, dict):
+                            logger.warning(f"JSON 文档条目格式错误，已跳过: {item}")
+                            continue
+                        meta_data = item.get("metadata")
+                        source = item.get("source") or "联网搜索"
+                        lib@rary_id = None
+                        if not isinstance(meta_data, dict):
+                            logger.warning(f"可选工具保存的JSON文档中的条目缺少'metadata'字段")
+                        else:
+                            library_id = meta_data.get("library_id")
+                        base_metadata = {
+                            "source": source,
+                            "path": local_path,
+                        }
+                        if library_id:
+                            base_metadata["library_id"] = library_id
+                        node=TextNode(text=item.get("text", ""), metadata=base_metadata)
+                        if not item.get("text", "").strip():
+                            logger.warning(f"JSON文档中的条目文本为空:{item}")
+                        json_nodes.append(node)
+                else:
+                    logger.warning(f"不支持的文件类型{file_ext}，跳过: {local_path}")
+                    continue
+
+            if not docs_for_pipeline:
+                logger.error("使用lama_index的MarkdownReader和PDFParser处理文档失败，未生成任何Document对象")
+                raise ValueError("document-process中没有可处理的文档")
+
+            # 2. 通过 IngestionPipeline 执行：MarkdownElementNodeParser -> SentenceSplitter -> QuestionsAnsweredExtractor
+            logger.info(f"开始通过 IngestionPipeline 处理 {len(docs_for_pipeline)} 个 文档")
+            nodes: List[BaseNode] = []
+            def _resolve_doc_path(doc: Document) -> str:
+                metadata = getattr(doc, "metadata", None)
+                if isinstance(metadata, dict):
+                    return (
+                        metadata.get("path")
+                        or metadata.get("file_path")
+                        or metadata.get("local_path")
+                        or metadata.get("title")
+                        or metadata.get("url")
+                        or metadata.get("source")
+                        or ""
+                    )
+                return ""
+
+            for doc in docs_for_pipeline: #使用for循环是为了跳过个别出错的文档，保证其他文档能继续处理，而不是整个批次都失败
+                try:
+                    nodes.extend(
+                        self.ingestion_pipeline.arun(
+                            documents=[doc],
+                            in_place=True,
+                            show_progress=False,
+                        )
+                    )
+                except Exception as e:
+                    doc_path = _resolve_doc_path(doc)
+                    logger.error(
+                        "IngestionPipeline 处理失败，已跳过文档: %s, error: %s",
+                        doc_path or "unknown",
+                        e,
+                    )
+                    continue
+
+            # 3. 返回处理后的节点列表
+            logger.info(f"文档处理完成: {len(nodes)} 个节点")
+            if json_nodes:
+                logger.info(f"另外添加了 {len(json_nodes)} 个来自 可选工具JSON 文档的节点")
+                nodes.extend(json_nodes)
+            return nodes
     
     async def _pdf_to_markdown(self, pdf_path: str) -> str:
         """将 PDF 转换为 Markdown
