@@ -525,10 +525,18 @@ class ExecutorAgent:
 
         except Exception as e:
             logger.error(f"ExecutorAgent-llm_chat_node 状态错误{e}")
-            return {"executor_messages": [AIMessage(content="Thought: 决策过程出错，跳过可选工具，直接进行清洗。")]}
+            return {
+                "executor_messages": [
+                    AIMessage(content="Thought: 决策过程出错，跳过可选工具，直接进行清洗。")
+                ],
+                "optional_failed": True,
+            }
     
     def _should_call_optional_tools(self, state: ExecutorState) -> str:
         """条件路由：判断是否需要调用可选工具"""
+        if state.get("optional_failed"):
+            logger.warning("检测到可选工具失败标记，直接进入清洗阶段")
+            return "clean"
         # 检查是否达到最大循环轮数
         optional_epoch = state.get("optional_epoch", 0)
         if optional_epoch >= Config.EXECUTOR_OPTIONAL_EPOCH:
@@ -625,7 +633,7 @@ class ExecutorAgent:
         
         except Exception as e:
             logger.error(f"执行可选工具时出错: {e}")
-            raise e
+            return {"optional_search_results": [], "optional_failed": True}
     
     async def _search_node(self, state: ExecutorState) -> dict:
         """搜索节点：并行调用必需的搜索工具"""

@@ -24,7 +24,7 @@ class Config:
     LLM_MUTI_AGENT = "glm" #只选厂家没选模型,选具体模型详见llms.py
     PLANNER_EPOCH=3#planneragent循环轮数，默认为3轮
     GENER_EPOCH=3#multiagent生成最终答案的循环轮数，默认为3轮
-    EXECUTOR_OPTIONAL_EPOCH = 3 # executoragent 可选工具循环轮数，默认为3轮
+    EXECUTOR_OPTIONAL_EPOCH = 1 # executoragent 可选工具循环轮数，默认为3轮
     # API服务地址和端口
     HOST = "0.0.0.0"
     PORT = 8001

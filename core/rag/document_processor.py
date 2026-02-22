@@ -168,7 +168,15 @@ class DocumentProcessor:
 
                 elif file_ext in ['.md', '.markdown']:
                     # 使用 MarkdownReader 加载 Markdown 文件
-                    md_docs = self.markdown_reader.load_data(file_path=Path(local_path))
+                    try:
+                        md_docs = self.markdown_reader.load_data(file_path=Path(local_path))
+                    except Exception as exc:
+                        logger.warning(
+                            "Markdown 文档加载失败，已跳过: %s, error: %s",
+                            local_path,
+                            exc,
+                        )
+                        continue
                     if not md_docs:
                         logger.error(f"文档存在，但Markdown 文档加载失败: {local_path}")
                         continue
@@ -198,7 +206,7 @@ class DocumentProcessor:
                             continue
                         meta_data = item.get("metadata")
                         source = item.get("source") or "联网搜索"
-                        lib@rary_id = None
+                        library_id = None
                         if not isinstance(meta_data, dict):
                             logger.warning(f"可选工具保存的JSON文档中的条目缺少'metadata'字段")
                         else:
@@ -241,7 +249,7 @@ class DocumentProcessor:
             for doc in docs_for_pipeline: #使用for循环是为了跳过个别出错的文档，保证其他文档能继续处理，而不是整个批次都失败
                 try:
                     nodes.extend(
-                        self.ingestion_pipeline.arun(
+                        await self.ingestion_pipeline.arun(
                             documents=[doc],
                             in_place=True,
                             show_progress=False,

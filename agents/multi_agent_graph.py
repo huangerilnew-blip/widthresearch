@@ -12,7 +12,7 @@ MultiAgent 协调器 - LangGraph 版本
 """
 
 import sys
-import os
+import os,re
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import asyncio
@@ -777,7 +777,7 @@ class MultiAgentGraph:
                 logger.info(f"成功添加 {len(first_llama_docs)} 个第一阶段文档到向量库")
             
             if second_llama_docs:
-                self.vector_store_index .add_nodes(second_llama_docs)
+                self.vector_store_index.insert_nodes(second_llama_docs)
                 logger.info(f"成功添加 {len(second_llama_docs)} 个第二阶段文档到向量库")
 
             if not first_llama_docs and not second_llama_docs:
@@ -938,12 +938,21 @@ class MultiAgentGraph:
             # 调用 LLM 生成答案
             response = await self.llm.ainvoke(base_messages)
 
+            new_answer = str(getattr(response, "content", ""))
+            previous_answer = str(state.get("final_answer", ""))
+            last_answer = previous_answer or str(state.get("last_answer", ""))
             logger.info(f"轮次：{epoch+1}答案生成完成(注:轮次从1开始计数)")
+            if new_answer:
+                logger.info("本轮答案内容(前500字): %s", new_answer[:500])
+            else:
+                logger.warning("本轮答案内容为空")
             elapsed = time.monotonic() - start_ts
             logger.info("[generate_answer] 完成 状态=success 耗时=%.2fs 轮次=%d", elapsed, epoch + 1)
             return {
                 "epoch": epoch + 1,
                 "messages": [response],
+                "last_answer": last_answer,
+                "final_answer": new_answer,
                 **self._with_flag(state, "generate_answer", "success")
             }
 
@@ -1080,7 +1089,9 @@ class MultiAgentGraph:
             cleaned = "\n".join(cleaned_lines).strip()
 
         try:
-            result = json.loads(cleaned)
+            match = re.search(r"\{.*?\}", cleaned, re.DOTALL)
+            payload = match.group(0) if match else cleaned
+            result = json.loads(payload)
             logger.info(f"评估结果解析成功: {result}")
         except json.JSONDecodeError:
             logger.warning(f"评估结果{content}解析失败，返回默认不通过")
@@ -1128,22 +1139,21 @@ class MultiAgentGraph:
                 "last_evaluation": eval_result,
                 **self._with_flag(state, "eval_answer", "error")
             }
+        passed = bool(eval_result.get("passed", False))
         if isinstance(content, str):
             logger.info(f"评估结果原始内容(str格式): {content}")
-            elapsed = time.monotonic() - start_ts
-            logger.info("[eval_answer] 完成 状态=fail 耗时=%.2fs", elapsed)
-            return {
-                "last_evaluation": eval_result, 
-                **self._with_flag(state, "eval_answer", "success")
-            }
         elif isinstance(content, dict):
             logger.info(f"评估结果原始内容（dict格式）: {content}")
-            elapsed = time.monotonic() - start_ts
+        print(f"[eval_answer] 评估{'成功' if passed else '失败'}，结果={eval_result}")
+        elapsed = time.monotonic() - start_ts
+        if passed:
             logger.info("[eval_answer] 完成 状态=success 耗时=%.2fs", elapsed)
-            return {
-                "last_evaluation": eval_result,
-                **self._with_flag(state, "eval_answer", "success")
-            }
+        else:
+            logger.info("[eval_answer] 完成 状态=fail 耗时=%.2fs", elapsed)
+        return {
+            "last_evaluation": eval_result,
+            **self._with_flag(state, "eval_answer", "success")
+        }
 
     def _should_continue_generation(self, state: MultiAgentState) -> str:
         """根据评估结果决定是否继续生成"""
@@ -1366,6 +1376,12 @@ class MultiAgentGraph:
             )
 
             question_pool = self._extract_question_pool_from_messages(result.get("messages", []))
+            answer = result.get("final_answer", "")
+            if not answer:
+                last_message = (result.get("messages") or [])[-1] if result.get("messages") else None
+                if isinstance(last_message, AIMessage):
+                    answer = str(last_message.content)
+            print(f"[final_answer] {answer}")
             final_result = {
                 'query': user_query,
                 'user_id': user_id,
@@ -1376,7 +1392,7 @@ class MultiAgentGraph:
                 'documents_processed': len(result.get('first_all_documents', []))
                 + len(result.get('second_all_documents', [])),
                 'url_pool_size': len(result.get('url_pool', [])),
-                'answer': result.get('final_answer', ''),
+                'answer': answer,
                 'metadata': {
                     'retrieved_count': len(result.get('retrieved_nodes', [])),
                     'unique_count': len(result.get('retrieved_nodes', [])),
