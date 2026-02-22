@@ -228,6 +228,41 @@ class PlannerAgent:
                     cleaned = "\n".join(cleaned_lines).strip()
                 return cleaned
 
+            def extract_json_from_text(content: str) -> Any:
+                cleaned = content.strip()
+                lower = cleaned.lower()
+                fence_start = lower.find("```json")
+                if fence_start != -1:
+                    fence_open = cleaned.find("```", fence_start)
+                    if fence_open != -1:
+                        fence_open += 3
+                        newline = cleaned.find("\n", fence_open)
+                        if newline != -1:
+                            fence_open = newline + 1
+                    fence_end = cleaned.find("```", fence_open)
+                    if fence_end != -1:
+                        fenced_content = cleaned[fence_open:fence_end].strip()
+                        if fenced_content:
+                            try:
+                                return json.loads(fenced_content)
+                            except Exception:
+                                pass
+
+                opens = [index for index, ch in enumerate(cleaned) if ch == "{"]
+                closes = [index for index, ch in enumerate(cleaned) if ch == "}"]
+                for start in opens:
+                    for end in closes:
+                        if end <= start:
+                            continue
+                        snippet = cleaned[start : end + 1].strip()
+                        if not snippet:
+                            continue
+                        try:
+                            return json.loads(snippet)
+                        except Exception:
+                            continue
+                return None
+
             if state["epoch"] >= planner_epoch:
                 state["planner_result"] = AIMessage(content=json.dumps({"tasks": []}))
                 logger.warning(f"planner_agent 达到最大迭代次数{planner_epoch}，结束planner流程")
@@ -252,6 +287,13 @@ class PlannerAgent:
                         return "persist_result"
                     return "llm_chat"
                 except Exception:
+                    if isinstance(result.content, str):
+                        extracted = extract_json_from_text(result.content)
+                        if extracted is not None and is_valid_tasks(extracted):
+                            logger.info(
+                                f"planner_agent 在第{state['epoch']}轮迭代中，解析混合文本后获得有效json结构，进入persist_result节点"
+                            )
+                            return "persist_result"
                     logger.info(f"planner_agent 在第{state['epoch']}轮迭代中，未能生成有效的json结构，继续进入llm_chat节点")
                     return "llm_chat"
         logger.error(f"planner_agent 条件路由器收到非AIMessage类型的消息，类型为:{type(result)}，内容为:{result.content}")
@@ -260,22 +302,63 @@ class PlannerAgent:
     async def _persist_result(self, state: PlannerState) -> dict:
         result = state["planner_messages"][-1]
         content = result.content
-        parsed: Any = content
-        if isinstance(content, str):
-            cleaned = content.strip()
-            if cleaned.startswith("```") and cleaned.endswith("```"):
-                cleaned_lines = [
-                    line for line in cleaned.splitlines() if not line.strip().startswith("```")
-                ]
-                cleaned = "\n".join(cleaned_lines).strip()
-            try:
-                parsed = json.loads(cleaned)
-            except Exception:
-                parsed = cleaned
-        if isinstance(parsed, (dict, list)):
-            persisted = json.dumps(parsed, ensure_ascii=True)
-        else:
-            persisted = parsed
+        def is_valid_tasks(obj: Any) -> bool:
+            if isinstance(obj, dict):
+                return "tasks" in obj and isinstance(obj["tasks"], list)
+            if isinstance(obj, list):
+                return any(
+                    isinstance(item, dict)
+                    and "tasks" in item
+                    and isinstance(item["tasks"], list)
+                    for item in obj
+                )
+            return False
+
+        def extract_json_from_text(text: str) -> Any:
+            cleaned = text.strip()
+            lower = cleaned.lower()
+            fence_start = lower.find("```json")
+            if fence_start != -1:
+                fence_open = cleaned.find("```", fence_start)
+                if fence_open != -1:
+                    fence_open += 3
+                    newline = cleaned.find("\n", fence_open)
+                    if newline != -1:
+                        fence_open = newline + 1
+                fence_end = cleaned.find("```", fence_open)
+                if fence_end != -1:
+                    fenced_content = cleaned[fence_open:fence_end].strip()
+                    if fenced_content:
+                        try:
+                            return json.loads(fenced_content)
+                        except Exception:
+                            pass
+
+            opens = [index for index, ch in enumerate(cleaned) if ch == "{"]
+            closes = [index for index, ch in enumerate(cleaned) if ch == "}"]
+            for start in opens:
+                for end in closes:
+                    if end <= start:
+                        continue
+                    snippet = cleaned[start : end + 1].strip()
+                    if not snippet:
+                        continue
+                    try:
+                        return json.loads(snippet)
+                    except Exception:
+                        continue
+            return None
+
+        parsed: Any = None
+        if isinstance(content, (dict, list)):
+            parsed = content
+        elif isinstance(content, str):
+            parsed = extract_json_from_text(content)
+
+        if parsed is None or not is_valid_tasks(parsed):
+            parsed = {"tasks": []}
+
+        persisted = json.dumps(parsed, ensure_ascii=True)
         logger.info(f"planner_agent persist_result 节点写入结果:{persisted}")
         return {"planner_result": AIMessage(content=persisted)}
 

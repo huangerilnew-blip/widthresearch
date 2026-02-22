@@ -145,7 +145,7 @@ def _initialize_lang_llm(
             api_key=chat_api_key_secret,
             model=chat_model_name,
             temperature=DEFAULT_TEMPERATURE,
-            timeout=30,
+            timeout=180,
             max_retries=2,
         )
 
