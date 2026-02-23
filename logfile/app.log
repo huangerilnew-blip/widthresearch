@@ -1,478 +1,145 @@
-2026-02-22 20:36:51,811 - core.llms - INFO - 成功初始化 LangChain Chat(glm)/Embedding(bge)
-2026-02-22 20:36:51,811 - core.llms - INFO - 成功初始化 LlamaIndex Chat(glm)/Embedding(bge)
-2026-02-22 20:36:51,957 - core.llms - INFO - 成功初始化 LangChain Chat(glm)/Embedding(bge)
-2026-02-22 20:36:52,090 - core.rag.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8100
-2026-02-22 20:36:52,222 - core.llms - INFO - 成功初始化 LangChain Chat(glm)/Embedding(bge)
-2026-02-22 20:36:52 - agents.planneragent - INFO - [planneragent.py:385] - 完成planner_graph的初始化构造
-2026-02-22 20:36:52,360 - core.llms - INFO - 成功初始化 LangChain Chat(glm)/Embedding(bge)
-2026-02-22 20:36:52 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 1/3
-2026-02-22 20:36:52,482 - core.llms - INFO - 成功初始化 LangChain Chat(glm)/Embedding(bge)
-2026-02-22 20:36:52 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 2/3
-2026-02-22 20:36:52,605 - core.llms - INFO - 成功初始化 LangChain Chat(glm)/Embedding(bge)
-2026-02-22 20:36:52 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 3/3
-2026-02-22 20:36:52 - agents.executor_pool - INFO - [executor_pool.py:64] - 成功创建 3 个 ExecutorAgent 实例
-2026-02-22 20:36:52 - agents.executor_pool - INFO - [executor_pool.py:54] - 初始化 ExecutorAgentPool: pool_size=3, model=glm
-2026-02-22 20:36:52,605 - core.rag.rag_preprocess_module - INFO - 初始化 VectorStoreManager: persist_dir=vector_storage, collection=base_crunchbase_collection
-2026-02-22 20:36:52,606 - core.llms - INFO - 成功初始化 LlamaIndex Chat(deepseek)/Embedding(bge)
-2026-02-22 20:36:52,733 - core.rag.document_processor - INFO - 初始化 DocumentProcessor: mineru_url=http://localhost:8080, max_chunk_size=1000
-2026-02-22 20:36:52 - core.file_deduplicator - INFO - [file_deduplicator.py:51] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
-2026-02-22 20:36:52 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1302] - MultiAgentGraph 构建完成（两阶段执行版本）
-2026-02-22 20:36:52 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:211] - 初始化 MultiAgentGraph: executor_pool_size=3
-2026-02-22 20:36:52 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1320] - 开始处理用户查询: langgraph 高阶技巧有哪些？ (user_id=test_user_001, thread_id=test_thread_001)
-2026-02-22 20:36:52 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:223] - [init_vector_store] 初始化向量存储
-2026-02-22 20:36:52,873 - core.rag.rag_preprocess_module - INFO - 检查本地向量库是否存在
-2026-02-22 20:36:52,873 - core.rag.rag_preprocess_module - INFO - 向量库目录存在: True, Chroma 数据库存在: True
-2026-02-22 20:36:52,873 - core.rag.rag_preprocess_module - INFO - 检测到本地向量库，尝试加载
-2026-02-22 20:36:53,481 - core.rag.rag_preprocess_module - INFO - 找到集合 'base_crunchbase_collection'，包含 38712 个文档
-2026-02-22 20:36:53,481 - core.rag.rag_preprocess_module - INFO - 从现有向量库加载索引
-2026-02-22 20:36:53,484 - core.rag.rag_preprocess_module - INFO - 成功从本地加载向量索引
-2026-02-22 20:36:53 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:228] - 向量存储初始化完成
-2026-02-22 20:36:53 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:231] - [init_vector_store] 完成 状态=success 耗时=0.61s
-2026-02-22 20:36:53 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:254] - [plan_query] 调用 PlannerAgent 拆解查询
-2026-02-22 20:36:53,489 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-22 20:36:54,978 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-22 20:37:07 - agents.planneragent - INFO - [planneragent.py:132] - planner_agent llm_chat 节点在第0轮迭代中，成功生成AIMessage类型的消息，内容为:我需要先获取 LangGraph 的最新文档信息，以便准确拆解这个问题。
-2026-02-22 20:37:07 - agents.planneragent - INFO - [planneragent.py:134] - planner_agent llm_chat: tool_calls_count=1, tool_names=['resolve-library-id']
-2026-02-22 20:37:07 - agents.planneragent - INFO - [planneragent.py:139] - planner_agent llm_chat: planner_messages_len=2
-2026-02-22 20:37:07 - agents.planneragent - INFO - [planneragent.py:144] - planner_agent llm_chat 节点在第0轮迭代中，生成的AIMessage类型的消息包含工具调用，工具调用内容为:[{'name': 'resolve-library-id', 'args': {'libraryName': 'langgraph', 'query': 'What are the advanced techniques and patterns for building stateful multi-agent applications with LangGraph'}, 'id': 'call_-7881364768840213368', 'type': 'tool_call'}]
-2026-02-22 20:37:07 - agents.planneragent - INFO - [planneragent.py:272] - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
-2026-02-22 20:37:07 - agents.planneragent - INFO - [planneragent.py:167] - planner_agent tool_node: tool_calls=['resolve-library-id']
-2026-02-22 20:37:07 - agents.planneragent - INFO - [planneragent.py:168] - planner_agent tool_node: registered_tools=['exa_summary_search', 'resolve-library-id', 'query-docs']
-2026-02-22 20:37:12 - agents.planneragent - INFO - [planneragent.py:191] - planner_agent tool_node: tool_messages_count=1, tool_message_ids=['call_-7881364768840213368']
-2026-02-22 20:37:19 - agents.planneragent - INFO - [planneragent.py:132] - planner_agent llm_chat 节点在第0轮迭代中，成功生成AIMessage类型的消息，内容为:
-2026-02-22 20:37:19 - agents.planneragent - INFO - [planneragent.py:134] - planner_agent llm_chat: tool_calls_count=1, tool_names=['query-docs']
-2026-02-22 20:37:19 - agents.planneragent - INFO - [planneragent.py:139] - planner_agent llm_chat: planner_messages_len=4
-2026-02-22 20:37:19 - agents.planneragent - INFO - [planneragent.py:144] - planner_agent llm_chat 节点在第0轮迭代中，生成的AIMessage类型的消息包含工具调用，工具调用内容为:[{'name': 'query-docs', 'args': {'libraryId': '/websites/langchain_oss_python_langgraph', 'query': 'What are the advanced techniques, patterns, and best practices for building complex stateful multi-agent applications with LangGraph, including memory management, persistence, human-in-the-loop, error handling, and dynamic workflows'}, 'id': 'call_-7881361779542977804', 'type': 'tool_call'}]
-2026-02-22 20:37:19 - agents.planneragent - INFO - [planneragent.py:272] - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
-2026-02-22 20:37:19 - agents.planneragent - INFO - [planneragent.py:167] - planner_agent tool_node: tool_calls=['query-docs']
-2026-02-22 20:37:19 - agents.planneragent - INFO - [planneragent.py:168] - planner_agent tool_node: registered_tools=['exa_summary_search', 'resolve-library-id', 'query-docs']
-2026-02-22 20:37:24 - agents.planneragent - INFO - [planneragent.py:191] - planner_agent tool_node: tool_messages_count=1, tool_message_ids=['call_-7881361779542977804']
-2026-02-22 20:37:48 - agents.planneragent - INFO - [planneragent.py:132] - planner_agent llm_chat 节点在第0轮迭代中，成功生成AIMessage类型的消息，内容为:```json
-{
-  "tasks": [
-    "LangGraph 的状态持久化机制和检查点策略如何实现长期运行的工作流恢复",
-    "LangGraph 中人机协作模式和错误重试策略的最佳实践有哪些",
-    "LangGraph 的内存架构如何支持短期记忆和跨会话长期记忆的协同管理",
-    "LangGraph 在多智能体编排、生产部署和调试监控方面提供哪些高级能力"
-  ]
-}
-```
-2026-02-22 20:37:48 - agents.planneragent - INFO - [planneragent.py:134] - planner_agent llm_chat: tool_calls_count=0, tool_names=[]
-2026-02-22 20:37:48 - agents.planneragent - INFO - [planneragent.py:139] - planner_agent llm_chat: planner_messages_len=6
-2026-02-22 20:37:48 - agents.planneragent - INFO - [planneragent.py:279] - planner_agent 在第1轮迭代中，成功生成有效的json结构，进入persist_result节点
-2026-02-22 20:37:48 - agents.planneragent - INFO - [planneragent.py:363] - planner_agent persist_result 节点写入结果:{"tasks": ["LangGraph \u7684\u72b6\u6001\u6301\u4e45\u5316\u673a\u5236\u548c\u68c0\u67e5\u70b9\u7b56\u7565\u5982\u4f55\u5b9e\u73b0\u957f\u671f\u8fd0\u884c\u7684\u5de5\u4f5c\u6d41\u6062\u590d", "LangGraph \u4e2d\u4eba\u673a\u534f\u4f5c\u6a21\u5f0f\u548c\u9519\u8bef\u91cd\u8bd5\u7b56\u7565\u7684\u6700\u4f73\u5b9e\u8df5\u6709\u54ea\u4e9b", "LangGraph \u7684\u5185\u5b58\u67b6\u6784\u5982\u4f55\u652f\u6301\u77ed\u671f\u8bb0\u5fc6\u548c\u8de8\u4f1a\u8bdd\u957f\u671f\u8bb0\u5fc6\u7684\u534f\u540c\u7ba1\u7406", "LangGraph \u5728\u591a\u667a\u80fd\u4f53\u7f16\u6392\u3001\u751f\u4ea7\u90e8\u7f72\u548c\u8c03\u8bd5\u76d1\u63a7\u65b9\u9762\u63d0\u4f9b\u54ea\u4e9b\u9ad8\u7ea7\u80fd\u529b"]}
-2026-02-22 20:37:48 - agents.planneragent - INFO - [planneragent.py:395] - planner_chatmodel对于用户的langgraph 高阶技巧有哪些？ 返回结果为:{"tasks": ["LangGraph \u7684\u72b6\u6001\u6301\u4e45\u5316\u673a\u5236\u548c\u68c0\u67e5\u70b9\u7b56\u7565\u5982\u4f55\u5b9e\u73b0\u957f\u671f\u8fd0\u884c\u7684\u5de5\u4f5c\u6d41\u6062\u590d", "LangGraph \u4e2d\u4eba\u673a\u534f\u4f5c\u6a21\u5f0f\u548c\u9519\u8bef\u91cd\u8bd5\u7b56\u7565\u7684\u6700\u4f73\u5b9e\u8df5\u6709\u54ea\u4e9b", "LangGraph \u7684\u5185\u5b58\u67b6\u6784\u5982\u4f55\u652f\u6301\u77ed\u671f\u8bb0\u5fc6\u548c\u8de8\u4f1a\u8bdd\u957f\u671f\u8bb0\u5fc6\u7684\u534f\u540c\u7ba1\u7406", "LangGraph \u5728\u591a\u667a\u80fd\u4f53\u7f16\u6392\u3001\u751f\u4ea7\u90e8\u7f72\u548c\u8c03\u8bd5\u76d1\u63a7\u65b9\u9762\u63d0\u4f9b\u54ea\u4e9b\u9ad8\u7ea7\u80fd\u529b"]}
-2026-02-22 20:37:48 - agents.planneragent - INFO - [planneragent.py:399] - planner_chatmodel对于用户的langgraph 高阶技巧有哪些？ 返回结果json解析成功，内容为:{'tasks': ['LangGraph 的状态持久化机制和检查点策略如何实现长期运行的工作流恢复', 'LangGraph 中人机协作模式和错误重试策略的最佳实践有哪些', 'LangGraph 的内存架构如何支持短期记忆和跨会话长期记忆的协同管理', 'LangGraph 在多智能体编排、生产部署和调试监控方面提供哪些高级能力']}
-2026-02-22 20:37:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:295] - 查询拆解完成，生成 4 个子问题
-2026-02-22 20:37:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:297] - [plan_query] 完成 状态=success 耗时=56.25s 子问题数=4
-2026-02-22 20:37:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:326] - [execute_first] 第一阶段执行 - 探索阶段（url_pool=[]）
-2026-02-22 20:37:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:348] - 第一阶段执行: 3 个子问题，初始 URL 池为空
-2026-02-22 20:37:48 - agents.executor_pool - INFO - [executor_pool.py:94] - 开始并发执行 3 个子问题 (user_id=test_user_001, url_pool_size=0)
-2026-02-22 20:37:48 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 1 到 Agent 0
-2026-02-22 20:37:48 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 2 到 Agent 1
-2026-02-22 20:37:48 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 3 到 Agent 2
-2026-02-22 20:37:48,883 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-22 20:37:48,883 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-22 20:37:48,883 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-22 20:37:50,545 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-22 20:37:50,613 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-22 20:37:50,613 - core.mcp.tools - INFO - 返回 6 个搜索工具
-2026-02-22 20:37:53 - agents.executoragent - INFO - [executoragent.py:1034] - 完成 executor_graph 的初始化构造
-2026-02-22 20:37:53 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'LangGraph 中人机协作模式和错误重试策略的最佳实践有哪些' (user_id=test_user_001, thread_id=test_thread_001_executor_1)
-2026-02-22 20:37:53 - agents.executoragent - INFO - [executoragent.py:646] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-22 20:37:53 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 wikipedia_search 搜索: LangGraph 中人机协作模式和错误重试策略的最佳实践有哪些
-2026-02-22 20:37:53 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 exa_context_search 搜索: LangGraph 中人机协作模式和错误重试策略的最佳实践有哪些
-2026-02-22 20:37:53 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 tavily_search 搜索: LangGraph 中人机协作模式和错误重试策略的最佳实践有哪些
-2026-02-22 20:37:53 - agents.executoragent - INFO - [executoragent.py:1034] - 完成 executor_graph 的初始化构造
-2026-02-22 20:37:53 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'LangGraph 的内存架构如何支持短期记忆和跨会话长期记忆的协同管理' (user_id=test_user_001, thread_id=test_thread_001_executor_2)
-2026-02-22 20:37:53 - agents.executoragent - INFO - [executoragent.py:646] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-22 20:37:53 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 wikipedia_search 搜索: LangGraph 的内存架构如何支持短期记忆和跨会话长期记忆的协同管理
-2026-02-22 20:37:53 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 exa_context_search 搜索: LangGraph 的内存架构如何支持短期记忆和跨会话长期记忆的协同管理
-2026-02-22 20:37:53 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 tavily_search 搜索: LangGraph 的内存架构如何支持短期记忆和跨会话长期记忆的协同管理
-2026-02-22 20:37:53 - agents.executoragent - INFO - [executoragent.py:1034] - 完成 executor_graph 的初始化构造
-2026-02-22 20:37:53 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'LangGraph 的状态持久化机制和检查点策略如何实现长期运行的工作流恢复' (user_id=test_user_001, thread_id=test_thread_001_executor_0)
-2026-02-22 20:37:53 - agents.executoragent - INFO - [executoragent.py:646] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-22 20:37:53 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 wikipedia_search 搜索: LangGraph 的状态持久化机制和检查点策略如何实现长期运行的工作流恢复
-2026-02-22 20:37:53 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 exa_context_search 搜索: LangGraph 的状态持久化机制和检查点策略如何实现长期运行的工作流恢复
-2026-02-22 20:37:53 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 tavily_search 搜索: LangGraph 的状态持久化机制和检查点策略如何实现长期运行的工作流恢复
-2026-02-22 20:37:57 - agents.executoragent - WARNING - [executoragent.py:177] - wikipedia_search 返回了 0 条数据
-2026-02-22 20:37:58 - agents.executoragent - WARNING - [executoragent.py:177] - wikipedia_search 返回了 0 条数据
-2026-02-22 20:37:58 - agents.executoragent - WARNING - [executoragent.py:177] - wikipedia_search 返回了 0 条数据
-2026-02-22 20:37:58 - agents.executoragent - INFO - [executoragent.py:175] - exa_context_search 返回了 1 条数据
-2026-02-22 20:37:58 - agents.executoragent - INFO - [executoragent.py:175] - exa_context_search 返回了 1 条数据
-2026-02-22 20:37:59 - agents.executoragent - INFO - [executoragent.py:175] - exa_context_search 返回了 1 条数据
-2026-02-22 20:38:00 - agents.executoragent - INFO - [executoragent.py:175] - tavily_search 返回了 1 条数据
-2026-02-22 20:38:00 - agents.executoragent - INFO - [executoragent.py:670] - 搜索完成，共获得 2 条结果
-2026-02-22 20:38:00 - agents.executoragent - INFO - [executoragent.py:500] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-22 20:38:00 - agents.executoragent - INFO - [executoragent.py:175] - tavily_search 返回了 1 条数据
-2026-02-22 20:38:00 - agents.executoragent - INFO - [executoragent.py:670] - 搜索完成，共获得 2 条结果
-2026-02-22 20:38:00 - agents.executoragent - INFO - [executoragent.py:500] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-22 20:38:00 - agents.executoragent - INFO - [executoragent.py:175] - tavily_search 返回了 1 条数据
-2026-02-22 20:38:00 - agents.executoragent - INFO - [executoragent.py:670] - 搜索完成，共获得 2 条结果
-2026-02-22 20:38:00 - agents.executoragent - INFO - [executoragent.py:500] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-22 20:38:02 - agents.executoragent - ERROR - [executoragent.py:527] - ExecutorAgent-llm_chat_node 状态错误Error code: 429 - {'error': {'code': '1302', 'message': '您的账户已达到速率限制，请您控制请求频率'}}
-2026-02-22 20:38:02 - agents.executoragent - INFO - [executoragent.py:555] - LLM 决定不调用可选工具，进入清洗阶段
-2026-02-22 20:38:02 - agents.executoragent - WARNING - [executoragent.py:775] - 处理langgraph 高阶技巧有哪些？----LangGraph 的内存架构如何支持短期记忆和跨会话长期记忆的协同管理时sub_url_pool 为空
-2026-02-22 20:38:02 - agents.executoragent - DEBUG - [executoragent.py:731] - 保留结果（URL去重）: https://cloud.tencent.com/developer/article/2588385
-2026-02-22 20:38:02 - agents.executoragent - DEBUG - [executoragent.py:731] - 保留结果（URL去重）: https://www.ningto.com/blog/2026/langchain-memory-management-deep-dive-from-shor
-2026-02-22 20:38:02 - agents.executoragent - INFO - [executoragent.py:758] - 去重统计: 去重前=2, 去重后=2, 去重率=0.0%
-2026-02-22 20:38:02 - agents.executoragent - INFO - [executoragent.py:856] - 去重前: 2 篇
-2026-02-22 20:38:02 - agents.executoragent - INFO - [executoragent.py:857] - 去重后: 2 篇
-2026-02-22 20:38:02 - agents.executoragent - INFO - [executoragent.py:884] - 从 deduplicated_results 获取 2 篇文档
-2026-02-22 20:38:02 - agents.executoragent - INFO - [executoragent.py:922] - 总共需要下载 2 篇文档
-2026-02-22 20:38:02,407 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-22 20:38:03,847 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-22 20:38:03 - agents.executoragent - INFO - [executoragent.py:943] - 开始下载 tavily 的 1 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-22 20:38:03 - agents.executoragent - INFO - [executoragent.py:949] - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-22 20:38:03 - agents.executoragent - INFO - [executoragent.py:943] - 开始下载 exa_context 的 1 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-22 20:38:03 - agents.executoragent - INFO - [executoragent.py:949] - 使用下载工具 exa_context_download 处理 exa_context 数据
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:956] - 下载工具 exa_context_download 返回类型: <class 'list'>
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:958] - 下载工具 exa_context_download 首项类型: <class 'dict'>
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:963] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=1
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:973] - 成功下载 1 篇 exa_context 文档
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:956] - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:958] - 下载工具 tavily_download 首项类型: <class 'dict'>
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:963] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=1
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:973] - 成功下载 1 篇 tavily 文档
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:1001] - 下载完成，共下载 2 篇文档
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:1057] - executor 完成子问题 'LangGraph 的内存架构如何支持短期记忆和跨会话长期记忆的协同管理' 的处理
-2026-02-22 20:38:05 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'LangGraph 的内存架构如何支持短期记忆和跨会话长期记忆的协同管理' 的处理
-2026-02-22 20:38:05 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成LangGraph 的内存架构如何支持短期记忆和跨会话长期记忆的协同管理后 sub_url_pool 包含 2 个 URL
-2026-02-22 20:38:05 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成LangGraph 的内存架构如何支持短期记忆和跨会话长期记忆的协同管理后 downloaded_papers 包含 2 个结果
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:511] - LLM 决策结果: 是否调用工具=True
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:512] - executor_agent llm_chat: tool_calls_count=1, tool_names=['resolve-library-id']
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:517] - executor_agent llm_chat: executor_messages_len=1
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:522] - LLM 思考: 我来帮你查询 LangGraph 的状态持久化机制和检查点策略的相关信息。...
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:551] - LLM 决定调用 1 个可选工具
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:583] - executor_agent tool_node: tool_calls=['resolve-library-id']
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:584] - executor_agent tool_node: registered_tools=['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-22 20:38:05 - agents.executoragent - INFO - [executoragent.py:589] - 准备执行 1 个可选工具调用
-2026-02-22 20:38:06 - agents.executoragent - INFO - [executoragent.py:511] - LLM 决策结果: 是否调用工具=True
-2026-02-22 20:38:06 - agents.executoragent - INFO - [executoragent.py:512] - executor_agent llm_chat: tool_calls_count=1, tool_names=['resolve-library-id']
-2026-02-22 20:38:06 - agents.executoragent - INFO - [executoragent.py:517] - executor_agent llm_chat: executor_messages_len=1
-2026-02-22 20:38:06 - agents.executoragent - INFO - [executoragent.py:522] - LLM 思考: 我来帮你查询 LangGraph 中关于人机协作模式和错误重试策略的最佳实践。...
-2026-02-22 20:38:06 - agents.executoragent - INFO - [executoragent.py:551] - LLM 决定调用 1 个可选工具
-2026-02-22 20:38:06 - agents.executoragent - INFO - [executoragent.py:583] - executor_agent tool_node: tool_calls=['resolve-library-id']
-2026-02-22 20:38:06 - agents.executoragent - INFO - [executoragent.py:584] - executor_agent tool_node: registered_tools=['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-22 20:38:06 - agents.executoragent - INFO - [executoragent.py:589] - 准备执行 1 个可选工具调用
-2026-02-22 20:38:10 - agents.executoragent - INFO - [executoragent.py:599] - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-22 20:38:10 - agents.executoragent - INFO - [executoragent.py:605] - executor_agent tool_node: tool_messages_count=1, tool_message_ids=['call_-7881347966928151764']
-2026-02-22 20:38:10 - agents.executoragent - INFO - [executoragent.py:622] -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-22 20:38:10 - agents.executoragent - INFO - [executoragent.py:500] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-22 20:38:11 - agents.executoragent - INFO - [executoragent.py:599] - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-22 20:38:11 - agents.executoragent - INFO - [executoragent.py:605] - executor_agent tool_node: tool_messages_count=1, tool_message_ids=['call_-7881350234670884763']
-2026-02-22 20:38:11 - agents.executoragent - INFO - [executoragent.py:622] -   - 工具 resolve-library-id 返回 1 条结果
-2026-02-22 20:38:11 - agents.executoragent - INFO - [executoragent.py:500] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-22 20:38:15 - agents.executoragent - INFO - [executoragent.py:511] - LLM 决策结果: 是否调用工具=True
-2026-02-22 20:38:15 - agents.executoragent - INFO - [executoragent.py:512] - executor_agent llm_chat: tool_calls_count=1, tool_names=['query-docs']
-2026-02-22 20:38:15 - agents.executoragent - INFO - [executoragent.py:517] - executor_agent llm_chat: executor_messages_len=3
-2026-02-22 20:38:15 - agents.executoragent - WARNING - [executoragent.py:543] - 达到可选工具最大循环轮数 (1)，强制进入清洗阶段
-2026-02-22 20:38:15 - agents.executoragent - WARNING - [executoragent.py:775] - 处理langgraph 高阶技巧有哪些？----LangGraph 的状态持久化机制和检查点策略如何实现长期运行的工作流恢复时sub_url_pool 为空
-2026-02-22 20:38:15 - agents.executoragent - INFO - [executoragent.py:795] - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-22 20:38:15 - agents.executoragent - DEBUG - [executoragent.py:731] - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraph/concepts/persistence/
-2026-02-22 20:38:15 - agents.executoragent - DEBUG - [executoragent.py:731] - 保留结果（URL去重）: https://langgraph.com.cn/concepts/persistence.1.html
-2026-02-22 20:38:15 - agents.executoragent - INFO - [executoragent.py:758] - 去重统计: 去重前=2, 去重后=2, 去重率=0.0%
-2026-02-22 20:38:15 - agents.executoragent - INFO - [executoragent.py:856] - 去重前: 2 篇
-2026-02-22 20:38:15 - agents.executoragent - INFO - [executoragent.py:857] - 去重后: 2 篇
-2026-02-22 20:38:15 - agents.executoragent - INFO - [executoragent.py:884] - 从 deduplicated_results 获取 2 篇文档
-2026-02-22 20:38:15 - agents.executoragent - INFO - [executoragent.py:897] - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-22 20:38:15 - agents.executoragent - INFO - [executoragent.py:922] - 总共需要下载 2 篇文档
-2026-02-22 20:38:15,217 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-22 20:38:16,616 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-22 20:38:16 - agents.executoragent - INFO - [executoragent.py:943] - 开始下载 tavily 的 1 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-22 20:38:16 - agents.executoragent - INFO - [executoragent.py:949] - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-22 20:38:16 - agents.executoragent - INFO - [executoragent.py:943] - 开始下载 exa_context 的 1 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-22 20:38:16 - agents.executoragent - INFO - [executoragent.py:949] - 使用下载工具 exa_context_download 处理 exa_context 数据
-2026-02-22 20:38:16 - agents.executoragent - INFO - [executoragent.py:511] - LLM 决策结果: 是否调用工具=True
-2026-02-22 20:38:16 - agents.executoragent - INFO - [executoragent.py:512] - executor_agent llm_chat: tool_calls_count=1, tool_names=['query-docs']
-2026-02-22 20:38:16 - agents.executoragent - INFO - [executoragent.py:517] - executor_agent llm_chat: executor_messages_len=3
-2026-02-22 20:38:16 - agents.executoragent - WARNING - [executoragent.py:543] - 达到可选工具最大循环轮数 (1)，强制进入清洗阶段
-2026-02-22 20:38:16 - agents.executoragent - WARNING - [executoragent.py:775] - 处理langgraph 高阶技巧有哪些？----LangGraph 中人机协作模式和错误重试策略的最佳实践有哪些时sub_url_pool 为空
-2026-02-22 20:38:16 - agents.executoragent - INFO - [executoragent.py:795] - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-22 20:38:16 - agents.executoragent - DEBUG - [executoragent.py:731] - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraphjs/concepts/human_in_the_loop/
-2026-02-22 20:38:16 - agents.executoragent - DEBUG - [executoragent.py:731] - 保留结果（URL去重）: https://github.langchain.ac.cn/langgraph/concepts/human_in_the_loop
-2026-02-22 20:38:16 - agents.executoragent - INFO - [executoragent.py:758] - 去重统计: 去重前=2, 去重后=2, 去重率=0.0%
-2026-02-22 20:38:16 - agents.executoragent - INFO - [executoragent.py:856] - 去重前: 2 篇
-2026-02-22 20:38:16 - agents.executoragent - INFO - [executoragent.py:857] - 去重后: 2 篇
-2026-02-22 20:38:16 - agents.executoragent - INFO - [executoragent.py:884] - 从 deduplicated_results 获取 2 篇文档
-2026-02-22 20:38:16 - agents.executoragent - INFO - [executoragent.py:897] - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-22 20:38:16 - agents.executoragent - INFO - [executoragent.py:922] - 总共需要下载 2 篇文档
-2026-02-22 20:38:16,697 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
-2026-02-22 20:38:18 - agents.executoragent - INFO - [executoragent.py:956] - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-22 20:38:18 - agents.executoragent - INFO - [executoragent.py:958] - 下载工具 tavily_download 首项类型: <class 'dict'>
-2026-02-22 20:38:18 - agents.executoragent - INFO - [executoragent.py:963] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=1
-2026-02-22 20:38:18 - agents.executoragent - INFO - [executoragent.py:973] - 成功下载 1 篇 tavily 文档
-2026-02-22 20:38:18 - agents.executoragent - INFO - [executoragent.py:956] - 下载工具 exa_context_download 返回类型: <class 'list'>
-2026-02-22 20:38:18 - agents.executoragent - INFO - [executoragent.py:958] - 下载工具 exa_context_download 首项类型: <class 'dict'>
-2026-02-22 20:38:18 - agents.executoragent - INFO - [executoragent.py:963] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=1
-2026-02-22 20:38:18 - agents.executoragent - INFO - [executoragent.py:973] - 成功下载 1 篇 exa_context 文档
-2026-02-22 20:38:18 - agents.executoragent - INFO - [executoragent.py:1001] - 下载完成，共下载 2 篇文档
-2026-02-22 20:38:18 - agents.executoragent - INFO - [executoragent.py:1057] - executor 完成子问题 'LangGraph 的状态持久化机制和检查点策略如何实现长期运行的工作流恢复' 的处理
-2026-02-22 20:38:18 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'LangGraph 的状态持久化机制和检查点策略如何实现长期运行的工作流恢复' 的处理
-2026-02-22 20:38:18 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成LangGraph 的状态持久化机制和检查点策略如何实现长期运行的工作流恢复后 sub_url_pool 包含 2 个 URL
-2026-02-22 20:38:18 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成LangGraph 的状态持久化机制和检查点策略如何实现长期运行的工作流恢复后 downloaded_papers 包含 2 个结果
-2026-02-22 20:38:18,441 - core.mcp.tools - INFO - 返回 6 个下载工具
-2026-02-22 20:38:18 - agents.executoragent - INFO - [executoragent.py:943] - 开始下载 tavily 的 1 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-22 20:38:18 - agents.executoragent - INFO - [executoragent.py:949] - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-22 20:38:18 - agents.executoragent - INFO - [executoragent.py:943] - 开始下载 exa_context 的 1 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-22 20:38:18 - agents.executoragent - INFO - [executoragent.py:949] - 使用下载工具 exa_context_download 处理 exa_context 数据
-2026-02-22 20:38:19 - agents.executoragent - INFO - [executoragent.py:956] - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-22 20:38:19 - agents.executoragent - INFO - [executoragent.py:958] - 下载工具 tavily_download 首项类型: <class 'dict'>
-2026-02-22 20:38:19 - agents.executoragent - INFO - [executoragent.py:963] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=1
-2026-02-22 20:38:19 - agents.executoragent - INFO - [executoragent.py:973] - 成功下载 1 篇 tavily 文档
-2026-02-22 20:38:19 - agents.executoragent - INFO - [executoragent.py:956] - 下载工具 exa_context_download 返回类型: <class 'list'>
-2026-02-22 20:38:19 - agents.executoragent - INFO - [executoragent.py:958] - 下载工具 exa_context_download 首项类型: <class 'dict'>
-2026-02-22 20:38:19 - agents.executoragent - INFO - [executoragent.py:963] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=1
-2026-02-22 20:38:19 - agents.executoragent - INFO - [executoragent.py:973] - 成功下载 1 篇 exa_context 文档
-2026-02-22 20:38:19 - agents.executoragent - INFO - [executoragent.py:1001] - 下载完成，共下载 2 篇文档
-2026-02-22 20:38:19 - agents.executoragent - INFO - [executoragent.py:1057] - executor 完成子问题 'LangGraph 中人机协作模式和错误重试策略的最佳实践有哪些' 的处理
-2026-02-22 20:38:19 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'LangGraph 中人机协作模式和错误重试策略的最佳实践有哪些' 的处理
-2026-02-22 20:38:19 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成LangGraph 中人机协作模式和错误重试策略的最佳实践有哪些后 sub_url_pool 包含 2 个 URL
-2026-02-22 20:38:19 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成LangGraph 中人机协作模式和错误重试策略的最佳实践有哪些后 downloaded_papers 包含 2 个结果
-2026-02-22 20:38:19 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 1 执行成功
-2026-02-22 20:38:19 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 2 执行成功
-2026-02-22 20:38:19 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 3 执行成功
-2026-02-22 20:38:19 - agents.executor_pool - INFO - [executor_pool.py:134] - 并发执行完成: 成功 3/3, 失败 0
-2026-02-22 20:38:19 - agents.executor_pool - INFO - [executor_pool.py:135] - URL 池更新: 0 -> 6 个 URL
-2026-02-22 20:38:19 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:357] - 第一阶段执行完成，完成3 个子问题的检索
-2026-02-22 20:38:19 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:358] - 第一阶段收集到 6 个 URL
-2026-02-22 20:38:19 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:360] - [execute_first] 完成 状态=success 耗时=31.32s 子问题数=3 URL数=6
-2026-02-22 20:38:19 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:491] - [collect_first] 第一次文档收集与去重
-2026-02-22 20:38:19 - core.file_deduplicator - INFO - [file_deduplicator.py:164] - 使用 TF-IDF 去重: 5 个文件, 阈值=0.8
-2026-02-22 20:38:20 - core.file_deduplicator - INFO - [file_deduplicator.py:267] - TF-IDF 去重完成: 保留 5 个, 未输出 0 个
-2026-02-22 20:38:20 - core.file_deduplicator - INFO - [file_deduplicator.py:297] - 列表去重完成: 输入 5 个, 输出 5 个, 未输出 0 个
-2026-02-22 20:38:20 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:507] - 第一次去重完成: 输入 5 个, 输出 5 个, 未输出 0 个
-2026-02-22 20:38:20 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:526] - 从第一阶段 executor_results 提取到 6 个文档元数据
-2026-02-22 20:38:20 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:528] - [collect_first] 完成 状态=success 耗时=0.02s 文档数=6 去重后=5
-2026-02-22 20:38:20 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:388] - [execute_second] 第二阶段执行 - 精炼阶段（使用第一阶段的 url_pool）
-2026-02-22 20:38:20 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:411] - 第二阶段执行: 1 个子问题，使用第一阶段收集的 6 个 URL
-2026-02-22 20:38:20 - agents.executor_pool - INFO - [executor_pool.py:94] - 开始并发执行 1 个子问题 (user_id=test_user_001, url_pool_size=6)
-2026-02-22 20:38:20 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 1 到 Agent 0
-2026-02-22 20:38:20 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:664] - [process_first_documents] 第一阶段文档处理（去重后）
-2026-02-22 20:38:20 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 'LangGraph 在多智能体编排、生产部署和调试监控方面提供哪些高级能力' (user_id=test_user_001, thread_id=test_thread_001_executor_0)
-2026-02-22 20:38:20,008 - core.rag.document_processor - INFO - 开始处理 5 个文档
-2026-02-22 20:38:20 - agents.executoragent - INFO - [executoragent.py:646] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
-2026-02-22 20:38:20 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 wikipedia_search 搜索: LangGraph 在多智能体编排、生产部署和调试监控方面提供哪些高级能力
-2026-02-22 20:38:20 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 exa_context_search 搜索: LangGraph 在多智能体编排、生产部署和调试监控方面提供哪些高级能力
-2026-02-22 20:38:20 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 tavily_search 搜索: LangGraph 在多智能体编排、生产部署和调试监控方面提供哪些高级能力
-2026-02-22 20:38:20,115 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/tavily_LangGraph .md 加载为 1 个 Document 并加入 pipeline
-2026-02-22 20:38:20,158 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_持久化 ¶.md 加载为 1 个 Document 并加入 pipeline
-2026-02-22 20:38:20,196 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/tavily_人机协作(Human.md 加载为 1 个 Document 并加入 pipeline
-2026-02-22 20:38:20,235 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_概述 - LangC.md 加载为 1 个 Document 并加入 pipeline
-2026-02-22 20:38:20,277 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_LangChain内.md 加载为 1 个 Document 并加入 pipeline
-2026-02-22 20:38:20,277 - core.rag.document_processor - WARNING - 文档路径不存在: /home/qinshan/widthresearch/data/downloads/context7_grep.json
-2026-02-22 20:38:20,277 - core.rag.document_processor - INFO - 开始通过 IngestionPipeline 处理 5 个 文档
-2026-02-22 20:38:22 - agents.executoragent - WARNING - [executoragent.py:177] - wikipedia_search 返回了 0 条数据
-2026-02-22 20:38:23 - agents.executoragent - INFO - [executoragent.py:175] - exa_context_search 返回了 1 条数据
-2026-02-22 20:38:25 - agents.executoragent - INFO - [executoragent.py:175] - tavily_search 返回了 1 条数据
-2026-02-22 20:38:25 - agents.executoragent - INFO - [executoragent.py:670] - 搜索完成，共获得 2 条结果
-2026-02-22 20:38:25 - agents.executoragent - INFO - [executoragent.py:500] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-22 20:38:33 - agents.executoragent - INFO - [executoragent.py:511] - LLM 决策结果: 是否调用工具=True
-2026-02-22 20:38:33 - agents.executoragent - INFO - [executoragent.py:512] - executor_agent llm_chat: tool_calls_count=1, tool_names=['query-docs']
-2026-02-22 20:38:33 - agents.executoragent - INFO - [executoragent.py:517] - executor_agent llm_chat: executor_messages_len=5
-2026-02-22 20:38:33 - agents.executoragent - INFO - [executoragent.py:551] - LLM 决定调用 1 个可选工具
-2026-02-22 20:38:33 - agents.executoragent - INFO - [executoragent.py:583] - executor_agent tool_node: tool_calls=['query-docs']
-2026-02-22 20:38:33 - agents.executoragent - INFO - [executoragent.py:584] - executor_agent tool_node: registered_tools=['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-22 20:38:33 - agents.executoragent - INFO - [executoragent.py:589] - 准备执行 1 个可选工具调用
-2026-02-22 20:38:38 - agents.executoragent - INFO - [executoragent.py:599] - 可选工具执行完成，返回 1 条 ToolMessage
-2026-02-22 20:38:38 - agents.executoragent - INFO - [executoragent.py:605] - executor_agent tool_node: tool_messages_count=1, tool_message_ids=['call_-7864095667415674109']
-2026-02-22 20:38:38 - agents.executoragent - INFO - [executoragent.py:622] -   - 工具 query-docs 返回 1 条结果
-2026-02-22 20:38:38 - agents.executoragent - INFO - [executoragent.py:500] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:511] - LLM 决策结果: 是否调用工具=True
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:512] - executor_agent llm_chat: tool_calls_count=1, tool_names=['query-docs']
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:517] - executor_agent llm_chat: executor_messages_len=7
-2026-02-22 20:38:43 - agents.executoragent - WARNING - [executoragent.py:543] - 达到可选工具最大循环轮数 (1)，强制进入清洗阶段
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:795] - 跳过工具 resolve-library-id 的结果（非 paper 结构）
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:795] - 跳过工具 query-docs 的结果（非 paper 结构）
-2026-02-22 20:38:43 - agents.executoragent - DEBUG - [executoragent.py:731] - 保留结果（URL去重）: https://www.cnblogs.com/crazymakercircle/p/19412858
-2026-02-22 20:38:43 - agents.executoragent - DEBUG - [executoragent.py:731] - 保留结果（URL去重）: https://codelabs.developers.google.com/aidemy-multi-agent/instructions?hl=zh-cn
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:758] - 去重统计: 去重前=2, 去重后=2, 去重率=0.0%
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:856] - 去重前: 2 篇
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:857] - 去重后: 2 篇
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:884] - 从 deduplicated_results 获取 2 篇文档
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:897] - 跳过工具 resolve-library-id 的下载结果合并
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:894] - 已将工具 query-docs 结果追加写入 context7_grep.json
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:922] - 总共需要下载 2 篇文档
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:943] - 开始下载 tavily 的 1 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:949] - 使用下载工具 tavily_download 处理 tavily 数据
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:943] - 开始下载 exa_context 的 1 篇文档到 /home/qinshan/widthresearch/data/downloads
-2026-02-22 20:38:43 - agents.executoragent - INFO - [executoragent.py:949] - 使用下载工具 exa_context_download 处理 exa_context 数据
-2026-02-22 20:38:45 - agents.executoragent - INFO - [executoragent.py:956] - 下载工具 exa_context_download 返回类型: <class 'list'>
-2026-02-22 20:38:45 - agents.executoragent - INFO - [executoragent.py:958] - 下载工具 exa_context_download 首项类型: <class 'dict'>
-2026-02-22 20:38:45 - agents.executoragent - INFO - [executoragent.py:963] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=1
-2026-02-22 20:38:45 - agents.executoragent - INFO - [executoragent.py:973] - 成功下载 1 篇 exa_context 文档
-2026-02-22 20:38:45 - agents.executoragent - INFO - [executoragent.py:956] - 下载工具 tavily_download 返回类型: <class 'list'>
-2026-02-22 20:38:45 - agents.executoragent - INFO - [executoragent.py:958] - 下载工具 tavily_download 首项类型: <class 'dict'>
-2026-02-22 20:38:45 - agents.executoragent - INFO - [executoragent.py:963] - 下载解析 payload: keys=['source_tool', 'result_type', 'count', 'papers'], count=1
-2026-02-22 20:38:45 - agents.executoragent - INFO - [executoragent.py:973] - 成功下载 1 篇 tavily 文档
-2026-02-22 20:38:45 - agents.executoragent - INFO - [executoragent.py:1001] - 下载完成，共下载 2 篇文档
-2026-02-22 20:38:45 - agents.executoragent - INFO - [executoragent.py:1057] - executor 完成子问题 'LangGraph 在多智能体编排、生产部署和调试监控方面提供哪些高级能力' 的处理
-2026-02-22 20:38:45 - agents.executor_pool - INFO - [executor_pool.py:169] - executor 完成子问题 'LangGraph 在多智能体编排、生产部署和调试监控方面提供哪些高级能力' 的处理
-2026-02-22 20:38:45 - agents.executor_pool - INFO - [executor_pool.py:175] - executor_pool中 完成LangGraph 在多智能体编排、生产部署和调试监控方面提供哪些高级能力后 sub_url_pool 包含 8 个 URL
-2026-02-22 20:38:45 - agents.executor_pool - INFO - [executor_pool.py:179] - executor_pool中 完成LangGraph 在多智能体编排、生产部署和调试监控方面提供哪些高级能力后 downloaded_papers 包含 2 个结果
-2026-02-22 20:38:45 - agents.executor_pool - DEBUG - [executor_pool.py:129] - 子问题 1 执行成功
-2026-02-22 20:38:45 - agents.executor_pool - INFO - [executor_pool.py:134] - 并发执行完成: 成功 1/1, 失败 0
-2026-02-22 20:38:45 - agents.executor_pool - INFO - [executor_pool.py:135] - URL 池更新: 6 -> 8 个 URL
-2026-02-22 20:38:45 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:420] - 第二阶段执行完成，获得 1 个结果
-2026-02-22 20:38:45 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:421] - 第二阶段 URL Pool: 6 -> 8
-2026-02-22 20:38:45 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:423] - [execute_second] 完成 状态=success 耗时=25.84s 子问题数=1 URL数=8
-2026-02-22 20:41:32,527 - core.rag.document_processor - INFO - 文档处理完成: 81 个节点
-2026-02-22 20:41:32 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:652] - 第一阶段文档处理完成: 81 个片段
-2026-02-22 20:41:32 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:689] - [process_first_documents] 完成 状态=success 耗时=194.90s 文档片段数=81
-2026-02-22 20:41:32 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:559] - [collect_second] 第二次文档收集与去重
-2026-02-22 20:41:32 - core.file_deduplicator - INFO - [file_deduplicator.py:164] - 使用 TF-IDF 去重: 2 个文件, 阈值=0.8
-2026-02-22 20:41:32 - core.file_deduplicator - INFO - [file_deduplicator.py:267] - TF-IDF 去重完成: 保留 2 个, 未输出 0 个
-2026-02-22 20:41:32 - core.file_deduplicator - INFO - [file_deduplicator.py:297] - 列表去重完成: 输入 2 个, 输出 2 个, 未输出 0 个
-2026-02-22 20:41:32 - core.file_deduplicator - INFO - [file_deduplicator.py:164] - 使用 TF-IDF 去重: 7 个文件, 阈值=0.8
-2026-02-22 20:41:32 - core.file_deduplicator - DEBUG - [file_deduplicator.py:258] - 检测到相似文件 (sim=1.000): tavily_LangGraph .md vs tavily_LangGraph .md
-2026-02-22 20:41:32 - core.file_deduplicator - INFO - [file_deduplicator.py:267] - TF-IDF 去重完成: 保留 6 个, 未输出 1 个
-2026-02-22 20:41:32 - core.file_deduplicator - INFO - [file_deduplicator.py:335] - 跨集合去重完成: 候选 2 个, 输出 2 个, 未输出 0 个
-2026-02-22 20:41:32 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:594] - 第二次去重完成: 输入 2 个, 输出 2 个, 未输出 0 个
-2026-02-22 20:41:32 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:615] - 从第二阶段 executor_results 提取到 2 个文档元数据
-2026-02-22 20:41:32 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:616] - 两阶段总计：5 + 2 = 2 个去重后的文档
-2026-02-22 20:41:32 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:621] - [collect_second] 完成 状态=success 耗时=0.04s 文档数=2 去重后=2
-2026-02-22 20:41:32 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:709] - [process_second_documents] 第二阶段文档处理（去重后）
-2026-02-22 20:41:32,570 - core.rag.document_processor - INFO - 开始处理 2 个文档
-2026-02-22 20:41:32,575 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/tavily_LangGraph .md 加载为 1 个 Document 并加入 pipeline
-2026-02-22 20:41:32,599 - core.rag.document_processor - INFO - Markdown 文档 /home/qinshan/widthresearch/data/downloads/exa_在Google Cl.md 加载为 1 个 Document 并加入 pipeline
-2026-02-22 20:41:32,600 - core.rag.document_processor - INFO - 开始通过 IngestionPipeline 处理 2 个 文档
-2026-02-22 20:43:33,764 - core.rag.document_processor - INFO - 文档处理完成: 47 个节点
-2026-02-22 20:43:33,764 - core.rag.document_processor - INFO - 另外添加了 1 个来自 可选工具JSON 文档的节点
-2026-02-22 20:43:33 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:652] - 第二阶段文档处理完成: 48 个片段
-2026-02-22 20:43:33 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:733] - [process_second_documents] 完成 状态=success 耗时=122.08s 文档片段数=48
-2026-02-22 20:43:33 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1193] - [join_vectorize] 进入 vectorize_documents
-2026-02-22 20:43:33 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:761] - [vectorize_documents] 向量化文档并入库
-2026-02-22 20:43:37 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:777] - 成功添加 81 个第一阶段文档到向量库
-2026-02-22 20:43:40 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:781] - 成功添加 48 个第二阶段文档到向量库
-2026-02-22 20:43:40 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:788] - [vectorize_documents] 完成 状态=success 耗时=6.75s 新增=第1阶段81 第2阶段48
-2026-02-22 20:43:40 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:810] - [rag_retrieve] RAG 检索
-2026-02-22 20:43:40 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:829] - 尝试创建 RAG 检索器，使用 top_k=5
-2026-02-22 20:43:40,521 - core.rag.rag_postprocess_module - INFO - 初始化 RAGModule: top_k=5
-2026-02-22 20:43:40,521 - core.rag.rag_postprocess_module - INFO - 开始 RAG 检索，planner问题数: 4
-2026-02-22 20:43:40,546 - core.rag.rag_postprocess_module - DEBUG - 问题 1/4 初步检索到 5 个节点
-2026-02-22 20:43:40,546 - core.rag.reranker - INFO - 开始异步 rerank，查询: LangGraph 的状态持久化机制和检查点策略如何实现长期运行的工作流恢复..., 文档数量: 5
-2026-02-22 20:43:41,582 - core.rag.reranker - INFO - 异步 Rerank 完成，返回 5 个结果
-2026-02-22 20:43:41,582 - core.rag.rag_postprocess_module - DEBUG - 问题 1/4 重排序+过滤后保留 4 个节点
-2026-02-22 20:43:41,603 - core.rag.rag_postprocess_module - DEBUG - 问题 2/4 初步检索到 5 个节点
-2026-02-22 20:43:41,603 - core.rag.reranker - INFO - 开始异步 rerank，查询: LangGraph 中人机协作模式和错误重试策略的最佳实践有哪些..., 文档数量: 5
-2026-02-22 20:43:42,077 - core.rag.reranker - INFO - 异步 Rerank 完成，返回 5 个结果
-2026-02-22 20:43:42,077 - core.rag.rag_postprocess_module - DEBUG - 问题 2/4 重排序+过滤后保留 5 个节点
-2026-02-22 20:43:42,114 - core.rag.rag_postprocess_module - DEBUG - 问题 3/4 初步检索到 5 个节点
-2026-02-22 20:43:42,114 - core.rag.reranker - INFO - 开始异步 rerank，查询: LangGraph 的内存架构如何支持短期记忆和跨会话长期记忆的协同管理..., 文档数量: 5
-2026-02-22 20:43:42,372 - core.rag.reranker - INFO - 异步 Rerank 完成，返回 5 个结果
-2026-02-22 20:43:42,372 - core.rag.rag_postprocess_module - DEBUG - 问题 3/4 重排序+过滤后保留 5 个节点
-2026-02-22 20:43:42,409 - core.rag.rag_postprocess_module - DEBUG - 问题 4/4 初步检索到 5 个节点
-2026-02-22 20:43:42,410 - core.rag.reranker - INFO - 开始异步 rerank，查询: LangGraph 在多智能体编排、生产部署和调试监控方面提供哪些高级能力..., 文档数量: 5
-2026-02-22 20:43:42,667 - core.rag.reranker - INFO - 异步 Rerank 完成，返回 5 个结果
-2026-02-22 20:43:42,667 - core.rag.rag_postprocess_module - DEBUG - 问题 4/4 重排序+过滤后保留 5 个节点
-2026-02-22 20:43:42,667 - core.rag.rag_postprocess_module - INFO - 所有问题检索并重排序完成，共 19 个节点
-2026-02-22 20:43:42,667 - core.rag.rag_postprocess_module - INFO - 去重后保留 18 个节点
-2026-02-22 20:43:42,674 - core.rag.rag_postprocess_module - INFO - 内容去重后保留 17 个节点
-2026-02-22 20:43:42,674 - core.rag.rag_postprocess_module - DEBUG - 问题池构建完成，包含 4 个去重后的问题
-2026-02-22 20:43:42,674 - core.rag.rag_postprocess_module - INFO - 构建问题池完成，共 4 个问题
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:844] - RAG 检索完成，获得 17 个节点
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 2314
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://github.langchain.ac.cn/langgraph/concepts/persistence/, 相似度得分: 0.9941295385360718
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 2230
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://blog.csdn.net/gitblog_00154/article/details/150793260, 相似度得分: 0.9931411147117615
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 2200
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://www.ningto.com/blog/2026/langchain-memory-management-deep-dive-from-short-term-conversations-to-long-term-memory-architecture-philosophy, 相似度得分: 0.9798780679702759
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 2277
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://jangwook.net/zh/blog/zh/langgraph-multi-agent/, 相似度得分: 0.9754036664962769
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 1411
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://github.langchain.ac.cn/langgraph/concepts/persistence/, 相似度得分: 0.9751446843147278
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 2087
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://jangwook.net/zh/blog/zh/langgraph-multi-agent/, 相似度得分: 0.9744192957878113
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 2136
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://github.langchain.ac.cn/langgraphjs/concepts/persistence/, 相似度得分: 0.9639618396759033
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 775
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://blog.csdn.net/gitblog_00154/article/details/150793260, 相似度得分: 0.9406124949455261
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 1898
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://cloud.tencent.com/developer/article/2557221, 相似度得分: 0.9397388696670532
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 1527
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://modelengine.csdn.net/690b1def5511483559e2720d.html, 相似度得分: 0.9362953305244446
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 2067
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://modelengine.csdn.net/690b1def5511483559e2720d.html, 相似度得分: 0.932195246219635
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 1504
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://adg.csdn.net/6970abfa437a6b40336b268a.html, 相似度得分: 0.8751835227012634
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 1753
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://blog.csdn.net/The_Thieves/article/details/148829864, 相似度得分: 0.8624794483184814
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 2096
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://langgraph.com.cn/concepts/persistence.1.html, 相似度得分: 0.8330861926078796
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 1870
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://cloud.tencent.com/developer/article/2557221, 相似度得分: 0.6684895753860474
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 498
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://github.langchain.ac.cn/langgraph/how-tos/node-retries/, 相似度得分: 0.5534335970878601
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:873] - 已将检索已将basenode添加到question_pool到,问题个数: 1218
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:875] - 检索到节点，来源: https://modelengine.csdn.net/690b1def5511483559e2720d.html, 相似度得分: 0.5381853580474854
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:890] - 从全部检索结果中提取并去重后，问题池中共有 337 个问题
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:892] - [rag_retrieve] 完成 状态=success 耗时=2.16s 节点数=17 问题池数=337
-2026-02-22 20:43:42 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:933] - [generate_answer] 尝试生成最终答案
-2026-02-22 20:45:12 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:944] - 轮次：1答案生成完成(注:轮次从1开始计数)
-2026-02-22 20:45:12 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:946] - 本轮答案内容(前500字): ————————————
-【问题理解】
-- 原始问题核心意图：用户希望了解在使用 LangGraph 构建应用时，除了基础用法之外，有哪些进阶的、能够提升系统稳定性、智能性和可控性的高级技巧（High-level Techniques）。
-- 改写问题的补充作用：无（用户问题清晰明确）。
-- 最终回答边界：围绕 LangGraph 的架构设计、记忆管理、容错机制、多智能体协作及调试控制等方面的高阶技巧展开。
+2026-02-23 22:20:17,103 - core.llms - INFO - 成功初始化 LangChain Chat(glm)/Embedding(bge)
+2026-02-23 22:20:17,104 - core.llms - INFO - 成功初始化 LlamaIndex Chat(glm)/Embedding(bge)
+2026-02-23 22:20:17,254 - core.llms - INFO - 成功初始化 LangChain Chat(glm)/Embedding(bge)
+2026-02-23 22:20:17,375 - core.rag.reranker - INFO - 初始化 BGEReranker: base_url=http://localhost:8100
+2026-02-23 22:20:17,497 - core.llms - INFO - 成功初始化 LangChain Chat(glm)/Embedding(bge)
+2026-02-23 22:20:17 - agents.planneragent - INFO - [planneragent.py:385] - 完成planner_graph的初始化构造
+2026-02-23 22:20:17,625 - core.llms - INFO - 成功初始化 LangChain Chat(glm)/Embedding(bge)
+2026-02-23 22:20:17 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 1/3
+2026-02-23 22:20:17,747 - core.llms - INFO - 成功初始化 LangChain Chat(glm)/Embedding(bge)
+2026-02-23 22:20:17 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 2/3
+2026-02-23 22:20:17,869 - core.llms - INFO - 成功初始化 LangChain Chat(glm)/Embedding(bge)
+2026-02-23 22:20:17 - agents.executor_pool - DEBUG - [executor_pool.py:62] - 创建 ExecutorAgent 3/3
+2026-02-23 22:20:17 - agents.executor_pool - INFO - [executor_pool.py:64] - 成功创建 3 个 ExecutorAgent 实例
+2026-02-23 22:20:17 - agents.executor_pool - INFO - [executor_pool.py:54] - 初始化 ExecutorAgentPool: pool_size=3, model=glm
+2026-02-23 22:20:17,869 - core.rag.rag_preprocess_module - INFO - 初始化 VectorStoreManager: persist_dir=vector_storage, collection=base_crunchbase_collection
+2026-02-23 22:20:17,869 - core.llms - INFO - 成功初始化 LlamaIndex Chat(deepseek)/Embedding(bge)
+2026-02-23 22:20:17,990 - core.rag.document_processor - INFO - 初始化 DocumentProcessor: mineru_url=http://localhost:8080, max_chunk_size=1000
+2026-02-23 22:20:17 - core.file_deduplicator - INFO - [file_deduplicator.py:51] - 初始化 FileDeduplicator: threshold=0.8, sklearn=可用
+2026-02-23 22:20:18 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1386] - MultiAgentGraph 构建完成（两阶段执行版本）
+2026-02-23 22:20:18 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:213] - 初始化 MultiAgentGraph: executor_pool_size=3
+2026-02-23 22:20:18 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1404] - 开始处理用户查询: 测算中国GDP增速变化对沪深300收益的敏感度。 (user_id=batch_user_001, thread_id=batch_thread_001)
+2026-02-23 22:20:18 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:994] - DOC_SAVE_PATH 已清空: /home/qinshan/widthresearch/data/downloads
+2026-02-23 22:20:18 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:225] - [init_vector_store] 初始化向量存储
+2026-02-23 22:20:18,144 - core.rag.rag_preprocess_module - INFO - 检查本地向量库是否存在
+2026-02-23 22:20:18,144 - core.rag.rag_preprocess_module - INFO - 向量库目录存在: True, Chroma 数据库存在: True
+2026-02-23 22:20:18,145 - core.rag.rag_preprocess_module - INFO - 检测到本地向量库，尝试加载
+2026-02-23 22:20:18,852 - core.rag.rag_preprocess_module - INFO - 找到集合 'base_crunchbase_collection'，包含 13235 个文档
+2026-02-23 22:20:18,853 - core.rag.rag_preprocess_module - INFO - 从现有向量库加载索引
+2026-02-23 22:20:18,855 - core.rag.rag_preprocess_module - INFO - 成功从本地加载向量索引
+2026-02-23 22:20:18 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:230] - 向量存储初始化完成
+2026-02-23 22:20:18 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:233] - [init_vector_store] 完成 状态=success 耗时=0.71s
+2026-02-23 22:20:18 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:256] - [plan_query] 调用 PlannerAgent 拆解查询
+2026-02-23 22:20:18,861 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-23 22:20:20,915 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-23 22:20:37 - agents.planneragent - INFO - [planneragent.py:132] - planner_agent llm_chat 节点在第0轮迭代中，成功生成AIMessage类型的消息，内容为:我需要先获取一些背景信息，了解GDP增速与股票市场敏感度分析的常见方法和最新研究。
+2026-02-23 22:20:37 - agents.planneragent - INFO - [planneragent.py:134] - planner_agent llm_chat: tool_calls_count=2, tool_names=['exa_summary_search', 'exa_summary_search']
+2026-02-23 22:20:37 - agents.planneragent - INFO - [planneragent.py:139] - planner_agent llm_chat: planner_messages_len=2
+2026-02-23 22:20:37 - agents.planneragent - INFO - [planneragent.py:144] - planner_agent llm_chat 节点在第0轮迭代中，生成的AIMessage类型的消息包含工具调用，工具调用内容为:[{'name': 'exa_summary_search', 'args': {'query': 'GDP增速与股市收益敏感度测算方法 计量经济学', 'type': 'auto'}, 'id': 'call_-7881282305468133542', 'type': 'tool_call'}, {'name': 'exa_summary_search', 'args': {'query': '沪深300指数与宏观经济GDP相关性分析', 'type': 'auto'}, 'id': 'call_-7881282305468133541', 'type': 'tool_call'}]
+2026-02-23 22:20:37 - agents.planneragent - INFO - [planneragent.py:272] - planner_agent 条件路由器检测到上一步存在工具调用，进入tool_node节点
+2026-02-23 22:20:37 - agents.planneragent - INFO - [planneragent.py:167] - planner_agent tool_node: tool_calls=['exa_summary_search', 'exa_summary_search']
+2026-02-23 22:20:37 - agents.planneragent - INFO - [planneragent.py:168] - planner_agent tool_node: registered_tools=['exa_summary_search', 'resolve-library-id', 'query-docs']
+2026-02-23 22:20:50 - agents.planneragent - INFO - [planneragent.py:191] - planner_agent tool_node: tool_messages_count=2, tool_message_ids=['call_-7881282305468133541', 'call_-7881282305468133542']
+2026-02-23 22:21:07 - agents.planneragent - INFO - [planneragent.py:132] - planner_agent llm_chat 节点在第0轮迭代中，成功生成AIMessage类型的消息，内容为:整体判断：这是一个需要基于频率匹配与计量模型（回归、滚动窗口、时序因子等）进行定量化测算的任务，核心在于“测什么（收益/波动）、用什么数据（GDP增速 vs 沪深300）、用什么模型（OLS/混频/滞后/稳健性）、如何解释（敏感度与显著性）”。
 
-【关键信息提取】
-- 事实1：LangGraph 支持双层记忆架构（短期/线程级 vs 长期/跨线程），并通过 `InMemoryStore` 或持久化数据库实现。
-- 事实2：具备完善的容错与重试机制，包括节点级 `RetryPolicy`（指数退避、特定异常重试）、Pending Writes 机制及基于 Checkpoint 的故障恢复。
-- 事实3：支持多智能体协作模式（如监督者模式、层级模式、工具调用模式）和复杂控制流（循环、并行、条件分支）。
-- 事实4：提供强大的状态控制能力，包括“人机交互”、“时间旅行”以及基于检查点的分支回放。
-- 事实5：具备生产级优化手段，
-2026-02-22 20:45:12 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:950] - [generate_answer] 完成 状态=success 耗时=91.23s 轮次=1
-2026-02-22 20:45:12 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1113] - [eval_answer] 评估生成答案
-2026-02-22 20:46:50 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1128] - 评估模型原始输出: ```json
 {
-  "passed": false,
-  "suggestions": [
-    "第5点“生产级性能优化与监控”中提到的“Prometheus集成”以及具体的“连接池配置（min/max connections）”在提供的检索内容中未找到依据（检索内容仅提及生产环境使用 PostgresSaver），属于证据缺失的幻觉内容，请删除或修改。",
-    "证据标注部分需更严谨，第5点的生产优化建议并未在列出的“直接来源”中得到充分体现，建议补充相关来源或移除该部分描述。"
-  ]
+    "tasks": [
+    "如何将季度或月度频率的GDP增速与日度沪深300收益率进行频率匹配与对齐，以构建适合测算敏感度的数据集",
+    "采用何种计量方法测算中国GDP增速变化对沪深300收益率的敏感度，并对滞后阶数与显著性进行检验",
+    "如何设计滚动窗口或时变参数模型来评估GDP增速对沪深300收益率的时变敏感度与结构性断点",
+    "应纳入哪些控制变量（货币供应量、利率、汇率、通胀等）以改善敏感度估计的稳健性，并说明其影响机制与预期方向"
+    ]
 }
-```
-2026-02-22 20:46:50 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1095] - 评估结果解析成功: {'passed': False, 'suggestions': ['第5点“生产级性能优化与监控”中提到的“Prometheus集成”以及具体的“连接池配置（min/max connections）”在提供的检索内容中未找到依据（检索内容仅提及生产环境使用 PostgresSaver），属于证据缺失的幻觉内容，请删除或修改。', '证据标注部分需更严谨，第5点的生产优化建议并未在列出的“直接来源”中得到充分体现，建议补充相关来源或移除该部分描述。']}
-2026-02-22 20:46:50 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1144] - 评估结果原始内容(str格式): ```json
-{
-  "passed": false,
-  "suggestions": [
-    "第5点“生产级性能优化与监控”中提到的“Prometheus集成”以及具体的“连接池配置（min/max connections）”在提供的检索内容中未找到依据（检索内容仅提及生产环境使用 PostgresSaver），属于证据缺失的幻觉内容，请删除或修改。",
-    "证据标注部分需更严谨，第5点的生产优化建议并未在列出的“直接来源”中得到充分体现，建议补充相关来源或移除该部分描述。"
-  ]
-}
-```
-2026-02-22 20:46:50 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1152] - [eval_answer] 完成 状态=fail 耗时=98.57s
-2026-02-22 20:46:50 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:933] - [generate_answer] 尝试生成最终答案
-2026-02-22 20:49:12 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:944] - 轮次：2答案生成完成(注:轮次从1开始计数)
-2026-02-22 20:49:12 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:946] - 本轮答案内容(前500字): ————————————
-【问题理解】
-- 原始问题核心意图：用户希望了解在使用 LangGraph 框架时，超越基础用法的进阶开发技巧，包括架构设计、状态管理、容错机制及调试手段。
-- 改写问题的补充作用：无（原问题清晰）。
-- 最终回答边界：聚焦于 LangGraph 的高阶特性，如双层记忆架构、智能重试与容错、多智能体协作模式、时间旅行与分支回放、以及生产级配置优化。
-
-【关键信息提取】
-- 事实1：LangGraph 支持双层记忆架构，区分“线程级（短期）”和“跨线程（长期）”记忆，分别通过 Checkpointer 和 Store 接口管理。
-- 事实2：具备生产级容错能力，支持自定义重试策略（RetryPolicy，如指数退避、特定异常重试）和基于 Checkpoint 的故障恢复，以及 Pending Writes 机制保障数据一致性。
-- 事实3：支持复杂的有状态图架构，包括多智能体协作（监督者、层级模式）、循环工作流、条件分支和并行执行。
-- 事实4：提供强大的状态控制能力，支持“人机交互”以及“时间旅行”，允许从历史检查点分支执行以探索不同路径。
-- 事实5：针对生
-2026-02-22 20:49:12 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:950] - [generate_answer] 完成 状态=success 耗时=143.66s 轮次=2
-2026-02-22 20:49:12 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1113] - [eval_answer] 评估生成答案
-2026-02-22 20:49:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1128] - 评估模型原始输出: ```json
-{
-  "passed": true,
-  "suggestions": []
-}
-```
-2026-02-22 20:49:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1095] - 评估结果解析成功: {'passed': True, 'suggestions': []}
-2026-02-22 20:49:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1144] - 评估结果原始内容(str格式): ```json
-{
-  "passed": true,
-  "suggestions": []
-}
-```
-2026-02-22 20:49:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1150] - [eval_answer] 完成 状态=success 耗时=36.20s
-2026-02-22 20:49:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1367] - 节点执行状态: {'init_vector_store': 'success', 'plan_query': 'success', 'execute_first': 'success', 'collect_first': 'success', 'process_first_documents': 'success', 'execute_second': 'success', 'collect_second': 'success', 'process_second_documents': 'success', 'vectorize_documents': 'success', 'rag_retrieve': 'success', 'generate_answer': 'success', 'eval_answer': 'success', 'terminal_error': False}
-2026-02-22 20:49:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1371] - 节点结果完整性: missing=[] unset=['terminal_error'] errors=[]
-2026-02-22 20:49:48 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:1406] - 查询处理完成
+2026-02-23 22:21:07 - agents.planneragent - INFO - [planneragent.py:134] - planner_agent llm_chat: tool_calls_count=0, tool_names=[]
+2026-02-23 22:21:07 - agents.planneragent - INFO - [planneragent.py:139] - planner_agent llm_chat: planner_messages_len=5
+2026-02-23 22:21:07 - agents.planneragent - INFO - [planneragent.py:294] - planner_agent 在第1轮迭代中，解析混合文本后获得有效json结构，进入persist_result节点
+2026-02-23 22:21:07 - agents.planneragent - INFO - [planneragent.py:363] - planner_agent persist_result 节点写入结果:{"tasks": ["\u5982\u4f55\u5c06\u5b63\u5ea6\u6216\u6708\u5ea6\u9891\u7387\u7684GDP\u589e\u901f\u4e0e\u65e5\u5ea6\u6caa\u6df1300\u6536\u76ca\u7387\u8fdb\u884c\u9891\u7387\u5339\u914d\u4e0e\u5bf9\u9f50\uff0c\u4ee5\u6784\u5efa\u9002\u5408\u6d4b\u7b97\u654f\u611f\u5ea6\u7684\u6570\u636e\u96c6", "\u91c7\u7528\u4f55\u79cd\u8ba1\u91cf\u65b9\u6cd5\u6d4b\u7b97\u4e2d\u56fdGDP\u589e\u901f\u53d8\u5316\u5bf9\u6caa\u6df1300\u6536\u76ca\u7387\u7684\u654f\u611f\u5ea6\uff0c\u5e76\u5bf9\u6ede\u540e\u9636\u6570\u4e0e\u663e\u8457\u6027\u8fdb\u884c\u68c0\u9a8c", "\u5982\u4f55\u8bbe\u8ba1\u6eda\u52a8\u7a97\u53e3\u6216\u65f6\u53d8\u53c2\u6570\u6a21\u578b\u6765\u8bc4\u4f30GDP\u589e\u901f\u5bf9\u6caa\u6df1300\u6536\u76ca\u7387\u7684\u65f6\u53d8\u654f\u611f\u5ea6\u4e0e\u7ed3\u6784\u6027\u65ad\u70b9", "\u5e94\u7eb3\u5165\u54ea\u4e9b\u63a7\u5236\u53d8\u91cf\uff08\u8d27\u5e01\u4f9b\u5e94\u91cf\u3001\u5229\u7387\u3001\u6c47\u7387\u3001\u901a\u80c0\u7b49\uff09\u4ee5\u6539\u5584\u654f\u611f\u5ea6\u4f30\u8ba1\u7684\u7a33\u5065\u6027\uff0c\u5e76\u8bf4\u660e\u5176\u5f71\u54cd\u673a\u5236\u4e0e\u9884\u671f\u65b9\u5411"]}
+2026-02-23 22:21:07 - agents.planneragent - INFO - [planneragent.py:395] - planner_chatmodel对于用户的测算中国GDP增速变化对沪深300收益的敏感度。 返回结果为:{"tasks": ["\u5982\u4f55\u5c06\u5b63\u5ea6\u6216\u6708\u5ea6\u9891\u7387\u7684GDP\u589e\u901f\u4e0e\u65e5\u5ea6\u6caa\u6df1300\u6536\u76ca\u7387\u8fdb\u884c\u9891\u7387\u5339\u914d\u4e0e\u5bf9\u9f50\uff0c\u4ee5\u6784\u5efa\u9002\u5408\u6d4b\u7b97\u654f\u611f\u5ea6\u7684\u6570\u636e\u96c6", "\u91c7\u7528\u4f55\u79cd\u8ba1\u91cf\u65b9\u6cd5\u6d4b\u7b97\u4e2d\u56fdGDP\u589e\u901f\u53d8\u5316\u5bf9\u6caa\u6df1300\u6536\u76ca\u7387\u7684\u654f\u611f\u5ea6\uff0c\u5e76\u5bf9\u6ede\u540e\u9636\u6570\u4e0e\u663e\u8457\u6027\u8fdb\u884c\u68c0\u9a8c", "\u5982\u4f55\u8bbe\u8ba1\u6eda\u52a8\u7a97\u53e3\u6216\u65f6\u53d8\u53c2\u6570\u6a21\u578b\u6765\u8bc4\u4f30GDP\u589e\u901f\u5bf9\u6caa\u6df1300\u6536\u76ca\u7387\u7684\u65f6\u53d8\u654f\u611f\u5ea6\u4e0e\u7ed3\u6784\u6027\u65ad\u70b9", "\u5e94\u7eb3\u5165\u54ea\u4e9b\u63a7\u5236\u53d8\u91cf\uff08\u8d27\u5e01\u4f9b\u5e94\u91cf\u3001\u5229\u7387\u3001\u6c47\u7387\u3001\u901a\u80c0\u7b49\uff09\u4ee5\u6539\u5584\u654f\u611f\u5ea6\u4f30\u8ba1\u7684\u7a33\u5065\u6027\uff0c\u5e76\u8bf4\u660e\u5176\u5f71\u54cd\u673a\u5236\u4e0e\u9884\u671f\u65b9\u5411"]}
+2026-02-23 22:21:07 - agents.planneragent - INFO - [planneragent.py:399] - planner_chatmodel对于用户的测算中国GDP增速变化对沪深300收益的敏感度。 返回结果json解析成功，内容为:{'tasks': ['如何将季度或月度频率的GDP增速与日度沪深300收益率进行频率匹配与对齐，以构建适合测算敏感度的数据集', '采用何种计量方法测算中国GDP增速变化对沪深300收益率的敏感度，并对滞后阶数与显著性进行检验', '如何设计滚动窗口或时变参数模型来评估GDP增速对沪深300收益率的时变敏感度与结构性断点', '应纳入哪些控制变量（货币供应量、利率、汇率、通胀等）以改善敏感度估计的稳健性，并说明其影响机制与预期方向']}
+2026-02-23 22:21:07 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:299] - [plan_query] final_tasks=['测算中国GDP增速变化对沪深300收益的敏感度。', '如何将季度或月度频率的GDP增速与日度沪深300收益率进行频率匹配与对齐，以构建适合测算敏感度的数据集', '采用何种计量方法测算中国GDP增速变化对沪深300收益率的敏感度，并对滞后阶数与显著性进行检验', '如何设计滚动窗口或时变参数模型来评估GDP增速对沪深300收益率的时变敏感度与结构性断点', '应纳入哪些控制变量（货币供应量、利率、汇率、通胀等）以改善敏感度估计的稳健性，并说明其影响机制与预期方向']
+2026-02-23 22:21:07 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:302] - 查询拆解完成，生成 4 个子问题
+2026-02-23 22:21:07 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:304] - [plan_query] 完成 状态=success 耗时=51.99s 子问题数=4
+2026-02-23 22:21:07 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:333] - [execute_first] 第一阶段执行 - 探索阶段（url_pool=[]）
+2026-02-23 22:21:07 - agents.multi_agent_graph - INFO - [multi_agent_graph.py:355] - 第一阶段执行: 3 个子问题，初始 URL 池为空
+2026-02-23 22:21:07 - agents.executor_pool - INFO - [executor_pool.py:94] - 开始并发执行 3 个子问题 (user_id=batch_user_001, url_pool_size=0)
+2026-02-23 22:21:07 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 1 到 Agent 0
+2026-02-23 22:21:07 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 2 到 Agent 1
+2026-02-23 22:21:07 - agents.executor_pool - DEBUG - [executor_pool.py:110] - 分配子问题 3 到 Agent 2
+2026-02-23 22:21:07,394 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-23 22:21:07,394 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-23 22:21:07,395 - core.mcp.tools - INFO - 环境变量验证通过: TAVILY_API_KEY 和 EXA_API_KEY 已配置
+2026-02-23 22:21:09,234 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-23 22:21:09,307 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-23 22:21:09,377 - core.mcp.tools - INFO - 返回 6 个搜索工具
+2026-02-23 22:21:13 - agents.executoragent - INFO - [executoragent.py:1034] - 完成 executor_graph 的初始化构造
+2026-02-23 22:21:13 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 '如何将季度或月度频率的GDP增速与日度沪深300收益率进行频率匹配与对齐，以构建适合测算敏感度的数据集' (user_id=batch_user_001, thread_id=batch_thread_001_executor_1)
+2026-02-23 22:21:13 - agents.executoragent - INFO - [executoragent.py:646] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-23 22:21:13 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 wikipedia_search 搜索: 如何将季度或月度频率的GDP增速与日度沪深300收益率进行频率匹配与对齐，以构建适合测算敏感度的数据集
+2026-02-23 22:21:13 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 exa_context_search 搜索: 如何将季度或月度频率的GDP增速与日度沪深300收益率进行频率匹配与对齐，以构建适合测算敏感度的数据集
+2026-02-23 22:21:13 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 tavily_search 搜索: 如何将季度或月度频率的GDP增速与日度沪深300收益率进行频率匹配与对齐，以构建适合测算敏感度的数据集
+2026-02-23 22:21:13 - agents.executoragent - INFO - [executoragent.py:1034] - 完成 executor_graph 的初始化构造
+2026-02-23 22:21:13 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 '采用何种计量方法测算中国GDP增速变化对沪深300收益率的敏感度，并对滞后阶数与显著性进行检验' (user_id=batch_user_001, thread_id=batch_thread_001_executor_2)
+2026-02-23 22:21:13 - agents.executoragent - INFO - [executoragent.py:646] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-23 22:21:13 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 wikipedia_search 搜索: 采用何种计量方法测算中国GDP增速变化对沪深300收益率的敏感度，并对滞后阶数与显著性进行检验
+2026-02-23 22:21:13 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 exa_context_search 搜索: 采用何种计量方法测算中国GDP增速变化对沪深300收益率的敏感度，并对滞后阶数与显著性进行检验
+2026-02-23 22:21:13 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 tavily_search 搜索: 采用何种计量方法测算中国GDP增速变化对沪深300收益率的敏感度，并对滞后阶数与显著性进行检验
+2026-02-23 22:21:14 - agents.executoragent - INFO - [executoragent.py:1034] - 完成 executor_graph 的初始化构造
+2026-02-23 22:21:14 - agents.executor_pool - INFO - [executor_pool.py:167] - executor_pool开始处理子问题 '测算中国GDP增速变化对沪深300收益的敏感度。' (user_id=batch_user_001, thread_id=batch_thread_001_executor_0)
+2026-02-23 22:21:14 - agents.executoragent - INFO - [executoragent.py:646] - 开始并行调用必需工具: ['wikipedia_search', 'exa_context_search', 'tavily_search']
+2026-02-23 22:21:14 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 wikipedia_search 搜索: 测算中国GDP增速变化对沪深300收益的敏感度。
+2026-02-23 22:21:14 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 exa_context_search 搜索: 测算中国GDP增速变化对沪深300收益的敏感度。
+2026-02-23 22:21:14 - agents.executoragent - INFO - [executoragent.py:116] - 调用工具 tavily_search 搜索: 测算中国GDP增速变化对沪深300收益的敏感度。
+2026-02-23 22:22:53 - agents.executoragent - WARNING - [executoragent.py:177] - wikipedia_search 返回了 0 条数据
+2026-02-23 22:22:53 - agents.executoragent - WARNING - [executoragent.py:177] - wikipedia_search 返回了 0 条数据
+2026-02-23 22:22:54 - agents.executoragent - INFO - [executoragent.py:175] - exa_context_search 返回了 1 条数据
+2026-02-23 22:22:55 - agents.executoragent - INFO - [executoragent.py:175] - exa_context_search 返回了 1 条数据
+2026-02-23 22:22:55 - agents.executoragent - WARNING - [executoragent.py:177] - wikipedia_search 返回了 0 条数据
+2026-02-23 22:22:55 - agents.executoragent - INFO - [executoragent.py:175] - exa_context_search 返回了 1 条数据
+2026-02-23 22:22:56 - agents.executoragent - WARNING - [executoragent.py:177] - tavily_search 返回了 0 条数据
+2026-02-23 22:22:56 - agents.executoragent - INFO - [executoragent.py:670] - 搜索完成，共获得 1 条结果
+2026-02-23 22:22:56 - agents.executoragent - INFO - [executoragent.py:500] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-23 22:22:57 - agents.executoragent - WARNING - [executoragent.py:177] - tavily_search 返回了 0 条数据
+2026-02-23 22:22:57 - agents.executoragent - INFO - [executoragent.py:670] - 搜索完成，共获得 1 条结果
+2026-02-23 22:22:57 - agents.executoragent - INFO - [executoragent.py:500] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-23 22:22:58 - agents.executoragent - WARNING - [executoragent.py:177] - tavily_search 返回了 0 条数据
+2026-02-23 22:22:58 - agents.executoragent - INFO - [executoragent.py:670] - 搜索完成，共获得 1 条结果
+2026-02-23 22:22:58 - agents.executoragent - INFO - [executoragent.py:500] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-23 22:23:07 - agents.executoragent - INFO - [executoragent.py:511] - LLM 决策结果: 是否调用工具=True
+2026-02-23 22:23:07 - agents.executoragent - INFO - [executoragent.py:512] - executor_agent llm_chat: tool_calls_count=2, tool_names=['grep_query', 'grep_query']
+2026-02-23 22:23:07 - agents.executoragent - INFO - [executoragent.py:517] - executor_agent llm_chat: executor_messages_len=1
+2026-02-23 22:23:07 - agents.executoragent - INFO - [executoragent.py:522] - LLM 思考: 我来为您详细介绍测算GDP增速变化对沪深300收益率敏感度的计量方法体系。让我先搜索一些相关的实践案例和代码示例。...
+2026-02-23 22:23:07 - agents.executoragent - INFO - [executoragent.py:551] - LLM 决定调用 2 个可选工具
+2026-02-23 22:23:07 - agents.executoragent - INFO - [executoragent.py:583] - executor_agent tool_node: tool_calls=['grep_query', 'grep_query']
+2026-02-23 22:23:07 - agents.executoragent - INFO - [executoragent.py:584] - executor_agent tool_node: registered_tools=['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-23 22:23:07 - agents.executoragent - INFO - [executoragent.py:589] - 准备执行 2 个可选工具调用
+2026-02-23 22:23:08 - agents.executoragent - INFO - [executoragent.py:511] - LLM 决策结果: 是否调用工具=True
+2026-02-23 22:23:08 - agents.executoragent - INFO - [executoragent.py:512] - executor_agent llm_chat: tool_calls_count=1, tool_names=['akshare_search']
+2026-02-23 22:23:08 - agents.executoragent - INFO - [executoragent.py:517] - executor_agent llm_chat: executor_messages_len=1
+2026-02-23 22:23:08 - agents.executoragent - INFO - [executoragent.py:522] - LLM 思考: 我来帮您测算中国GDP增速对沪深300收益的敏感度。首先让我搜索沪深300的相关信息，然后为您提供分析方法。...
+2026-02-23 22:23:08 - agents.executoragent - INFO - [executoragent.py:551] - LLM 决定调用 1 个可选工具
+2026-02-23 22:23:08 - agents.executoragent - INFO - [executoragent.py:583] - executor_agent tool_node: tool_calls=['akshare_search']
+2026-02-23 22:23:08 - agents.executoragent - INFO - [executoragent.py:584] - executor_agent tool_node: registered_tools=['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-23 22:23:08 - agents.executoragent - INFO - [executoragent.py:589] - 准备执行 1 个可选工具调用
+2026-02-23 22:23:09 - agents.executoragent - INFO - [executoragent.py:599] - 可选工具执行完成，返回 1 条 ToolMessage
+2026-02-23 22:23:09 - agents.executoragent - INFO - [executoragent.py:605] - executor_agent tool_node: tool_messages_count=1, tool_message_ids=['call_-7881288215343131627']
+2026-02-23 22:23:09 - agents.executoragent - INFO - [executoragent.py:622] -   - 工具 akshare_search 返回 1 条结果
+2026-02-23 22:23:09 - agents.executoragent - INFO - [executoragent.py:500] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-23 22:23:10 - agents.executoragent - INFO - [executoragent.py:599] - 可选工具执行完成，返回 2 条 ToolMessage
+2026-02-23 22:23:10 - agents.executoragent - INFO - [executoragent.py:605] - executor_agent tool_node: tool_messages_count=2, tool_message_ids=['call_-7881288180983396436', 'call_-7881288180983396435']
+2026-02-23 22:23:10 - agents.executoragent - INFO - [executoragent.py:622] -   - 工具 grep_query 返回 1 条结果
+2026-02-23 22:23:10 - agents.executoragent - INFO - [executoragent.py:622] -   - 工具 grep_query 返回 1 条结果
+2026-02-23 22:23:10 - agents.executoragent - INFO - [executoragent.py:500] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-23 22:23:11 - agents.executoragent - INFO - [executoragent.py:511] - LLM 决策结果: 是否调用工具=True
+2026-02-23 22:23:11 - agents.executoragent - INFO - [executoragent.py:512] - executor_agent llm_chat: tool_calls_count=3, tool_names=['grep_query', 'grep_query', 'grep_query']
+2026-02-23 22:23:11 - agents.executoragent - INFO - [executoragent.py:517] - executor_agent llm_chat: executor_messages_len=1
+2026-02-23 22:23:11 - agents.executoragent - INFO - [executoragent.py:522] - LLM 思考: 我来帮你了解如何处理不同频率金融数据的匹配与对齐问题。让我先搜索一些相关的代码实现和最佳实践。...
+2026-02-23 22:23:11 - agents.executoragent - INFO - [executoragent.py:551] - LLM 决定调用 3 个可选工具
+2026-02-23 22:23:11 - agents.executoragent - INFO - [executoragent.py:583] - executor_agent tool_node: tool_calls=['grep_query', 'grep_query', 'grep_query']
+2026-02-23 22:23:11 - agents.executoragent - INFO - [executoragent.py:584] - executor_agent tool_node: registered_tools=['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']
+2026-02-23 22:23:11 - agents.executoragent - INFO - [executoragent.py:589] - 准备执行 3 个可选工具调用
+2026-02-23 22:23:17 - agents.executoragent - INFO - [executoragent.py:599] - 可选工具执行完成，返回 3 条 ToolMessage
+2026-02-23 22:23:17 - agents.executoragent - INFO - [executoragent.py:605] - executor_agent tool_node: tool_messages_count=3, tool_message_ids=['call_-7881286428636734061', 'call_-7881286428636734060', 'call_-7881286428636734059']
+2026-02-23 22:23:17 - agents.executoragent - INFO - [executoragent.py:622] -   - 工具 grep_query 返回 1 条结果
+2026-02-23 22:23:17 - agents.executoragent - INFO - [executoragent.py:622] -   - 工具 grep_query 返回 1 条结果
+2026-02-23 22:23:17 - agents.executoragent - INFO - [executoragent.py:622] -   - 工具 grep_query 返回 1 条结果
+2026-02-23 22:23:17 - agents.executoragent - INFO - [executoragent.py:500] - 让 LLM 决定是否调用可选工具: ['sec_edgar_search', 'akshare_search', 'resolve-library-id', 'query-docs', 'grep_query']

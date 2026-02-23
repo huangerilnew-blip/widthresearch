@@ -9,7 +9,7 @@ from psycopg_pool import AsyncConnectionPool
 from agents.multi_agent_graph import MultiAgentGraph
 from core.config import Config
 
-QUERY = "langgraph 高阶技巧有哪些？"
+QUERY = "langgraph的高阶用法？"
 THREAD_ID = "test_thread_001"
 USER_ID = "test_user_001"
 RUN_FULL = True # 用于控制multiagent是否执行完成

@@ -1,4 +1,5 @@
 import asyncio
+import asyncio
 from pathlib import Path
 
 from core.config import Config
@@ -8,7 +9,7 @@ from core.rag.document_processor import DocumentProcessor
 
 async def main() -> None:
     llm_chat, embedding = llama_llm(
-        chat_name="glm",
+        chat_name="llama" ,
         embedding_name=Config.LLM_EMBEDDING,
     )
     processor = DocumentProcessor(
@@ -35,11 +36,15 @@ async def main() -> None:
     nodes = await processor.get_nodes(documents)
     print(f"input_file={sample_path}")
     print(f"node_count={len(nodes)}")
-    if nodes:
-        metadata = getattr(nodes[0], "metadata", {}) or {}
-        preview = nodes[0].get_content()[:200]
-        print(f"first_node_metadata={metadata}")
-        print(f"first_node_preview={preview}")
+    for index, node in enumerate(nodes):
+        metadata = getattr(node, "metadata", {}) or {}
+        content = node.get_content()
+        questions = metadata.get("questions_this_excerpt_can_answer", [])
+        if not isinstance(questions, list):
+            questions = [questions]
+        print(f"node_index={index}")
+        print(f"original_content={content}")
+        print(f"rewritten_questions={questions}")
 
 
 if __name__ == "__main__":

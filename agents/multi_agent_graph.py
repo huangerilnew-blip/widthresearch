@@ -1179,6 +1179,18 @@ class MultiAgentGraph:
             file.write(json.dumps(record, ensure_ascii=False) + "\n")
         logger.info("观测数据追加写入完成")
 
+    def _persist_fail_run(self, user_query: str) -> None:
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        output_path = os.path.join(project_root, "fail_run.md")
+        clean_query = (user_query or "").strip("\n")
+        logger.error("评估未通过: query=%s", clean_query)
+        try:
+            with open(output_path, "a", encoding="utf-8") as file:
+                file.write(f"- {clean_query}\n")
+            logger.info("已将 query 落盘到 fail_run.md: %s", clean_query)
+        except Exception as err:
+            logger.warning("fail_run.md 写入失败: %s", err)
+
     async def _eval_answer_node(self, state: MultiAgentState) -> Dict[str, Any]:
         """节点 10: 评估生成答案"""
         start_ts = time.monotonic()
@@ -1467,10 +1479,13 @@ class MultiAgentGraph:
                     logger.warning(f"观测数据持久化失败: {persist_error}")
             else:
                 logger.info("评估未通过，不记录本次运行的观测数据")
+                self._persist_fail_run(user_query)
+            status = "pass" if evaluation.get("passed") is True else "fail"
             final_result = {
                 'query': user_query,
                 'user_id': user_id,
                 'thread_id': thread_id,
+                'status': status,
                 'sub_questions': result.get('sub_questions', []),
                 'rewritten_questions_count': len(question_pool),
                 'total_questions': len(question_pool),
