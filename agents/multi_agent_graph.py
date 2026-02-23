@@ -20,6 +20,7 @@ import json
 import ast
 import logging
 import time
+import shutil
 from typing import Dict, Any, List, Optional, TypedDict, Annotated, Union, Set, Literal
 from psycopg_pool import AsyncConnectionPool
 from concurrent_log_handler import ConcurrentRotatingFileHandler
@@ -291,13 +292,18 @@ class MultiAgentGraph:
 
             # 提取 tasks
             tasks = data.get('tasks', [])
+            merged_tasks = [original_query]
+            if isinstance(tasks, list):
+                merged_tasks.extend(tasks)
+            final_tasks = self._dedupe_preserve_order(merged_tasks)
+            logger.info("[plan_query] final_tasks=%s", final_tasks)
 
             if isinstance(tasks, list) and len(tasks) >= 3:
                 logger.info(f"查询拆解完成，生成 {len(tasks)} 个子问题")
                 elapsed = time.monotonic() - start_ts
                 logger.info("[plan_query] 完成 状态=success 耗时=%.2fs 子问题数=%d", elapsed, len(tasks))
                 return {
-                    "sub_questions": tasks,
+                    "sub_questions": final_tasks,
                     **self._with_flag(state, "plan_query", "success")
                 }
             elif isinstance(tasks, list) and len(tasks) <3:
@@ -305,7 +311,7 @@ class MultiAgentGraph:
                 elapsed = time.monotonic() - start_ts
                 logger.info("[plan_query] 完成 状态=success 耗时=%.2fs 子问题数=%d", elapsed, len(tasks))
                 return {
-                    "sub_questions": tasks if tasks else [original_query],
+                    "sub_questions": final_tasks,
                     **self._with_flag(state, "plan_query", "success")
                 }
 
@@ -974,6 +980,19 @@ class MultiAgentGraph:
     # 辅助方法
     # ========================================================================
 
+    def _clear_doc_save_path(self) -> None:
+        doc_path = Config.DOC_SAVE_PATH
+        if not os.path.exists(doc_path):
+            os.makedirs(doc_path, exist_ok=True)
+            return
+        for name in os.listdir(doc_path):
+            full_path = os.path.join(doc_path, name)
+            if os.path.isfile(full_path) or os.path.islink(full_path):
+                os.remove(full_path)
+            elif os.path.isdir(full_path):
+                shutil.rmtree(full_path)
+        logger.info("DOC_SAVE_PATH 已清空: %s", doc_path)
+
     def _init_flags(self) -> Dict[str, Union[bool, Literal["success", "skipped", "error"]]]:
         return {node_name: False for node_name in NODE_FLAG_KEYS}
 
@@ -993,40 +1012,39 @@ class MultiAgentGraph:
             "========================\n"
             "【工作原则】\n"
             "1. 优先使用“检索内容”中的信息。\n"
-            "2. 不得凭空补充事实。\n"
+            "2. 不允许凭空补充事实。所有回答必须基于检索内容。\n"
             "3. 若信息不足，应明确指出“不足以回答”。\n"
             "4. 回答必须围绕用户原始问题。\n"
             "5. 改写问题的作用是辅助理解与语义扩展，而不是替代原问题。\n"
             "6. 输出必须分层组织，并体现逻辑结构。\n"
-            "7. 所有结论必须能够在检索内容中找到依据或合理推导路径。\n\n"
+            "7. 所有结论必须能够在检索内容中找到依据或合理推导路径。\n"
+            "8. 最终回答需要向原始问题收敛，确保回答内容与原始问题高度相关。\n\n"
             "========================\n"
             "【思考步骤】\n"
             "第一步：问题对齐，明确最终要回答的边界。\n"
-            "第二步：信息筛选，提取高度相关事实。\n"
-            "第三步：结构化生成，先给核心结论，再展开支撑逻辑。\n"
-            "第四步：证据标注，说明来源、推理与不足。\n\n"
+            "第二步: 信息筛选,过滤掉无关question_pool的内容,提取高度相关事实。\n"
+            "第三步：聚焦于原始问题，分析出需要使用的语料。\n"
+            "第四步：结构化生成，先给核心结论，再展开支撑逻辑。\n"
+            "第五步：证据标注，说明来源、推理。\n\n"
             "========================\n"
             "【输出格式】\n"
             "————————————\n"
             "【问题理解】\n"
             "- 原始问题核心意图：\n"
-            "- 改写问题的补充作用：\n"
+            "- 总结回答维度：\n"
             "- 最终回答边界：\n\n"
+            "【结构化回答--核心问题回复】\n"
+            "一、核心结论（简洁回答原问题）\n"
+            "二、详细解释（分层展开，逻辑清晰）\n\n"
+            "【证据说明】\n"
+            "- 直接来源：\n"
+            "- 合理推断：\n"
+            "- 信息不足部分（如有）：\n\n"
             "【关键信息提取】\n"
             "- 事实1：\n"
             "- 事实2：\n"
             "- 事实3：\n\n"
-            "【结构化回答】\n"
-            "一、核心结论（简洁回答原问题）\n"
-            "二、关键支撑点\n"
-            "1.\n2.\n3.\n"
-            "三、详细解释（分层展开，逻辑清晰）\n\n"
-            "【证据说明】\n"
-            "- 直接来源：\n"
-            "- 合理推断：\n"
-            "- 信息不足部分（如有）：\n"
             "————————————\n"
-            "请确保回答严格围绕用户原始问题展开。"
         )
 
     def _format_retrieved_contexts(self, retrieved_nodes: list) -> str:
@@ -1071,7 +1089,7 @@ class MultiAgentGraph:
         system_prompt = (
             "你是一名严格的答案评估器。\n"
             "请从两个维度评估答案质量：\n"
-            "1) 回答维度是否合理（是否围绕原问题、结构清晰、无明显矛盾）。\n"
+            "1) 回答维度是否合理（是否聚焦于原问题、结构清晰、无明显矛盾）。\n"
             "2) 证据标注是否准确（关键结论是否有来源标注、证据是否匹配、是否说明不足）。\n\n"
             "输出必须是 JSON，格式如下：\n"
             "{\"passed\": true/false, \"suggestions\": [\"问题1\", \"问题2\"]}\n"
@@ -1407,6 +1425,7 @@ class MultiAgentGraph:
 
         try:
             # 运行图
+            self._clear_doc_save_path()
             result = await self.graph.ainvoke(initial_state, config)
 
             # 构建返回结果
