@@ -48,7 +48,12 @@ MODEL_CONFIGS = {
             "base_url": "https://open.bigmodel.cn/api/coding/paas/v4",
             "api_key": os.getenv("GLM_API_KEY"),
             "model_name": "GLM-5"
-        }
+        },
+    "llama": {
+            "base_url": "http://127.0.0.1:8200/v1",
+            "api_key": "NA",
+            "model_name": "/root/autodl-tmp/my_llms/qwen_distill_7b"
+    }
     },
     "embedding": {
         "qwen": {
