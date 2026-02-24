@@ -459,6 +459,54 @@ class MultiAgentGraph:
             deduped.append(item)
         return deduped
 
+    def _normalize_questions_field(self, raw: Any) -> List[str]:
+        """将 questions_this_excerpt_can_answer 归一化为 list[str]。"""
+        normalized: List[str] = []
+
+        if raw is None:
+            return normalized
+
+        if isinstance(raw, (list, tuple)):
+            for item in raw:
+                if item is None:
+                    continue
+                text = str(item).strip()
+                if text:
+                    normalized.append(text)
+            return self._dedupe_preserve_order(normalized)
+
+        if isinstance(raw, str):
+            text = raw.strip()
+            if not text:
+                return normalized
+
+            try:
+                parsed = ast.literal_eval(text)
+            except (ValueError, SyntaxError):
+                parsed = None
+
+            if isinstance(parsed, (list, tuple)):
+                for item in parsed:
+                    parsed_text = str(item).strip()
+                    if parsed_text:
+                        normalized.append(parsed_text)
+                if normalized:
+                    return self._dedupe_preserve_order(normalized)
+
+            lines = [line.strip() for line in text.splitlines() if line.strip()]
+            if lines:
+                for line in lines:
+                    cleaned = re.sub(r"^\s*(?:[-*•]\s+|\d+[.)、]\s+)", "", line).strip()
+                    if cleaned:
+                        normalized.append(cleaned)
+                if normalized:
+                    return self._dedupe_preserve_order(normalized)
+
+            return [text]
+
+        fallback = str(raw).strip()
+        return [fallback] if fallback else []
+
     def _get_document_path(self, doc: Dict) -> str:
         """从文档元数据中提取文件路径"""
         if not isinstance(doc, dict):
@@ -865,22 +913,39 @@ class MultiAgentGraph:
                     "correct_context": False,
                     **self._with_flag(state, "rag_retrieve", "skipped")
                 }
-            contents=[]
-            contents_str=[]
-            question_pool=[]
-            num=0
+            contents = []
+            contents_str = []
+            question_pool = []
+            num = 0
+            nodes_with_questions = 0
+            nodes_without_questions = 0
             for nws in retrieved_nodes_score:
                 node, score = nws.node, nws.score
                 metadata = node.metadata
                 content = node.get_content()
                 source = metadata.get('url', metadata.get('source', '联网检索获得')).strip("\n")
-                questions=metadata.get("questions_this_excerpt_can_answer",[])
-                if not questions:
-                    logger.warning(f"检索出的basenode缺少 'questions_this_excerpt_can_answer' 元数据，无法展示改写的问题") 
+                raw_questions = metadata.get("questions_this_excerpt_can_answer", [])
+                parsed_questions = self._normalize_questions_field(raw_questions)
+                if not parsed_questions:
+                    nodes_without_questions += 1
+                    logger.warning(
+                        "节点问题解析为空: source=%s raw_type=%s",
+                        source[:120],
+                        type(raw_questions).__name__,
+                    )
                 else:
-                    question_pool.extend(questions)
-                    logger.info(f"已将检索已将basenode添加到question_pool到,问题个数: {len(questions)}")   
-                num+=1
+                    nodes_with_questions += 1
+                    question_pool.extend(parsed_questions)
+                    raw_len = len(raw_questions) if hasattr(raw_questions, "__len__") else "NA"
+                    logger.info(
+                        "节点问题解析完成: source=%s raw_type=%s raw_len=%s parsed_count=%d sample=%s",
+                        source[:120],
+                        type(raw_questions).__name__,
+                        raw_len,
+                        len(parsed_questions),
+                        parsed_questions[:3],
+                    )
+                num += 1
                 logger.info(f"检索到节点，来源: {source}, 相似度得分: {score}")
                 contents.append({"source": source,"content": content })
                 contents_str.append(f"来源: {source}---内容: {content}")
@@ -895,7 +960,13 @@ class MultiAgentGraph:
                 seen_questions.add(cleaned)
                 questions_pool.append(cleaned)
             correct_context = len(questions_pool) > 0
-            updated_epoch = retrieved_epoch + 1 
+            updated_epoch = retrieved_epoch + 1
+            logger.info(
+                "问题池汇总: nodes_with_questions=%d nodes_without_questions=%d total_questions=%d",
+                nodes_with_questions,
+                nodes_without_questions,
+                len(questions_pool),
+            )
             logger.info(f"从全部检索结果中提取并去重后，问题池中共有 {len(questions_pool)} 个问题")
             elapsed = time.monotonic() - start_ts
             logger.info(
@@ -1019,8 +1090,7 @@ class MultiAgentGraph:
             "6. 输出必须分层组织，并体现逻辑结构。\n"
             "7. 所有结论必须能够在检索内容中找到依据或合理推导路径。\n"
             "8. 最终回答需要向原始问题收敛，确保回答内容与原始问题高度相关。\n\n"
-            "【严格禁止】\n"
-            "1. 不允许使用任何未在检索内容中出现的信息,来生成回答。\n"
+            "9.为了保证语义的通畅，在回答时可以适当对于检索内容进行必要的整合和润色，但必须确保整合和润色后的内容与原始检索内容保持一致，不得引入与检索内容不符的信息。\n"
             "========================\n"
             "【思考步骤】\n"
             "第一步：问题对齐，明确最终要回答的边界。\n"
@@ -1089,13 +1159,26 @@ class MultiAgentGraph:
     def _build_eval_messages(self, answer: str, contexts_str: str) -> List[AnyMessage]:
         """构建评估消息"""
         system_prompt = (
-            "你是一名严格的答案评估器。\n"
-            "请从两个维度评估答案质量：\n"
-            "1) 回答维度是否合理（是否聚焦于原问题、结构清晰、无明显矛盾）。\n"
-            "2) 证据标注是否准确（关键结论是否有来源标注、证据是否匹配、是否说明不足）。\n\n"
-            "输出必须是 JSON，格式如下：\n"
-            "{\"passed\": true/false, \"suggestions\": [\"问题1\", \"问题2\"]}\n"
-            "若通过，suggestions 为空数组。若不通过，提供具体可操作建议。"
+            "你是一名答案质量与表达优化评估助手。\n"
+            "请从两个维度评估答案：\n\n"
+
+        "1) 语义与表达：\n"
+        "- 是否语句通顺、表达清晰。\n"
+        "- 是否可以在不改变原意的前提下进行润色优化。\n"
+        "- 是否存在明显歧义或表达混乱。\n"
+
+        "2) 内容一致性：\n"
+        "- 是否总体基于提供的检索内容作答。\n"
+        "- 若为使表达更流畅而增加少量过渡性语句，只要不引入新的事实或关键结论，可视为合理。\n"
+        "- 若存在超出检索范围的内容，需要指出。\n\n"
+
+        "注意："
+        "- 不要求逐字对应检索文本。\n"
+        "- 允许为提升流畅度进行合理改写。\n"
+        "- 只需关注是否存在明显偏离或实质性新增信息。\n\n"
+
+        "输出必须为 JSON，格式如下：\n"
+        "{\"passed\": true/false, \"suggestions\": [\"问题1\", \"问题2\"]}\n"
         )
         user_prompt = (
             "需要评估的答案如下：\n\n"
@@ -1147,9 +1230,9 @@ class MultiAgentGraph:
             if not content:
                 empty_content_count += 1
             metadata = getattr(node, "metadata", {}) or {}
-            questions = metadata.get("questions_this_excerpt_can_answer", [])
-            if not isinstance(questions, list):
-                questions = [questions]
+            questions = self._normalize_questions_field(
+                metadata.get("questions_this_excerpt_can_answer", [])
+            )
             observations.append({
                 "content": content,
                 "questions": [str(question) for question in questions if question]
