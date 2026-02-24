@@ -883,6 +883,13 @@ class MultiAgentGraph:
         try:
             # 创建检索器
             logger.info(f"尝试创建 RAG 检索器，使用 top_k={Config.TOP_K}")
+            logger.info(
+                "RAG检索参数快照: TOP_K=%d RERANK_THRESHOLD=%.3f RETRIEVE_DEDUP_THRESHOLD=%.3f RETRIEVE_DEDUP_MIN_KEEP=%d",
+                Config.TOP_K,
+                Config.RERANK_THRESHOLD,
+                float(getattr(Config, "RETRIEVE_DEDUP_THRESHOLD", Config.DOC_FILTER)),
+                int(getattr(Config, "RETRIEVE_DEDUP_MIN_KEEP", 1)),
+            )
             retriever = self.vector_store_index.as_retriever(similarity_top_k=Config.TOP_K)
 
             # 创建 RAG 模块

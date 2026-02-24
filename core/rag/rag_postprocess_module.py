@@ -118,30 +118,44 @@ class RAGPostProcessModule:
         
         # 1. 对每个问题单独检索、重排序、过滤
         all_reranked_nodes = []
+        initial_node_counts: List[int] = []
+        reranked_node_counts: List[int] = []
         for i, question in enumerate(planner_questions, 1):
             try:
                 # 初步检索
                 nodes = await self._retrieve_single_question(question)
+                initial_node_counts.append(len(nodes))
                 logger.debug(f"问题 {i}/{len(planner_questions)} 初步检索到 {len(nodes)} 个节点")
                 
                 # 使用 BGERerankNodePostprocessor 进行重排序和过滤
                 reranked_nodes = await self._rerank_and_filter(question, nodes)
+                reranked_node_counts.append(len(reranked_nodes))
                 logger.debug(f"问题 {i}/{len(planner_questions)} 重排序+过滤后保留 {len(reranked_nodes)} 个节点")
                 
                 all_reranked_nodes.extend(reranked_nodes)
             except Exception as e:
                 logger.error(f"处理问题 {i} 失败: {e}")
+                initial_node_counts.append(0)
+                reranked_node_counts.append(0)
                 continue
         
         logger.info(f"所有问题检索并重排序完成，共 {len(all_reranked_nodes)} 个节点")
 
         # 2. 去重（根据 node_id，保留最大分数）
         unique_nodes = self._deduplicate_by_node_id(all_reranked_nodes)
+        node_id_dedup_count = len(unique_nodes)
         logger.info(f"去重后保留 {len(unique_nodes)} 个节点")
 
         # 2.1 内容相似度去重（保留高分节点）
         unique_nodes = self._deduplicate_by_text_similarity(unique_nodes)
         logger.info(f"内容去重后保留 {len(unique_nodes)} 个节点")
+        logger.info(
+            "RAG阶段汇总: 初检总数=%d 重排后总数=%d node_id去重后=%d 内容去重后=%d",
+            sum(initial_node_counts),
+            sum(reranked_node_counts),
+            node_id_dedup_count,
+            len(unique_nodes),
+        )
         
         # 3. 构建 question_pool
         self._build_question_pool(planner_questions, unique_nodes)
@@ -251,6 +265,17 @@ class RAGPostProcessModule:
         assert TfidfVectorizer is not None
         assert cosine_similarity is not None
 
+        threshold = float(getattr(Config, "RETRIEVE_DEDUP_THRESHOLD", Config.DOC_FILTER))
+        min_keep_cfg = int(getattr(Config, "RETRIEVE_DEDUP_MIN_KEEP", 1))
+        min_keep = max(1, min(min_keep_cfg, len(nodes)))
+
+        logger.info(
+            "开始检索内容去重: input_nodes=%d threshold=%.3f min_keep=%d",
+            len(nodes),
+            threshold,
+            min_keep,
+        )
+
         contents = [self._normalize_content(node.node.get_content()) for node in nodes]
         if not any(contents):
             return nodes
@@ -265,6 +290,7 @@ class RAGPostProcessModule:
         similarity_matrix = cosine_similarity(tfidf_matrix)
 
         to_keep = set(range(len(nodes)))
+        removed_pairs = []
         for i in range(len(nodes)):
             if i not in to_keep:
                 continue
@@ -273,10 +299,42 @@ class RAGPostProcessModule:
                 if j not in to_keep:
                     continue
 
-                if similarity_matrix[i, j] >= Config.DOC_FILTER:
+                if similarity_matrix[i, j] >= threshold:
+                    if len(to_keep) <= min_keep:
+                        continue
                     to_keep.discard(j)
+                    keep_meta = nodes[i].node.metadata or {}
+                    remove_meta = nodes[j].node.metadata or {}
+                    keep_source = (
+                        keep_meta.get("url")
+                        or keep_meta.get("source")
+                        or "unknown"
+                    )
+                    remove_source = (
+                        remove_meta.get("url")
+                        or remove_meta.get("source")
+                        or "unknown"
+                    )
+                    removed_pairs.append((i, j, float(similarity_matrix[i, j]), keep_source, remove_source))
+
+        if removed_pairs:
+            for kept_idx, removed_idx, sim, kept_source, removed_source in removed_pairs[:10]:
+                logger.debug(
+                    "内容去重删除节点: kept_idx=%d removed_idx=%d sim=%.4f kept_source=%s removed_source=%s",
+                    kept_idx,
+                    removed_idx,
+                    sim,
+                    str(kept_source)[:120],
+                    str(removed_source)[:120],
+                )
 
         deduped = [node for idx, node in enumerate(nodes) if idx in to_keep]
+        logger.info(
+            "检索内容去重完成: input_nodes=%d output_nodes=%d removed=%d",
+            len(nodes),
+            len(deduped),
+            len(nodes) - len(deduped),
+        )
         return deduped
     
     def _build_question_pool(

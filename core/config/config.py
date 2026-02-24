@@ -38,9 +38,9 @@ class Config:
     VECTOR_DIM=1024 #向量维度
     BASEDATA_RESTRUCTURE_PATH="data/crunchbase_data/restructure_data/restructure_company_info.json" #清洗与重构后的基础数据路径
     TOP_K=5 #向量检索top_k
-    TAVILY_NUM=1 #Tavily文献检索返回数量
+    TAVILY_NUM=2 #Tavily文献检索返回数量
     TAVILY_FLOOR_SCORE=0.8 #Tavily文献检索最低分数线
-    EXA_NUM=1 #EXA检索的结果
+    EXA_NUM=2 #EXA检索的结果
     SEC_NUM=1 #SEC检索返回数量
     AKSHARE_NUM=1 #Akshare检索返回数量
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
@@ -52,7 +52,7 @@ class Config:
     RERANK_BASE_URL ="http://localhost:8100"  # TEI rerank API 地址
     RERANK_API_KEY = "EMPTY"  # TEI API Key（如果不需要可以设为 EMPTY）
     RERANK_THRESHOLD = 0.5  # Rerank 分数阈值
-    RERANK_TOP_N = 20  # Rerank 后保留的文档数量
+    RERANK_TOP_N = 15  # Rerank 后保留的文档数量
     RERANK_BATCH_SIZE = 32  # Rerank 批处理大小
     RERANK_MAX_CONCURRENT = 5  # Rerank 最大并发请求数
     
@@ -67,6 +67,8 @@ class Config:
     MINERU_BASE_URL = "http://localhost:8080"  # MinerU 服务地址
     VLLM_BASE_URL =  "http://localhost:8081"  # vllm Embedding 服务地址
     DOC_FILTER=0.8 #文档过滤分数线，低于此分数的文档将被过滤掉，默认为0.8
+    RETRIEVE_DEDUP_THRESHOLD=0.94 #检索后内容去重阈值（仅用于RAG节点内容去重）
+    RETRIEVE_DEDUP_MIN_KEEP=3 #检索后内容去重最少保留节点数
     BL_MODEL_NAME="text-embedding-v4" #百炼模型名称，默认为text-embedding-v4
 
 def get_rotating_file_handler(config=None):
