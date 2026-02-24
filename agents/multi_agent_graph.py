@@ -922,65 +922,69 @@ class MultiAgentGraph:
                 }
             contents = []
             contents_str = []
-            question_pool = []
+            # 注释原因：暂不使用问题改写。
+            # question_pool = []
             num = 0
-            nodes_with_questions = 0
-            nodes_without_questions = 0
+            # 注释原因：暂不使用问题改写。
+            # nodes_with_questions = 0
+            # nodes_without_questions = 0
             for nws in retrieved_nodes_score:
                 node, score = nws.node, nws.score
                 metadata = node.metadata
                 content = node.get_content()
                 source = metadata.get('url', metadata.get('source', '联网检索获得')).strip("\n")
-                raw_questions = metadata.get("questions_this_excerpt_can_answer", [])
-                parsed_questions = self._normalize_questions_field(raw_questions)
-                if not parsed_questions:
-                    nodes_without_questions += 1
-                    logger.warning(
-                        "节点问题解析为空: source=%s raw_type=%s",
-                        source[:120],
-                        type(raw_questions).__name__,
-                    )
-                else:
-                    nodes_with_questions += 1
-                    question_pool.extend(parsed_questions)
-                    raw_len = len(raw_questions) if hasattr(raw_questions, "__len__") else "NA"
-                    logger.info(
-                        "节点问题解析完成: source=%s raw_type=%s raw_len=%s parsed_count=%d sample=%s",
-                        source[:120],
-                        type(raw_questions).__name__,
-                        raw_len,
-                        len(parsed_questions),
-                        parsed_questions[:3],
-                    )
+                # 注释原因：暂不使用问题改写。
+                # raw_questions = metadata.get("questions_this_excerpt_can_answer", [])
+                # parsed_questions = self._normalize_questions_field(raw_questions)
+                # if not parsed_questions:
+                #     nodes_without_questions += 1
+                #     logger.warning(
+                #         "节点问题解析为空: source=%s raw_type=%s",
+                #         source[:120],
+                #         type(raw_questions).__name__,
+                #     )
+                # else:
+                #     nodes_with_questions += 1
+                #     question_pool.extend(parsed_questions)
+                #     raw_len = len(raw_questions) if hasattr(raw_questions, "__len__") else "NA"
+                #     logger.info(
+                #         "节点问题解析完成: source=%s raw_type=%s raw_len=%s parsed_count=%d sample=%s",
+                #         source[:120],
+                #         type(raw_questions).__name__,
+                #         raw_len,
+                #         len(parsed_questions),
+                #         parsed_questions[:3],
+                #     )
                 num += 1
                 logger.info(f"检索到节点，来源: {source}, 相似度得分: {score}")
                 contents.append({"source": source,"content": content })
                 contents_str.append(f"来源: {source}---内容: {content}")
-            questions_pool: List[str] = []
-            seen_questions: Set[str] = set()
-            for question in question_pool:
-                if not isinstance(question, str):
-                    continue
-                cleaned = question.strip()
-                if not cleaned or cleaned in seen_questions:
-                    continue
-                seen_questions.add(cleaned)
-                questions_pool.append(cleaned)
-            correct_context = len(questions_pool) > 0
+            # 注释原因：暂不使用问题改写。
+            # questions_pool: List[str] = []
+            # seen_questions: Set[str] = set()
+            # for question in question_pool:
+            #     if not isinstance(question, str):
+            #         continue
+            #     cleaned = question.strip()
+            #     if not cleaned or cleaned in seen_questions:
+            #         continue
+            #     seen_questions.add(cleaned)
+            #     questions_pool.append(cleaned)
+            correct_context = len(contents) > 0
             updated_epoch = retrieved_epoch + 1
-            logger.info(
-                "问题池汇总: nodes_with_questions=%d nodes_without_questions=%d total_questions=%d",
-                nodes_with_questions,
-                nodes_without_questions,
-                len(questions_pool),
-            )
-            logger.info(f"从全部检索结果中提取并去重后，问题池中共有 {len(questions_pool)} 个问题")
+            # 注释原因：暂不使用问题改写。
+            # logger.info(
+            #     "问题池汇总: nodes_with_questions=%d nodes_without_questions=%d total_questions=%d",
+            #     nodes_with_questions,
+            #     nodes_without_questions,
+            #     len(questions_pool),
+            # )
+            logger.info("当前配置下仅基于检索节点判断上下文有效性")
             elapsed = time.monotonic() - start_ts
             logger.info(
-                "[rag_retrieve] 完成 状态=success 耗时=%.2fs 节点数=%d 问题池数=%d",
+                "[rag_retrieve] 完成 状态=success 耗时=%.2fs 节点数=%d",
                 elapsed,
                 len(contents),
-                len(questions_pool),
             )
             return {
                 "retrieved_nodes": contents,
@@ -992,10 +996,11 @@ class MultiAgentGraph:
                         content="\n\n".join(contents_str),
                         metadata={"num_retreved": f"累计检索到 {num} 个相关节点"}
                     ),
-                    SystemMessage(
-                        content=f"问题池:{questions_pool}",
-                        metadata={"message_type": "question_pool"}
-                    )
+                    # 注释原因：暂不使用问题改写。
+                    # SystemMessage(
+                    #     content=f"问题池:{questions_pool}",
+                    #     metadata={"message_type": "question_pool"}
+                    # )
                 ],
                 **self._with_flag(state, "rag_retrieve", "success")
             }
@@ -1016,7 +1021,7 @@ class MultiAgentGraph:
     async def _generate_answer_node(self, state: MultiAgentState) -> Dict[str, Any]:
         """节点 9: 生成最终答案
 
-        基于检索结果和问题池生成最终答案
+        基于检索结果生成最终答案
         """
         start_ts = time.monotonic()
         logger.info("[generate_answer] 尝试生成最终答案")
@@ -1086,14 +1091,14 @@ class MultiAgentGraph:
         """构建回答生成的系统提示词"""
         return (
             "你是一名严谨的知识整合与分析专家。\n"
-            "你的任务是基于对话中提供的用户问题、改写问题和检索内容生成回答。\n\n"
+            "你的任务是基于对话中提供的用户问题和检索内容生成回答。\n\n"
             "========================\n"
             "【核心原则】\n"
             "1. 优先使用检索内容中的信息进行回答。\n"
             "2. 不得凭空补充新的事实或关键结论。\n"
             "3. 若检索信息不足，应说明信息有限，而不是自行扩展\n"
             "4. 回答必须围绕用户的原始问题展开。\n"
-            "5. 改写问题仅用于辅助理解，不可替代原始问题。\n"
+            "5. 回答应直接围绕原始问题组织，不引入额外问题改写依赖。\n"
             "6. 输出必须分层组织，并体现逻辑结构。\n"
             "7. 所有结论必须能够在检索内容中找到依据或合理推导路径。\n"
             "8. 最终回答需要向原始问题收敛，确保回答内容与原始问题高度相关。\n\n"
@@ -1101,7 +1106,7 @@ class MultiAgentGraph:
             "========================\n"
             "【思考步骤】\n"
             "第一步：问题对齐，明确最终要回答的边界。\n"
-            "第二步: 信息筛选,过滤掉无关question_pool的内容,提取高度相关事实。\n"
+            "第二步: 信息筛选,过滤掉与原始问题无关的内容,提取高度相关事实。\n"
             "第三步：整合信息，形成连贯、自然的回答。\n"
             "第四步：结构化生成，先给核心结论，再展开支撑逻辑。\n"
             "第五步：若存在推理，应确保可以由检索内容合理支持\n\n"
@@ -1145,22 +1150,23 @@ class MultiAgentGraph:
         return "\n".join(retrieved_contexts) if retrieved_contexts else "无"
 
     def _extract_question_pool_from_messages(self, messages: List[AnyMessage]) -> List[str]:
-        for message in reversed(messages or []):
-            if not isinstance(message, SystemMessage):
-                continue
-            metadata = getattr(message, "additional_kwargs", {}) or {}
-            if metadata.get("message_type") != "question_pool":
-                continue
-            content = message.content
-            if isinstance(content, str) and content.startswith("问题池:"):
-                raw = content[len("问题池:"):]
-                try:
-                    parsed = ast.literal_eval(raw)
-                except (ValueError, SyntaxError):
-                    return []
-                if isinstance(parsed, list):
-                    return [str(item) for item in parsed]
-                return []
+        # 注释原因：暂不使用问题改写。
+        # for message in reversed(messages or []):
+        #     if not isinstance(message, SystemMessage):
+        #         continue
+        #     metadata = getattr(message, "additional_kwargs", {}) or {}
+        #     if metadata.get("message_type") != "question_pool":
+        #         continue
+        #     content = message.content
+        #     if isinstance(content, str) and content.startswith("问题池:"):
+        #         raw = content[len("问题池:"):]
+        #         try:
+        #             parsed = ast.literal_eval(raw)
+        #         except (ValueError, SyntaxError):
+        #             return []
+        #         if isinstance(parsed, list):
+        #             return [str(item) for item in parsed]
+        #         return []
         return []
 
     def _build_eval_messages(self, answer: str, contexts_str: str) -> List[AnyMessage]:
@@ -1237,12 +1243,14 @@ class MultiAgentGraph:
             if not content:
                 empty_content_count += 1
             metadata = getattr(node, "metadata", {}) or {}
-            questions = self._normalize_questions_field(
-                metadata.get("questions_this_excerpt_can_answer", [])
-            )
+            # 注释原因：暂不使用问题改写。
+            # questions = self._normalize_questions_field(
+            #     metadata.get("questions_this_excerpt_can_answer", [])
+            # )
             observations.append({
                 "content": content,
-                "questions": [str(question) for question in questions if question]
+                # 注释原因：暂不使用问题改写。
+                # "questions": [str(question) for question in questions if question]
             })
         logger.info(
             "观测输入构建完成: observations=%d empty_content=%d",
@@ -1551,7 +1559,8 @@ class MultiAgentGraph:
                 error_keys,
             )
 
-            question_pool = self._extract_question_pool_from_messages(result.get("messages", []))
+            # 注释原因：暂不使用问题改写。
+            # question_pool = self._extract_question_pool_from_messages(result.get("messages", []))
             answer = result.get("final_answer", "")
             if not answer:
                 last_message = (result.get("messages") or [])[-1] if result.get("messages") else None
@@ -1577,8 +1586,10 @@ class MultiAgentGraph:
                 'thread_id': thread_id,
                 'status': status,
                 'sub_questions': result.get('sub_questions', []),
-                'rewritten_questions_count': len(question_pool),
-                'total_questions': len(question_pool),
+                # 注释原因：暂不使用问题改写。
+                # 'rewritten_questions_count': len(question_pool),
+                # 注释原因：暂不使用问题改写。
+                # 'total_questions': len(question_pool),
                 'documents_processed': len(result.get('first_all_documents', []))
                 + len(result.get('second_all_documents', [])),
                 'url_pool_size': len(result.get('url_pool', [])),

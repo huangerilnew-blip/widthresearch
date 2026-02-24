@@ -157,9 +157,10 @@ class RAGPostProcessModule:
             len(unique_nodes),
         )
         
+        # 注释原因：暂不使用问题改写。
         # 3. 构建 question_pool
-        self._build_question_pool(planner_questions, unique_nodes)
-        logger.info(f"构建问题池完成，共 {len(self.question_pool)} 个问题")
+        # self._build_question_pool(planner_questions, unique_nodes)
+        # logger.info(f"构建问题池完成，共 {len(self.question_pool)} 个问题")
         
         return unique_nodes
     
@@ -374,7 +375,8 @@ class RAGPostProcessModule:
         
         # 3. 转换为列表并存储到 self.question_pool
         self.question_pool = list(question_set)
-        logger.debug(f"问题池构建完成，包含 {len(self.question_pool)} 个去重后的问题")
+        # 注释原因：暂不使用问题改写。
+        # logger.debug(f"问题池构建完成，包含 {len(self.question_pool)} 个去重后的问题")
     def get_question_pool(self) -> List[str]:
         """获取问题池
         Returns:

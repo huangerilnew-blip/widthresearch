@@ -1,181 +1,82 @@
-# pipeline
-## PlannerAgent-1.0版本
-- 功能:按照DAG思想，负责将用户的问题分解为多个子任务。
-- 输出格式json：
-- 样例
-```
-{
-  "tasks": [
-    {"id": "T1", "query": "子问题1", "dep": []},
-    {"id": "T2", "query": "子问题2", "dep": ["T1"]},
-    {"id": "T3", "query": "子问题3", "dep": ["T1"]}
-    {"id": "T4", "query": "子问题4", "dep": ["T2"]}
-  ]
-}
-```
-## PlannerAgent-2.0版本
+# widthresearch
 
-功能:只负责将用户的问题分解为多个子任务，不需要按照DAG思想。
+`widthresearch` 是一个面向研究场景的多智能体系统，核心目标是把“问题拆解-证据检索-答案生成-质量评估”做成可复用的工程流水线。
 
-## 性格优化
+本文档从企业落地常用的 6 个能力维度介绍项目，而非仅描述单个 Agent 功能。
 
-- 初始化parentagnt时候，先初始化多个executoragent，用于并发执行子问题
+## 1) 智能体编排能力（Agent Orchestration）
 
-## executoragent
+- 采用 `LangGraph StateGraph` 构建多节点流水线，覆盖初始化、规划、两阶段执行、文档处理、向量化、检索、生成、评估。
+- 在全局编排层统一管理 Planner + Executor Pool + RAG 组件，形成可扩展的多 Agent 协同框架。
+- 支持条件路由与分支汇合（如检索后路由、向量化前 join），具备流程级控制能力。
 
-### 1. 核心定位与职责
+关键实现证据：
+- `agents/multi_agent_graph.py`
+- `agents/planneragent.py`
+- `agents/executoragent.py`
+- `agents/executor_pool.py`
 
-- ExecutorAgent 是一个负责执行单个子问题完整处理流程的智能代理。它的主要职责包括：
+## 2) 知识与 RAG 能力（Knowledge & RAG Engineering）
 
-  - 接收并处理来自 PlannerAgent 拆解后的子问题
+- 内置文档处理链路：PDF/Markdown/JSON 统一转为可检索节点，并补充可回答问题元数据。
+- 基于 Chroma + LlamaIndex 的向量库管理，支持基础知识库加载与增量节点写入。
+- 提供检索后处理：重排序、阈值过滤、节点去重、问题池构建，提升回答相关性和可解释性。
 
-  - 智能决策是否调用可选工具获取额外信息
+关键实现证据：
+- `core/rag/document_processor.py`
+- `core/rag/rag_preprocess_module.py`
+- `core/rag/rag_postprocess_module.py`
+- `core/rag/reranker.py`
 
-  - 并行调用必需的搜索工具获取相关文档
+## 3) 外部工具与协议集成能力（Tool/Protocol Integration）
 
-  - 对搜索结果进行清洗和重排序（Rerank）
+- 通过 MCP 客户端统一接入外部能力，已覆盖 Context7 与 Grep 这类检索工具。
+- Planner/Executor 均支持工具调用路径，工具结果通过标准消息结构回流到图状态。
+- 保留“必需工具 + 可选工具”混合机制，兼顾稳定召回与动态探索。
 
-  - 下载相关文档到本地存储
+关键实现证据：
+- `core/mcp/context7_grep.py`
+- `core/mcp/AGENTS.md`
+- `agents/planneragent.py`
+- `agents/executoragent.py`
 
-  - 返回处理后的结构化结果
+## 4) 模型工程能力（ModelOps / Multi-LLM Abstraction）
 
+- 统一模型工厂封装 chat 与 embedding 初始化，支持多供应侧配置与默认回退策略。
+- 在不同任务层使用差异化模型（规划、执行、评估、Embedding）以平衡质量与成本。
+- 配置集中在 `Config`，包含模型选择、重排参数、检索参数、服务地址等关键运行参数。
 
-### 2. 架构设计
+关键实现证据：
+- `core/llms.py`
+- `core/config/config.py`
+- `agents/multi_agent_graph.py`
 
-#### 2.1 工作流程（基于 LangGraph）
+## 5) 评估与可观测能力（Evaluation & Observability）
 
-ExecutorAgent 采用 ReAct（Reasoning + Acting）模式，工作流程如下：
+- 生成后引入评估节点（`eval_answer`），支持“生成-评估-再生成”闭环。
+- 全流程节点均带结构化日志与状态标记，便于问题定位与运行追踪。
+- 通过 `thread_id/user_id` 与 checkpoint 机制，支撑会话级上下文追踪与恢复。
 
-```
-START 
-  ↓
-llm_decision_node (LLM 决策)
-  ↓
-[条件路由]
-  ├─→ optional_tool_node (可选工具) → llm_decision_node (循环)
-  └─→ search_node (必需搜索)
-        ↓
-      clean_and_rerank (清洗与重排序)
-        ↓
-      download (文档下载)
-        ↓
-      END
-```
+关键实现证据：
+- `agents/multi_agent_graph.py`
+- `openspec/changes/archive/2026-02-07-add-answer-evaluation-loop/proposal.md`
+- `main.py`
 
-#### 2.2 核心组件
+## 6) 治理与可靠性能力（Governance & Reliability）
 
-- **LLM 决策引擎**: 使用配置的大语言模型进行智能决策
-- **工具系统**: 
-  - 必需工具：wikipedia_search, openalex_search, semantic_scholar_search, tavily_search
-  - 可选工具：sec_edgar_search, akshare_search
-- **Reranker**: 基于 BGE 模型的文档重排序器
-- **记忆系统**: 使用 PostgreSQL 存储对话历史和状态
+- Executor Pool 为单 Agent 引入串行锁，避免同一 Agent 并发复用导致状态竞态。
+- 广泛采用 `asyncio.gather(..., return_exceptions=True)`，避免单点失败拖垮整批任务。
+- 通过 OpenSpec 变更档案保留关键可靠性设计意图，支撑工程治理与演进审计。
 
-### 3. 技术特性
+关键实现证据：
+- `agents/executor_pool.py`
+- `test_code/test_executor_pool_serialization.py`
+- `openspec/changes/archive/2026-02-09-fix-executor-pool-queue/specs/executor-pool-queueing/spec.md`
+- `openspec/changes/archive/2026-02-09-fix-executor-pool-queue/design.md`
 
-#### 3.1 智能决策机制
+---
 
-ExecutorAgent 实现了基于 ReAct 模式的智能决策：
+## 当前边界说明
 
-- **Thought（思考）**: LLM 分析当前信息是否足够
-- **Action（行动）**: 决定是否调用可选工具
-- **Observation（观察）**: 接收工具返回的结果
-- **循环决策**: 可以多次调用可选工具，直到 LLM 认为信息充足
-
-#### 3.2 并发处理能力
-
-- 使用 `asyncio.gather` 并行调用多个必需搜索工具
-- 即使某个工具失败也不会中断整体流程（`return_exceptions=True`）
-- 支持批量文档下载的并发处理
-
-#### 3.3 智能重排序（Rerank）
-
-- 使用 TEI 部署的 bge-reranker 模型
-- 只对配置的数据源（openalex, semantic_scholar）进行重排序
-- 支持阈值过滤和 Top-N 截断
-- 保留未参与重排序的其他来源文档
-
-#### 3.4 观察信息裁剪
-
-为了减少 Token 消耗和加快 LLM 决策速度，ExecutorAgent 实现了 `_crop_observation` 方法：
-
-- 只保留关键信息（标题、来源、简短预览）
-- 针对不同数据源采用不同的格式化策略
-- 将完整的 JSON 数据裁剪为易读的摘要信息
-
-### 4. 数据流转
-
-#### 4.1 状态管理（ExecutorState）
-
-```python
-{
-    "executor_messages": List[AnyMessage],      # 对话历史
-    "current_query": str,                       # 当前子问题
-    "optional_search_results": List[ToolMessage], # 可选工具结果
-    "search_results": List[Dict],               # 所有搜索结果
-    "reranked_results": List[Dict],             # 重排序后的结果
-    "downloaded_papers": List[Dict],            # 已下载的文档
-    "executor_result": Dict                     # 最终结果摘要
-}
-```
-
-#### 4.2 数据源分类处理
-
-ExecutorAgent 对不同数据源采用差异化处理策略：
-
-- **学术论文源**（openalex, semantic_scholar）：
-  - 提取摘要用于 Rerank
-  - 参与相关性评分
-  - 按分数排序后保留 Top-N
-
-- **专业数据源**（sec_edgar, akshare）：
-  - 作为可选工具，由 LLM 决定是否调用
-  - 不参与 Rerank，直接保留
-  - 适用于特定领域的深度查询
-
-- **通用搜索源**（wikipedia, tavily）：
-  - 作为必需工具，每次都调用
-  - 不参与 Rerank，直接保留
-  - 提供基础背景信息
-
-## build_vector_store
-- 功能:构建向量数据库
-- 向量数据库：chroma
-- 框架：llamaindex
-- 流程:
-    - 使用mineru对pdf进行解析，提取文本内容
-    - crunchbase作为基础数据+markdown文件上层数据
-    - 入库
-## search_info
-- 功能:检索相关信息
-- pre_questions:通过question_pool构建search目标
-- question_pool:由planner和markdown文件改写获得
-- 过滤：rerank+过滤
-### 工具输出格式
-| 类型编号 | 输入类型              | 说明            | 示例                                             |
-| ---- | ----------------- | ------------- | ---------------------------------------------- |
-| 1    | `str` (JSON List) | JSON 字符串格式的列表 | `'[{"title": "paper1"}, {"title": "paper2"}]'` |
-| 2    | `list[dict]`      | Python 列表内含字典 | `[{"title": "paper1"}, {"title": "paper2"}]`   |
-| 3    | `dict`            | 单个字典（会被包装为列表） | `{"title": "paper1"}`                          |
-### searcher类工具返回格式
-
-- [TextContent]
-  - text的结构
-
-```
-{
-	source_tool: <tool_name>,
-	result_type: papers,
-	papers: [ ... ],
-	count: <int>
-}                                                 
-```
-
-### 亮点
-
-
-- 广度探索 → 深度精炼
-- 实时去重 → 减少冗余
-- 向量检索 → 语义匹配
-- 重排序优化 → 提高质量
-- 问题池扩展 → 覆盖更多角度
+- 项目当前重点是“研究流程与多 Agent 工程化”，并非完整企业 SaaS（如组织/租户/计费/权限门户）产品。
+- 但在编排、RAG、工具协议、评估追踪、可靠性控制这 6 个核心能力上，已经具备可继续产品化的技术底座。

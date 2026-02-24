@@ -22,7 +22,8 @@ from llama_index.core.base.embeddings.base import BaseEmbedding
 from llama_index.core.llms.llm import LLM
 from llama_index.core.node_parser import MarkdownElementNodeParser, SentenceSplitter
 from llama_index.readers.markitdown import MarkItDownReader
-from llama_index.core.extractors import QuestionsAnsweredExtractor
+# 注释原因：暂不使用问题改写。
+# from llama_index.core.extractors import QuestionsAnsweredExtractor
 from llama_index.core.ingestion import IngestionPipeline
 from core.config import Config
 from core.rag.models import PDFParser, JsonReader
@@ -87,18 +88,21 @@ class DocumentProcessor:
             chunk_size=self.max_chunk_size
         )
         
+        # 注释原因：暂不使用问题改写。
         # 初始化 QuestionsAnsweredExtractor（从节点中抽取可回答的问题）
-        self.question_extractor = QuestionsAnsweredExtractor(
-            questions=3,  # 每个 chunk 抽取的问题数量
-            llm=llm
-        )
+        # self.question_extractor = QuestionsAnsweredExtractor(
+        #     questions=3,  # 每个 chunk 抽取的问题数量
+        #     llm=llm
+        # )
         
-        # 构建 IngestionPipeline：MarkdownElementNodeParser -> SentenceSplitter -> QuestionsAnsweredExtractor
+        # 注释原因：暂不使用问题改写。
+        # 构建 IngestionPipeline：MarkdownElementNodeParser -> SentenceSplitter
         self.ingestion_pipeline = IngestionPipeline(
             transformations=[
                 self.markdown_parser,
                 self.sentence_splitter,
-                self.question_extractor,
+                # 注释原因：暂不使用问题改写。
+                # self.question_extractor,
             ]
         )
         

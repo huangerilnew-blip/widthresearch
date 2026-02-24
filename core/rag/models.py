@@ -21,6 +21,8 @@ from llama_index.core.schema import NodeWithScore, QueryBundle
 from pydantic import ConfigDict
 from core.config.config import Config
 
+logger = setup_logger(__name__)
+
 @dataclass
 class DocumentMetadata:
     """文档元数据
@@ -212,6 +214,12 @@ class BGERerankNodePostprocessor(BaseNodePostprocessor):
         
         # 使用 BGEReranker 进行重排序
         rerank_results = await self.reranker.rerank_async(query, documents)
+        logging.getLogger(__name__).info(
+            "Rerank过滤统计: input_nodes=%d score_threshold=%.3f top_n=%d",
+            len(nodes),
+            self.score_threshold,
+            self.top_n,
+        )
         
         # 根据 rerank 结果更新节点分数
         reranked_nodes = []
@@ -227,7 +235,13 @@ class BGERerankNodePostprocessor(BaseNodePostprocessor):
                 reranked_nodes.append(node_with_score)
         
         # 限制返回数量
-        return reranked_nodes[:self.top_n]
+        limited_nodes = reranked_nodes[:self.top_n]
+        logging.getLogger(__name__).info(
+            "Rerank过滤结果: passed_threshold=%d returned_after_topn=%d",
+            len(reranked_nodes),
+            len(limited_nodes),
+        )
+        return limited_nodes
     
     @classmethod
     def class_name(cls) -> str:
